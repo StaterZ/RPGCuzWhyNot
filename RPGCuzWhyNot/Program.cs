@@ -72,7 +72,7 @@ namespace RPGCuzWhyNot {
 		    };
 
             //some basic event loop
-			player.location.PrintInformation();
+			player.location.PrintEnterInformation();
             while (true) {
 	            Console.WriteLine();
                 string commandText = ConsoleUtils.Ask("|>");
