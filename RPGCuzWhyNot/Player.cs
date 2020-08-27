@@ -21,11 +21,7 @@ namespace RPGCuzWhyNot {
 	                    if (args.Length >= 2) {
 		                    Location location = Program.world.GetLocationByCallName(args[1]);
 		                    if (location != null) {
-			                    if (TryGoto(location)) {
-				                    Console.WriteLine("success!");
-			                    } else {
-				                    Console.WriteLine("can't reach location from here");
-			                    }
+			                    Console.WriteLine(TryGoto(location) ? "success!" : "can't reach location from here");
 		                    } else {
 			                    Console.WriteLine("Location not found, does it exist?");
                             }
@@ -33,9 +29,10 @@ namespace RPGCuzWhyNot {
 		                    Console.WriteLine("No location specified");
 	                    }
 						break;
+
                     case "equip":
 	                    if (args.Length >= 2) {
-							throw new System.NotImplementedException();
+							throw new NotImplementedException();
 
 		                    //Todo: use args[1] to get the item
                             Item item = null;
@@ -50,7 +47,8 @@ namespace RPGCuzWhyNot {
 		                    Console.WriteLine("No item specified");
                         }
 						break;
-					default:
+
+                    default:
 						Console.WriteLine("Invalid command");
 						break;
                 }
@@ -60,7 +58,7 @@ namespace RPGCuzWhyNot {
 		}
 
 		private bool TryEquip(Item item) {
-			throw new System.NotImplementedException();
+			throw new NotImplementedException();
         }
 
 		private bool TryGoto(Location newLocation) {

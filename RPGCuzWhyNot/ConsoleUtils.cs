@@ -23,9 +23,8 @@ namespace RPGCuzWhyNot {
 		public static string Ask(string question, params string[] options) {
 			Console.Write(question + "   " + StringifyArray("[", ", ", "]", options));
 
-			string answer;
 			while (true) {
-				answer = Console.ReadLine();
+				string answer = Console.ReadLine();
 
 				if (options.Contains(answer)) {
 					return answer;

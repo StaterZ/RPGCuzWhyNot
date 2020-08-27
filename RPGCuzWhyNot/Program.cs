@@ -21,7 +21,7 @@ namespace RPGCuzWhyNot {
 		    player = new Player {
 			    name = "Bengt",
 				location = village,
-				race = new Human() {
+				race = new Human {
 					gender = Humanoid.Gender.Male
                 }
 		    };
