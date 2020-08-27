@@ -47,6 +47,7 @@
     <Compile Include="ConsoleUtils.cs" />
     <Compile Include="Races\Humanoid\Dwarf.cs" />
     <Compile Include="Races\Humanoid\Human.cs" />
+    <Compile Include="Enemies\TheMother.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="Player.cs" />
