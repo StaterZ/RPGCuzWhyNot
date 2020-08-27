@@ -30,5 +30,9 @@ namespace RPGCuzWhyNot {
 			paths.Add(location);
 			location.paths.Add(this);
         }
-    }
+
+        public override string ToString() {
+	        return $"{name} ({callName})";
+        }
+	}
 }
