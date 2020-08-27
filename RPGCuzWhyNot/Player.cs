@@ -2,8 +2,6 @@
 
 namespace RPGCuzWhyNot {
 	public class Player : Character {
-		public int health;
-
 		public override void TakeDamage(int damage, Character source) {
 			damage = Math.Min(health, damage);
 			health -= damage;
