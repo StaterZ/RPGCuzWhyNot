@@ -1,17 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace RPGCuzWhyNot {
 	public class Location {
 		public readonly string name;
 		public readonly string callName;
+		public readonly string description;
+		public readonly string pathDescription;
+		private readonly List<Location> paths = new List<Location>();
+		public readonly ReadOnlyCollection<Location> Paths;
 
-        public Location(string callName, string name) {
+        public Location(string callName, string name, string description, string pathDescription) {
 	        this.callName = callName;
 			this.name = name;
-		}
+			this.description = description;
+			this.pathDescription = pathDescription;
 
-		private readonly List<Location> paths = new List<Location>();
+			Paths = new ReadOnlyCollection<Location>(paths);
+        }
+
         public bool HasPathTo(Location location) {
 			return paths.Contains(location);
 		}
