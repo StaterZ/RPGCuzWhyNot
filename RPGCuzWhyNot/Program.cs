@@ -11,8 +11,18 @@ namespace RPGCuzWhyNot {
 
 		private static void Main(string[] args) {
 			//construct world
-            Location village = new Location("village", "The Village", "A small village stands before you.", "The smoke of a little village can be seen in the distance.");
-			Location dragonNest = new Location("nest", "The Elder Dragons Nest", "A large lair sprawls out around you. The deep ominous sound of the dragon breathing can be heard further in.", "In the horizon a dragons nest can be seen");
+            Location village = new Location(
+	            "village", 
+	            "The Village", 
+	            "A small village stands before you.", 
+	            "The smoke of a little village can be seen in the distance."
+	        );
+			Location dragonNest = new Location(
+				"nest", 
+				"The Elder Dragons Nest", 
+				"A large lair sprawls out around you. The deep ominous sound of the dragon breathing can be heard further in.", 
+				"In the horizon a dragons nest can be seen"
+			);
 
 			world = new World();
             world.RegisterNewLocation(village);
