@@ -23,7 +23,7 @@ namespace RPGCuzWhyNot {
 						if (args.Length >= 2) {
 		                    Location newLocation = Program.world.GetLocationByCallName(args[1]);
 							if (newLocation != null && TryGoto(newLocation)) {
-				                location.PrintInformation();
+				                location.PrintEnterInformation();
                             } else {
 			                    Console.WriteLine("That location does not exist!");
 		                    }
