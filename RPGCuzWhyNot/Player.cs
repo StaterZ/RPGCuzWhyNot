@@ -13,7 +13,7 @@ namespace RPGCuzWhyNot {
 				// TODO: Die
 			}
 		}
-		
+
 		public void ReactToCommand(string[] args) {
 			if (args.Length >= 1) {
 				switch (args[0].ToLower()) {
@@ -21,15 +21,16 @@ namespace RPGCuzWhyNot {
 					case "goto":
 					case "enter":
 						if (args.Length >= 2) {
-		                    Location newLocation = Program.world.GetLocationByCallName(args[1]);
+							Location newLocation = Program.world.GetLocationByCallName(args[1]);
 							if (newLocation != null && TryGoto(newLocation)) {
-				                location.PrintEnterInformation();
-                            } else {
-			                    Console.WriteLine("That location does not exist!");
-		                    }
+								location.PrintEnterInformation();
+							} else {
+								Console.WriteLine("That location does not exist!");
+							}
 						} else {
-		                    Console.WriteLine("Where do you want to go?");
-	                    }
+							Console.WriteLine("Where do you want to go?");
+						}
+
 						break;
 
 					case "where":
@@ -48,36 +49,37 @@ namespace RPGCuzWhyNot {
 
 						break;
 
-                    case "equip":
-	                    if (args.Length >= 2) {
+					case "equip":
+						if (args.Length >= 2) {
 							throw new NotImplementedException();
 
-		                    //Todo: use args[1] to get the item
-                            Item item = null;
-                            if (item != null) {
-	                            if (TryEquip(item)) {
-		                            Console.WriteLine("success");
-	                            }
-                            } else {
+							//Todo: use args[1] to get the item
+							Item item = null;
+							if (item != null) {
+								if (TryEquip(item)) {
+									Console.WriteLine("success");
+								}
+							} else {
 								Console.WriteLine("Item not found, does it exist?");
-                            }
-                        } else {
-		                    Console.WriteLine("No item specified");
-                        }
+							}
+						} else {
+							Console.WriteLine("No item specified");
+						}
+
 						break;
 
-                    default:
+					default:
 						Console.WriteLine("Invalid command");
 						break;
-                }
-            } else {
+				}
+			} else {
 				Console.WriteLine("No command");
-            }
+			}
 		}
 
 		private bool TryEquip(Item item) {
 			throw new NotImplementedException();
-        }
+		}
 
 		private bool TryGoto(Location newLocation) {
 			if (location.HasPathTo(newLocation)) {
