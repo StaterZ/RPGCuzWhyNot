@@ -1,8 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace RPGCuzWhyNot {
 	public class World {
 		private readonly List<Location> locations = new List<Location>();
+		public ReadOnlyCollection<Location> Locations { get; }
+
+		public World() {
+			Locations = locations.AsReadOnly();
+		}
 
 		/// <summary>
 		/// finds a location by its name. if not found it returns null

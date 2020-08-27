@@ -16,18 +16,35 @@ namespace RPGCuzWhyNot {
 		
 		public void ReactToCommand(string[] args) {
 			if (args.Length >= 1) {
-				switch (args[0]) {
-                    case "goto":
-	                    if (args.Length >= 2) {
-		                    Location location = Program.world.GetLocationByCallName(args[1]);
-		                    if (location != null) {
-			                    Console.WriteLine(TryGoto(location) ? "success!" : "can't reach location from here");
+				switch (args[0].ToLower()) {
+					case "go":
+					case "goto":
+					case "enter":
+						if (args.Length >= 2) {
+		                    Location newLocation = Program.world.GetLocationByCallName(args[1]);
+		                    if (newLocation != null) {
+			                    Console.WriteLine(TryGoto(newLocation) ? "success!" : "can't reach location from here");
 		                    } else {
 			                    Console.WriteLine("Location not found, does it exist?");
                             }
 	                    } else {
 		                    Console.WriteLine("No location specified");
 	                    }
+						break;
+
+					case "where":
+						Console.WriteLine($"You are in: {location}");
+						break;
+
+					case "ls":
+					case "list":
+					case "locations":
+						Console.WriteLine("Locations:");
+						foreach (Location loc in Program.world.Locations) {
+							Console.Write(loc == location ? "* " : "  ");
+							Console.WriteLine(loc);
+						}
+
 						break;
 
                     case "equip":
