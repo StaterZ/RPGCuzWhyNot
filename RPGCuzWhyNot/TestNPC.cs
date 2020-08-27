@@ -1,5 +1,5 @@
 ﻿namespace RPGCuzWhyNot {
-	public class TestNPC: Character {
+	public class TestNPC : Character {
 
 	}
 }
