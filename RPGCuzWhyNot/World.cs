@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 namespace RPGCuzWhyNot {
 	public class World {
 		private readonly List<Location> locations = new List<Location>();
-		public ReadOnlyCollection<Location> Locations { get; }
+		public readonly ReadOnlyCollection<Location> Locations;
 
 		public World() {
 			Locations = locations.AsReadOnly();

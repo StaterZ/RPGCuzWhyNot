@@ -23,7 +23,11 @@ namespace RPGCuzWhyNot {
 						if (args.Length >= 2) {
 		                    Location newLocation = Program.world.GetLocationByCallName(args[1]);
 		                    if (newLocation != null) {
-			                    Console.WriteLine(TryGoto(newLocation) ? "success!" : "can't reach location from here");
+			                    if (TryGoto(newLocation)) {
+				                    location.PrintInformation();
+                                } else {
+				                    Console.WriteLine("Can't reach location from here");
+			                    }
 		                    } else {
 			                    Console.WriteLine("Location not found, does it exist?");
                             }
@@ -81,7 +85,6 @@ namespace RPGCuzWhyNot {
 		private bool TryGoto(Location newLocation) {
 			if (location.HasPathTo(newLocation)) {
 				location = newLocation;
-				location.PrintInformation();
 				return true;
 			}
 

@@ -17,7 +17,7 @@ namespace RPGCuzWhyNot {
 			this.description = description;
 			this.pathDescription = pathDescription;
 
-			Paths = new ReadOnlyCollection<Location>(paths);
+			Paths = paths.AsReadOnly();
         }
 
         public bool HasPathTo(Location location) {
