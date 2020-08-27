@@ -1,8 +1,8 @@
 ﻿using System;
 
 namespace RPGCuzWhyNot.Enemies {
-	public class FinalBossEnemy : Character {
-		public FinalBossEnemy() {
+	public class TheMother : Character {
+		public TheMother() {
 			name = "Din Mamma";
 			health = 9001;
 		}
