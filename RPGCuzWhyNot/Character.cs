@@ -20,12 +20,19 @@ namespace RPGCuzWhyNot {
 			if (health <= 0) {
 				Console.WriteLine($"{name} got killed by {source.name}.");
 				// TODO: Die
+				Die();
 			}
 		}
 
 		protected virtual int CalculateDamage(Character target) {
 			// TODO
 			return 2;
+		}
+
+		protected virtual void Die() { }
+
+		public void Say(string message) {
+			Console.WriteLine($"{name}: {message}");
 		}
 	}
 }
