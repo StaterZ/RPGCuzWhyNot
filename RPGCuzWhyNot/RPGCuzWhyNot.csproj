@@ -56,6 +56,7 @@
     <Compile Include="Races\Humanoid\Humanoid.cs" />
     <Compile Include="Races\Race.cs" />
     <Compile Include="TestNPC.cs" />
+    <Compile Include="World.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
