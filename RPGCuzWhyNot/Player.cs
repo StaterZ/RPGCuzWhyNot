@@ -81,6 +81,7 @@ namespace RPGCuzWhyNot {
 		private bool TryGoto(Location newLocation) {
 			if (location.HasPathTo(newLocation)) {
 				location = newLocation;
+				location.PrintInformation();
 				return true;
 			}
 

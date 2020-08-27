@@ -39,18 +39,10 @@ namespace RPGCuzWhyNot {
 		    };
 
             //some basic event loop
+			player.location.PrintInformation();
             while (true) {
-                //inform about situation
-                string title = $"----- [ {player.location.name} ] -----";
-                Console.WriteLine(title);
-                Console.WriteLine(player.location.description);
-                foreach (Location location in player.location.Paths) {
-	                Console.WriteLine(location.pathDescription + " [" + location.callName + "]");
-                }
-                Console.WriteLine(new string('-', title.Length));
-
-				//take nenxt command
-			    string commandText = ConsoleUtils.Ask("|>");
+	            Console.WriteLine();
+                string commandText = ConsoleUtils.Ask("|>");
 			    string[] segments = commandText.Split(' ');
 			    player.ReactToCommand(segments);
             }

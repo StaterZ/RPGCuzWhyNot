@@ -34,5 +34,15 @@ namespace RPGCuzWhyNot {
         public override string ToString() {
 	        return $"{name} ({callName})";
         }
+
+        public void PrintInformation() {
+	        string title = $"----- [ {name} ] -----";
+	        Console.WriteLine(title);
+	        Console.WriteLine(description);
+	        foreach (Location location in paths) {
+		        Console.WriteLine(location.pathDescription + " [" + location.callName + "]");
+	        }
+	        Console.WriteLine(new string('-', title.Length));
+        }
 	}
 }
