@@ -1,6 +1,6 @@
 ﻿namespace RPGCuzWhyNot {
-	public class Character {
+	public abstract class Character {
 		public string name;
-		public Gender gender;
+		public Race race;
 	}
 }
