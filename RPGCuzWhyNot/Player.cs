@@ -22,18 +22,17 @@ namespace RPGCuzWhyNot {
 					case "enter":
 						if (args.Length >= 2) {
 		                    Location newLocation = Program.world.GetLocationByCallName(args[1]);
-		                    if (newLocation != null) {
-			                    Console.WriteLine(TryGoto(newLocation) ? "success!" : "can't reach location from here");
-		                    } else {
-			                    Console.WriteLine("Location not found, does it exist?");
-                            }
-	                    } else {
-		                    Console.WriteLine("No location specified");
+		                    if (location == null || !TryGoto(newLocation)) {
+			                    Console.WriteLine("That location does not exist!");
+		                    }
+						} else {
+		                    Console.WriteLine("Where do you want to go?");
 	                    }
 						break;
 
 					case "where":
 						Console.WriteLine($"You are in: {location}");
+						location.PrintInformation();
 						break;
 
 					case "ls":
@@ -81,7 +80,7 @@ namespace RPGCuzWhyNot {
 		private bool TryGoto(Location newLocation) {
 			if (location.HasPathTo(newLocation)) {
 				location = newLocation;
-				location.PrintInformation();
+				location.PrintEnterInformation();
 				return true;
 			}
 
