@@ -40,7 +40,7 @@ namespace RPGCuzWhyNot {
 					case "list":
 					case "locations":
 						Console.WriteLine("Locations:");
-						foreach (Location loc in Program.world.Locations) {
+						foreach (Location loc in location.Paths) {
 							Console.Write(loc == location ? "* " : "  ");
 							Console.WriteLine(loc);
 						}
