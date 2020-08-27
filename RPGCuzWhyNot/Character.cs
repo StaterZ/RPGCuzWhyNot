@@ -1,4 +1,6 @@
-﻿namespace RPGCuzWhyNot {
+﻿using System;
+
+namespace RPGCuzWhyNot {
 	public abstract class Character {
 		public string name;
 		public Race race;
