@@ -49,14 +49,14 @@ namespace RPGCuzWhyNot {
 				throw new NotImplementedException();
 
 				//Todo: use args[1] to get the item
-				Item item = null;
-				if (item != null) {
-					if (TryEquip(item)) {
-						Console.WriteLine("success");
-					}
-				} else {
-					Console.WriteLine("Item not found, does it exist?");
-				}
+				//Item item = null;
+				//if (item != null) {
+				//	if (TryEquip(item)) {
+				//		Console.WriteLine("success");
+				//	}
+				//} else {
+				//	Console.WriteLine("Item not found, does it exist?");
+				//}
 			}));
 			commandHandler.commands.Add(new Command(new[] { "take", "pickup", "grab" }, "Take an item from the current location", args => {
 				if (args.Length < 2) {
