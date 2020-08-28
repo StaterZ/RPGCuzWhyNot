@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RPGCuzWhyNot {
 	public static class Program {

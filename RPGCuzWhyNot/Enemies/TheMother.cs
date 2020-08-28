@@ -1,5 +1,5 @@
-﻿using StaterZ.Core.HealthSystem;
-using System;
+﻿using System;
+using StaterZ.Core.HealthSystem;
 
 namespace RPGCuzWhyNot.Enemies {
 	public class TheMother : Character {
