@@ -63,6 +63,7 @@ namespace RPGCuzWhyNot {
 
 			village.AddPathTo(dragonNest);
 			village.AddPathTo(stoneFormation);
+			stoneFormation.AddPathTo(dragonNest);
 			village.AddPathTo(smithy);
 			smithy.AddPathTo(smith);
 			smithy.AddPathTo(smithyCustomer);
