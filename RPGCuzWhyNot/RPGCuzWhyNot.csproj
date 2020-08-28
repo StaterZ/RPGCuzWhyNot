@@ -43,20 +43,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="HealthSystem\IAlignment.cs" />
+    <Compile Include="HealthSystem\BasicAlignment.cs" />
     <Compile Include="Character.cs" />
     <Compile Include="ConsoleUtils.cs" />
     <Compile Include="Equipment.cs" />
-    <Compile Include="Races\Humanoid\Dwarf.cs" />
-    <Compile Include="Races\Humanoid\Human.cs" />
+    <Compile Include="ExtraMath.cs" />
+    <Compile Include="HealthSystem\Health.cs" />
+    <Compile Include="HealthSystem\HealthChangeInfo.cs" />
+    <Compile Include="HealthSystem\HealthChangeInfoSuccess.cs" />
+    <Compile Include="HealthSystem\IArmor.cs" />
+    <Compile Include="HealthSystem\IInflictor.cs" />
+    <Compile Include="Races\Humanoids\Dwarf.cs" />
+    <Compile Include="Races\Humanoids\Human.cs" />
     <Compile Include="Enemies\TheMother.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Races\Humanoid\Humanoid.cs" />
+    <Compile Include="Races\Humanoids\Humanoid.cs" />
     <Compile Include="Races\Race.cs" />
-    <Compile Include="TestNPC.cs" />
     <Compile Include="World.cs" />
   </ItemGroup>
   <ItemGroup>

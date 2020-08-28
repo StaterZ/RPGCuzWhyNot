@@ -1,20 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using StaterZ.Core.HealthSystem;
 
 namespace RPGCuzWhyNot {
 	public class Player : Character {
 		public readonly List<Item> inventory = new List<Item>();
 
-		public override void TakeDamage(int damage, Character source) {
-			damage = Math.Min(health, damage);
-			health -= damage;
+		public Player() {
+			health = new Health(100);
 
-			Console.WriteLine($"{source.name} hit you for {damage} damage.");
-
-			if (health <= 0) {
-				Console.WriteLine($"{source.name} killed you.");
-				// TODO: Die
-			}
+			health.OnDamage += ctx => {
+				Console.WriteLine($"{ctx.inflictor} hit you for {ctx.Delta} damage.");
+			};
+			health.OnDeath += ctx => {
+				Console.WriteLine($"{ctx.inflictor} killed you.");
+			};
 		}
 
 		public void ReactToCommand(string[] args) {

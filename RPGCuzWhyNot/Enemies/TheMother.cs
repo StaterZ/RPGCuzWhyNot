@@ -1,17 +1,15 @@
 ﻿using System;
+using StaterZ.Core.HealthSystem;
 
 namespace RPGCuzWhyNot.Enemies {
 	public class TheMother : Character {
 		public TheMother() {
 			name = "Din Mamma";
-			health = 9001;
+			health = new Health(9001);
+			health.OnDeath += Die;
 		}
 
-		protected override int CalculateDamage(Character target) {
-			return (int)Math.Ceiling(target.health / 2.0);
-		}
-
-		protected override void Die() {
+		private void Die(HealthChangeInfo ctx) {
 			Say("NOOOOOO!!!");
 		}
 	}
