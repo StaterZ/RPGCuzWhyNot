@@ -9,7 +9,7 @@ namespace RPGCuzWhyNot {
 		public Health health;
 		public Alignment alignment { get; set; }
 
-		protected virtual void Attack(Character target) {
+		public virtual void Attack(Character target) {
 		}
 
 		public void Say(string message) {

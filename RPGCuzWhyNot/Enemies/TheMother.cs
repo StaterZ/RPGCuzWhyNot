@@ -9,7 +9,7 @@ namespace RPGCuzWhyNot.Enemies {
 			health.OnDeath += Die;
 		}
 
-		protected override void Attack(Character target) {
+		public override void Attack(Character target) {
 			target.health.TakeDamage((float)Math.Ceiling(target.health.CurrentHealth / 2), this);
 		}
 
