@@ -92,10 +92,15 @@ namespace RPGCuzWhyNot {
 
 				// List the items in the inventory.
 				case "inventory":
-					Console.WriteLine("Inventory:");
-					foreach (Item item in inventory) {
-						Console.Write("  ");
-						Console.WriteLine(item);
+					if (inventory.Count != 0) {
+						Console.WriteLine("Inventory:");
+						foreach (Item item in inventory) {
+							Console.Write("  ");
+							Console.WriteLine(item);
+						}
+					}
+					else {
+						Console.WriteLine("Your inventory is empty.");
 					}
 
 					break;
@@ -112,6 +117,20 @@ namespace RPGCuzWhyNot {
 					else {
 						Console.WriteLine("You look around but can't find anything of use.");
 					}
+
+					break;
+
+				case "help":
+				case "commands":
+					Console.WriteLine(@"Commands:
+  go, goto, enter     - Go to another location.
+  where               - Show information about the current location.
+  locations, list, ls - List all locations accessible from the current one.
+  equip               - Equip an item.
+  take, pickup, grab  - Take an item from the current location.
+  inventory           - List the items in the inventory.
+  items               - List the items in the current location.
+  help, commands      - Show this information.");
 
 					break;
 
