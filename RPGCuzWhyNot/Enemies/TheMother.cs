@@ -1,5 +1,5 @@
-﻿using System;
-using StaterZ.Core.HealthSystem;
+﻿using StaterZ.Core.HealthSystem;
+using System;
 
 namespace RPGCuzWhyNot.Enemies {
 	public class TheMother : Character {
@@ -7,6 +7,10 @@ namespace RPGCuzWhyNot.Enemies {
 			name = "Din Mamma";
 			health = new Health(9001);
 			health.OnDeath += Die;
+		}
+
+		protected override void Attack(Character target) {
+			target.health.TakeDamage((float)Math.Ceiling(target.health.CurrentHealth / 2), this);
 		}
 
 		private void Die(HealthChangeInfo ctx) {
