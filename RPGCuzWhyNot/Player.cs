@@ -23,8 +23,8 @@ namespace RPGCuzWhyNot {
 					Console.WriteLine("Where to?");
 				}
 
-				Location newLocation = Program.world.GetLocationByCallName(args[1]);
-				if (newLocation != null && TryGoto(newLocation)) {
+				if (location.GetConnectedLocationByCallName(args[1], out Location newLocation)) {
+					location = newLocation;
 					location.PrintEnterInformation();
 				} else {
 					Console.WriteLine("I don't know where that is.");

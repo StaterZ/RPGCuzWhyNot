@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 namespace RPGCuzWhyNot {
 	public static class Program {
 		public static Player player;
-		public static World world;
+
+		private static readonly char[] commandArgumentSeparators = new char[] { ' ' };
 
 		private static void Main(string[] args) {
 			//construct world
@@ -54,14 +55,6 @@ namespace RPGCuzWhyNot {
 				"A customer casually stands leaning against a pillar"
 			);
 
-			world = new World();
-			world.RegisterNewLocation(village);
-			world.RegisterNewLocation(dragonNest);
-			world.RegisterNewLocation(smithy);
-			world.RegisterNewLocation(smith);
-			world.RegisterNewLocation(smithyCustomer);
-			world.RegisterNewLocation(stoneFormation);
-
 			village.AddPathTo(dragonNest);
 			village.AddPathTo(stoneFormation);
 			stoneFormation.AddPathTo(dragonNest);
@@ -83,7 +76,7 @@ namespace RPGCuzWhyNot {
 			while (true) {
 				Console.WriteLine();
 				string commandText = ConsoleUtils.Ask("|> ").ToLower();
-				string[] segments = commandText.Split(' ');
+				string[] segments = commandText.Split(commandArgumentSeparators, StringSplitOptions.RemoveEmptyEntries);
 				Console.WriteLine();
 				player.ReactToCommand(segments);
 			}

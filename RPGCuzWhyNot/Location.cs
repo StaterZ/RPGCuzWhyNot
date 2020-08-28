@@ -36,6 +36,17 @@ namespace RPGCuzWhyNot {
 			location.paths.Add(this);
 		}
 
+		public bool GetConnectedLocationByCallName(string callName, out Location connectedLocation) {
+			foreach(Location location in paths) {
+				if (location.callName == callName) {
+					connectedLocation = location;
+					return true;
+				}
+			}
+			connectedLocation = default;
+			return false;
+		}
+
 		public void AddItem(Item item) {
 			if (items.Contains(item))
 				throw new InvalidOperationException("Item already added");
