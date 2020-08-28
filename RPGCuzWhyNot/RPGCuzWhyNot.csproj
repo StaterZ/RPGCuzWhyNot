@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Character.cs" />
     <Compile Include="ConsoleUtils.cs" />
+    <Compile Include="Equipment.cs" />
     <Compile Include="Races\Humanoid\Dwarf.cs" />
     <Compile Include="Races\Humanoid\Human.cs" />
     <Compile Include="Enemies\TheMother.cs" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace RPGCuzWhyNot {
 	public class Location {
@@ -8,31 +9,46 @@ namespace RPGCuzWhyNot {
 		public readonly string callName;
 		public readonly string description;
 		public readonly string pathDescription;
-		private readonly List<Location> paths = new List<Location>();
 		public readonly ReadOnlyCollection<Location> Paths;
+		public readonly ReadOnlyCollection<Item> Items;
 
-        public Location(string callName, string name, string description, string pathDescription) {
+		private readonly List<Location> paths = new List<Location>();
+		private readonly List<Item> items = new List<Item>();
+
+		public Location(string callName, string name, string description, string pathDescription) {
 	        this.callName = callName;
 			this.name = name;
 			this.description = description;
 			this.pathDescription = pathDescription;
 
 			Paths = paths.AsReadOnly();
-        }
+			Items = items.AsReadOnly();
+		}
 
         public bool HasPathTo(Location location) {
 			return paths.Contains(location);
 		}
 
         public void AddPathTo(Location location) {
-			if (paths.Contains(location)) throw new Exception("Locations are already connected");
+			if (paths.Contains(location)) throw new InvalidOperationException("Locations are already connected");
 
 			paths.Add(location);
 			location.paths.Add(this);
         }
 
-        public override string ToString() {
-	        return $"{name} [{callName}]";
+        public void AddItem(Item item) {
+	        if (items.Contains(item))
+		        throw new InvalidOperationException("Item already added");
+
+	        items.Add(item);
+        }
+
+        public bool RemoveItem(Item item) {
+	        return items.Remove(item);
+        }
+
+        public Item GetItemByCallName(string itemCallName) {
+	        return items.FirstOrDefault(item => item.callName == itemCallName);
         }
 
         public void PrintEnterInformation() {
@@ -47,6 +63,14 @@ namespace RPGCuzWhyNot {
 	        foreach (Location location in paths) {
 		        Console.WriteLine(location.pathDescription + " [" + location.callName + "]");
 	        }
+
+	        foreach (Item item in items) {
+		        Console.WriteLine($"{item.description} [{item.callName}]");
+	        }
+        }
+
+        public override string ToString() {
+	        return $"{name} [{callName}]";
         }
 	}
 }
