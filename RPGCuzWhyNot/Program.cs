@@ -82,7 +82,7 @@ namespace RPGCuzWhyNot {
 			player.location.PrintEnterInformation();
 			while (true) {
 				Console.WriteLine();
-				string commandText = ConsoleUtils.Ask("|> ");
+				string commandText = ConsoleUtils.Ask("|> ").ToLower();
 				string[] segments = commandText.Split(' ');
 				Console.WriteLine();
 				player.ReactToCommand(segments);

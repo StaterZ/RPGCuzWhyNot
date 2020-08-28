@@ -34,7 +34,7 @@ namespace RPGCuzWhyNot {
 			}
 		}
 
-		private static string StringifyArray(string start, string separator, string end, string[] array) {
+		public static string StringifyArray(string start, string separator, string end, string[] array) {
 			StringBuilder builder = new StringBuilder();
 
 			builder.Append(start);

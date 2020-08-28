@@ -43,6 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Command.cs" />
+    <Compile Include="CommandHandler.cs" />
     <Compile Include="HealthSystem\IAlignment.cs" />
     <Compile Include="HealthSystem\BasicAlignment.cs" />
     <Compile Include="Character.cs" />
