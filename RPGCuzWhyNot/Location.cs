@@ -16,7 +16,7 @@ namespace RPGCuzWhyNot {
 		private readonly List<Item> items = new List<Item>();
 
 		public Location(string callName, string name, string description, string pathDescription) {
-	        this.callName = callName;
+			this.callName = callName;
 			this.name = name;
 			this.description = description;
 			this.pathDescription = pathDescription;
@@ -25,52 +25,52 @@ namespace RPGCuzWhyNot {
 			Items = items.AsReadOnly();
 		}
 
-        public bool HasPathTo(Location location) {
+		public bool HasPathTo(Location location) {
 			return paths.Contains(location);
 		}
 
-        public void AddPathTo(Location location) {
+		public void AddPathTo(Location location) {
 			if (paths.Contains(location)) throw new InvalidOperationException("Locations are already connected");
 
 			paths.Add(location);
 			location.paths.Add(this);
-        }
+		}
 
-        public void AddItem(Item item) {
-	        if (items.Contains(item))
-		        throw new InvalidOperationException("Item already added");
+		public void AddItem(Item item) {
+			if (items.Contains(item))
+				throw new InvalidOperationException("Item already added");
 
-	        items.Add(item);
-        }
+			items.Add(item);
+		}
 
-        public bool RemoveItem(Item item) {
-	        return items.Remove(item);
-        }
+		public bool RemoveItem(Item item) {
+			return items.Remove(item);
+		}
 
-        public Item GetItemByCallName(string itemCallName) {
-	        return items.FirstOrDefault(item => item.callName == itemCallName);
-        }
+		public Item GetItemByCallName(string itemCallName) {
+			return items.FirstOrDefault(item => item.callName == itemCallName);
+		}
 
-        public void PrintEnterInformation() {
-	        string title = $"----- [ {name} ] -----";
-	        Console.WriteLine(title);
-	        PrintInformation();
-	        Console.WriteLine(new string('-', title.Length));
-        }
+		public void PrintEnterInformation() {
+			string title = $"----- [ {name} ] -----";
+			Console.WriteLine(title);
+			PrintInformation();
+			Console.WriteLine(new string('-', title.Length));
+		}
 
-        public void PrintInformation() {
-	        Console.WriteLine(description);
-	        foreach (Location location in paths) {
-		        Console.WriteLine(location.pathDescription + " [" + location.callName + "]");
-	        }
+		public void PrintInformation() {
+			Console.WriteLine(description);
+			foreach (Location location in paths) {
+				Console.WriteLine(location.pathDescription + " [" + location.callName + "]");
+			}
 
-	        foreach (Item item in items) {
-		        Console.WriteLine($"{item.description} [{item.callName}]");
-	        }
-        }
+			foreach (Item item in items) {
+				Console.WriteLine($"{item.description} [{item.callName}]");
+			}
+		}
 
-        public override string ToString() {
-	        return $"{name} [{callName}]";
-        }
+		public override string ToString() {
+			return $"{name} [{callName}]";
+		}
 	}
 }

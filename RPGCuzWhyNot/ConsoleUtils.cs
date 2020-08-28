@@ -28,7 +28,7 @@ namespace RPGCuzWhyNot {
 
 				if (options.Contains(answer)) {
 					return answer;
-                }
+				}
 
 				Console.WriteLine("Invalid answer");
 			}

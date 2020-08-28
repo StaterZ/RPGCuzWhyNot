@@ -6,5 +6,5 @@
 			Male,
 			Female
 		}
-    }
+	}
 }

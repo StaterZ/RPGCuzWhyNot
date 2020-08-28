@@ -18,9 +18,9 @@ namespace RPGCuzWhyNot {
 				"The smoke of a little village can be seen in the distance."
 			);
 			village.AddItem(new Item(
-				                "Rusty Bucket",
-				                "bucket",
-				                "There is a rusty old bucket on the ground."));
+								"Rusty Bucket",
+								"bucket",
+								"There is a rusty old bucket on the ground."));
 
 			Location dragonNest = new Location(
 				"nest",
