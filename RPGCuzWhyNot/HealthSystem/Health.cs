@@ -32,36 +32,42 @@ namespace StaterZ.Core.HealthSystem {
 
         public Health(float maxHealth, float currentHealth) {
 	        this.maxHealth = maxHealth;
-	        this.CurrentHealth = currentHealth;
+	        CurrentHealth = currentHealth;
         }
 
-        public void SetHealth(float value, HealthChangeInfo info) {
-			float delta = value - CurrentHealth;
+        public HealthChangeInfo SetHealth(float value, IInflictor inflictor) {
+			float attemptedDelta = value - CurrentHealth;
 			value = ExtraMath.Clamp(value, 0, maxHealth);
+			float delta = value - CurrentHealth;
 
-			info.health = this;
-			info.newHealth = value;
-			info.oldHealth = CurrentHealth;
-			info.attemptedDelta = delta;
+			HealthChangeInfo info = new HealthChangeInfo() {
+				health = this,
+				oldHealth = CurrentHealth,
+                newHealth = value,
+				attemptedDelta = attemptedDelta,
+                inflictor = inflictor
+			};
 
 			CurrentHealth = value;
 			OnChange?.Invoke(info);
 			if (delta > 0) {
 				OnHeal?.Invoke(info);
-				if (delta != 0 && IsAtMaxHealth) {
+				if (IsAtMaxHealth) {
 					OnFullRecovery?.Invoke(info);
 				}
 			}
 			if (delta < 0) {
 				OnDamage?.Invoke(info);
-				if (delta != 0 && IsDead) {
+				if (IsDead) {
 					OnDeath?.Invoke(info);
 				}
 			}
-		}
 
-        public void ResoreAllHealth() {
-            SetHealth(maxHealth, new HealthChangeInfo());
+			return info;
+        }
+
+        public void RestoreAllHealth(IInflictor inflictor) {
+            SetHealth(maxHealth, inflictor);
         }
 
         public HealthChangeInfo TakeDamage(float damage, IInflictor inflictor) {
@@ -88,21 +94,8 @@ namespace StaterZ.Core.HealthSystem {
             return info;
         }
 		
-		protected HealthChangeInfo ChangeHealth(float amount, IInflictor inflictor) {
-            HealthChangeInfo info = new HealthChangeInfo {
-                inflictor = inflictor,
-                health = this,
-                newHealth = CurrentHealth,
-                oldHealth = CurrentHealth,
-				attemptedDelta = amount
-            };
-
-            if (info.Success == HealthChangeInfoSuccess.AlignmentConflict || info.Success == HealthChangeInfoSuccess.AlreadyDead) return info;
-
-            SetHealth(CurrentHealth + amount, info);
-	        info.newHealth = CurrentHealth;
-
-            return info;
+		protected HealthChangeInfo ChangeHealth(float damage, IInflictor inflictor) {
+            return SetHealth(CurrentHealth + damage, inflictor);
         }
     }
 }
