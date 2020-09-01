@@ -4,7 +4,7 @@ using StaterZ.Core.HealthSystem;
 
 namespace RPGCuzWhyNot {
 	public class Player : Character {
-		public readonly List<Item> inventory = new List<Item>();
+		public readonly List<IItem> inventory = new List<IItem>();
 		public readonly CommandHandler commandHandler = new CommandHandler();
 
 		public Player() {
@@ -74,7 +74,7 @@ namespace RPGCuzWhyNot {
 				}
 
 				Console.WriteLine("Inventory:");
-				foreach (Item item in inventory) {
+				foreach (IItem item in inventory) {
 					Console.Write("  ");
 					Console.WriteLine(item);
 				}
@@ -85,7 +85,7 @@ namespace RPGCuzWhyNot {
 				}
 
 				Console.WriteLine("You look around and see:");
-				foreach (Item item in location.Items) {
+				foreach (IItem item in location.Items) {
 					Console.Write("  ");
 					Console.WriteLine(item);
 				}
@@ -117,7 +117,7 @@ namespace RPGCuzWhyNot {
 			}
 		}
 
-		private bool TryEquip(Item item) {
+		private bool TryEquip(IItem item) {
 			throw new NotImplementedException();
 		}
 
@@ -131,7 +131,7 @@ namespace RPGCuzWhyNot {
 		}
 
 		private bool TryPickup(string callName) {
-			Item item = location.GetItemByCallName(callName);
+			IItem item = location.GetItemByCallName(callName);
 
 			if (item != null) {
 				location.RemoveItem(item);

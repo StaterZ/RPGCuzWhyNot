@@ -10,10 +10,10 @@ namespace RPGCuzWhyNot {
 		public readonly string description;
 		public readonly string pathDescription;
 		public readonly ReadOnlyCollection<Location> Paths;
-		public readonly ReadOnlyCollection<Item> Items;
+		public readonly ReadOnlyCollection<IItem> Items;
 
 		private readonly List<Location> paths = new List<Location>();
-		private readonly List<Item> items = new List<Item>();
+		private readonly List<IItem> items = new List<IItem>();
 
 		public Location(string callName, string name, string description, string pathDescription) {
 			this.callName = callName;
@@ -47,19 +47,19 @@ namespace RPGCuzWhyNot {
 			return false;
 		}
 
-		public void AddItem(Item item) {
+		public void AddItem(IItem item) {
 			if (items.Contains(item))
 				throw new InvalidOperationException("Item already added");
 
 			items.Add(item);
 		}
 
-		public bool RemoveItem(Item item) {
+		public bool RemoveItem(IItem item) {
 			return items.Remove(item);
 		}
 
-		public Item GetItemByCallName(string itemCallName) {
-			return items.FirstOrDefault(item => item.callName == itemCallName);
+		public IItem GetItemByCallName(string itemCallName) {
+			return items.FirstOrDefault(item => item.Callname == itemCallName);
 		}
 
 		public void PrintEnterInformation() {
@@ -75,8 +75,8 @@ namespace RPGCuzWhyNot {
 				Console.WriteLine(location.pathDescription + " [" + location.callName + "]");
 			}
 
-			foreach (Item item in items) {
-				Console.WriteLine($"{item.description} [{item.callName}]");
+			foreach (IItem item in items) {
+				Console.WriteLine($"{item.DescriptionOnGround} [{item.Callname}]");
 			}
 		}
 

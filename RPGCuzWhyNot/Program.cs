@@ -14,9 +14,10 @@ namespace RPGCuzWhyNot {
 				"A small village stands before you.",
 				"The smoke of a little village can be seen in the distance."
 			);
-			village.AddItem(new Item(
+			village.AddItem(new SimpleItem(
 				"Rusty Bucket",
 				"bucket",
+				"A rusty old bucket",
 				"There is a rusty old bucket on the ground."
 			));
 
