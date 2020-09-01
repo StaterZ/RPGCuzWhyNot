@@ -5,6 +5,7 @@ using StaterZ.Core.HealthSystem;
 namespace RPGCuzWhyNot {
 	public class Player : Character {
 		public readonly List<IItem> inventory = new List<IItem>();
+		public readonly List<IWearable> wearing = new List<IWearable>();
 		public readonly CommandHandler commandHandler = new CommandHandler();
 
 		public Player() {
@@ -41,22 +42,62 @@ namespace RPGCuzWhyNot {
 					Console.WriteLine(loc);
 				}
 			}));
-			commandHandler.AddCommand(new Command(new[] { "equip" }, "Equip an item", args => {
+			commandHandler.AddCommand(new Command(new[] { "wear", "equip" }, "Wear something", args => {
 				if (args.Length < 2) {
 					Console.WriteLine("No item specified");
+					return;
 				}
 
-				throw new NotImplementedException();
+				string callname = args[1];
+				for (int i = 0; i < inventory.Count; ++i) {
+					IItem item = inventory[i];
+					if (item.Callname != callname) continue;
+					if (item is IWearable w) {
+						if (Wear(w)) {
+							inventory.RemoveAt(i);
+							Console.WriteLine($"You take {w.Name} from your inventory and put it on");
+						}
+						return;
+					} else {
+						Console.WriteLine($"{item.Name} is not wearable");
+						return;
+					}
+				}
+				Console.WriteLine("Item not found, does it exist?");
+			}));
+			commandHandler.AddCommand(new Command(new[] { "unwear" }, "Remove something worn", args => {
+				if (args.Length < 2) {
+					Console.WriteLine("No item specified");
+					return;
+				}
 
-				//Todo: use args[1] to get the item
-				//Item item = null;
-				//if (item != null) {
-				//	if (TryEquip(item)) {
-				//		Console.WriteLine("success");
-				//	}
-				//} else {
-				//	Console.WriteLine("Item not found, does it exist?");
-				//}
+				string callname = args[1];
+				foreach (IWearable piece in wearing)
+					if (piece.Callname == callname) {
+						wearing.Remove(piece);
+						if (piece is IItem item) {
+							AddToInventory(item);
+							Console.WriteLine($"You remove {piece.Name} and put it in your inventory");
+						} else {
+							Console.WriteLine($"You remove {piece.Name} and throw it away");
+						}
+						return;
+					}
+				Console.WriteLine("You're wearing nothing such");
+			}));
+			commandHandler.AddCommand(new Command(new[] { "wearing", "armor" }, "List what is currently being worn", args => {
+				if (args.Length > 1) {
+					Console.WriteLine($"'{args[0]}' does not take any arguments");
+					return;
+				}
+				if (wearing.Count == 0) {
+					Console.WriteLine("Currently not wearing anything");
+					return;
+				}
+				Console.WriteLine("Currently wearing:");
+				foreach (IWearable w in wearing) {
+					Console.WriteLine($"  {w.ListingWithStats()}");
+				}
 			}));
 			commandHandler.AddCommand(new Command(new[] { "take", "pickup", "grab" }, "Take an item from the current location", args => {
 				if (args.Length < 2) {
@@ -117,8 +158,29 @@ namespace RPGCuzWhyNot {
 			}
 		}
 
-		private bool TryEquip(IItem item) {
-			throw new NotImplementedException();
+		public void AddToInventory(IItem item) {
+			inventory.Add(item);
+		}
+
+		private bool Wear(IWearable wearable, bool silent = false) {
+			bool failed = false;
+			foreach (IWearable piece in wearing) {
+				if (!wearable.IsCompatibleWith(piece)) {
+					if (!silent) {
+						if (!failed)
+							Console.WriteLine($"Cannot wear {wearable.Name} together with:");
+						string layers = (wearable.CoversLayers & piece.CoversLayers).FancyBitFlagEnum(out int count);
+						string layerPlural = count != 1 ? "s" : "";
+						string parts = (wearable.CoversParts & piece.CoversParts).FancyBitFlagEnum();
+						Console.WriteLine($"  {piece.ListingName()}, they both cover the {layers} layer{layerPlural} on the {parts}");
+					}
+					failed = true;
+				}
+			}
+			if (failed)
+				return false;
+			wearing.Add(wearable);
+			return true;
 		}
 
 		private bool TryGoto(Location newLocation) {
