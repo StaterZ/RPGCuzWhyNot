@@ -18,7 +18,7 @@ namespace RPGCuzWhyNot {
 			};
 
 			//init commands
-			commandHandler.commands.Add(new Command(new[] { "go", "goto", "enter" }, "Go to another location", args => {
+			commandHandler.AddCommand(new Command(new[] { "go", "goto", "enter" }, "Go to another location", args => {
 				if (args.Length < 2) {
 					Console.WriteLine("Where to?");
 				}
@@ -30,18 +30,18 @@ namespace RPGCuzWhyNot {
 					Console.WriteLine("I don't know where that is.");
 				}
 			}));
-			commandHandler.commands.Add(new Command(new[] { "where" }, "Show information about the current location", args => {
+			commandHandler.AddCommand(new Command(new[] { "where" }, "Show information about the current location", args => {
 				Console.WriteLine($"You are in: {location}");
 				location.PrintInformation();
 			}));
-			commandHandler.commands.Add(new Command(new[] { "ls", "list", "locations" }, "List all locations accessible from the current one", args => {
+			commandHandler.AddCommand(new Command(new[] { "ls", "list", "locations" }, "List all locations accessible from the current one", args => {
 				Console.WriteLine("Locations:");
 				foreach (Location loc in location.Paths) {
 					Console.Write("  ");
 					Console.WriteLine(loc);
 				}
 			}));
-			commandHandler.commands.Add(new Command(new[] { "equip" }, "Equip an item", args => {
+			commandHandler.AddCommand(new Command(new[] { "equip" }, "Equip an item", args => {
 				if (args.Length < 2) {
 					Console.WriteLine("No item specified");
 				}
@@ -58,7 +58,7 @@ namespace RPGCuzWhyNot {
 				//	Console.WriteLine("Item not found, does it exist?");
 				//}
 			}));
-			commandHandler.commands.Add(new Command(new[] { "take", "pickup", "grab" }, "Take an item from the current location", args => {
+			commandHandler.AddCommand(new Command(new[] { "take", "pickup", "grab" }, "Take an item from the current location", args => {
 				if (args.Length < 2) {
 					Console.WriteLine("Take what?");
 					return;
@@ -68,7 +68,7 @@ namespace RPGCuzWhyNot {
 					Console.WriteLine("Can't see that here.");
 				}
 			}));
-			commandHandler.commands.Add(new Command(new[] { "inventory" }, "List the items in the inventory", args => {
+			commandHandler.AddCommand(new Command(new[] { "inventory" }, "List the items in the inventory", args => {
 				if (inventory.Count <= 0) {
 					Console.WriteLine("Your inventory is empty.");
 				}
@@ -79,7 +79,7 @@ namespace RPGCuzWhyNot {
 					Console.WriteLine(item);
 				}
 			}));
-			commandHandler.commands.Add(new Command(new[] { "items" }, "List the items in the inventory", args => {
+			commandHandler.AddCommand(new Command(new[] { "items" }, "List the items nearby", args => {
 				if (location.Items.Count == 0) {
 					Console.WriteLine("You look around but can't find anything of use.");
 				}
@@ -90,7 +90,7 @@ namespace RPGCuzWhyNot {
 					Console.WriteLine(item);
 				}
 			}));
-			commandHandler.commands.Add(new Command(new[] { "help", "commands" }, "Show this list", args => {
+			commandHandler.AddCommand(new Command(new[] { "help", "commands" }, "Show this list", args => {
 				Console.WriteLine("Commands:");
 				string[] formattedCommandCallNames = new string[commandHandler.commands.Count];
 				int longestFormattedCommandCallName = 0;
