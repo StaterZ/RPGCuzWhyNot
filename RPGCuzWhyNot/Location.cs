@@ -4,9 +4,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace RPGCuzWhyNot {
-	public class Location {
-		public readonly string name;
-		public readonly string callName;
+	public class Location : IThing {
+		public string Name { get; }
+		public string Callname { get; }
 		public readonly string description;
 		public readonly string pathDescription;
 		public readonly ReadOnlyCollection<Location> Paths;
@@ -16,8 +16,8 @@ namespace RPGCuzWhyNot {
 		private readonly List<IItem> items = new List<IItem>();
 
 		public Location(string callName, string name, string description, string pathDescription) {
-			this.callName = callName;
-			this.name = name;
+			Callname = callName;
+			Name = name;
 			this.description = description;
 			this.pathDescription = pathDescription;
 
@@ -37,8 +37,8 @@ namespace RPGCuzWhyNot {
 		}
 
 		public bool GetConnectedLocationByCallName(string callName, out Location connectedLocation) {
-			foreach(Location location in paths) {
-				if (location.callName == callName) {
+			foreach (Location location in paths) {
+				if (location.Callname == callName) {
 					connectedLocation = location;
 					return true;
 				}
@@ -63,7 +63,7 @@ namespace RPGCuzWhyNot {
 		}
 
 		public void PrintEnterInformation() {
-			string title = $"----- [ {name} ] -----";
+			string title = $"----- [ {Name} ] -----";
 			Console.WriteLine(title);
 			PrintInformation();
 			Console.WriteLine(new string('-', title.Length));
@@ -72,7 +72,7 @@ namespace RPGCuzWhyNot {
 		public void PrintInformation() {
 			Console.WriteLine(description);
 			foreach (Location location in paths) {
-				Console.WriteLine(location.pathDescription + " [" + location.callName + "]");
+				Console.WriteLine(location.pathDescription + " [" + location.Callname + "]");
 			}
 
 			foreach (IItem item in items) {
@@ -81,7 +81,7 @@ namespace RPGCuzWhyNot {
 		}
 
 		public override string ToString() {
-			return $"{name} [{callName}]";
+			return this.ListingName();
 		}
 	}
 }
