@@ -12,11 +12,11 @@ namespace RPGCuzWhyNot.Inventory {
 
 				if (!silent) {
 					if (!failed)
-						Console.WriteLine($"Cannot wear {wearable.Name} together with:");
+						ConsoleUtils.SlowWriteLine($"Cannot wear {wearable.Name} together with:");
 					string layers = (wearable.CoverdLayers & piece.CoverdLayers).FancyBitFlagEnum(out int count);
 					string layerPlural = count != 1 ? "s" : "";
 					string parts = (wearable.CoverdParts & piece.CoverdParts).FancyBitFlagEnum();
-					Console.WriteLine($"  {WearableExt.ListingName(piece)}, they both cover the {layers} layer{layerPlural} on the {parts}");
+					ConsoleUtils.SlowWriteLine($"  {WearableExt.ListingName(piece)}, they both cover the {layers} layer{layerPlural} on the {parts}");
 				}
 				failed = true;
 			}

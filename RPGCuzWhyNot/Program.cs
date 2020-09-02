@@ -9,6 +9,8 @@ namespace RPGCuzWhyNot {
 		private static readonly char[] commandArgumentSeparators = { ' ' };
 
 		private static void Main() {
+			ConsoleUtils.colorScopes.Add(new ConsoleUtils.ColorScope('[', ']', true, true, ConsoleColor.Magenta));
+
 			//construct world
 			Location village = new Location(
 				"village",

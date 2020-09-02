@@ -61,19 +61,24 @@ namespace RPGCuzWhyNot {
 
 		public void PrintEnterInformation() {
 			string title = $"----- [ {Name} ] -----";
-			Console.WriteLine(title);
+
+			using (new FGColorScope(ConsoleColor.Yellow)) {
+				ConsoleUtils.SlowWriteLine(title);
+			}
 			PrintInformation();
-			Console.WriteLine(new string('-', title.Length));
+			using (new FGColorScope(ConsoleColor.Yellow)) {
+				ConsoleUtils.SlowWriteLine(new string('-', title.Length));
+			}
 		}
 
 		public void PrintInformation() {
-			Console.WriteLine(description);
+			ConsoleUtils.SlowWriteLine(description);
 			foreach (Location location in paths) {
-				Console.WriteLine(location.pathDescription + " [" + location.CallName + "]");
+				ConsoleUtils.SlowWriteLine($"{location.pathDescription} [{location.CallName}]");
 			}
 
 			foreach (IItem item in items) {
-				Console.WriteLine($"{item.DescriptionOnGround} [{item.CallName}]");
+				ConsoleUtils.SlowWriteLine($"{item.DescriptionOnGround} [{item.CallName}]");
 			}
 		}
 

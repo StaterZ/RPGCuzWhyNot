@@ -15,7 +15,7 @@ namespace RPGCuzWhyNot {
 		}
 
 		public void Say(string message) {
-			Console.WriteLine($"{Name}: {message}");
+			ConsoleUtils.SlowWriteLine($"{Name}: {message}");
 		}
 	}
 }
