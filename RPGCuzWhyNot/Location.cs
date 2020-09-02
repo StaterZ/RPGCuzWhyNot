@@ -26,10 +26,6 @@ namespace RPGCuzWhyNot {
 			Paths = paths.AsReadOnly();
 		}
 
-		public bool HasPathTo(Location location) {
-			return paths.Contains(location);
-		}
-
 		public void AddPathTo(Location location) {
 			if (paths.Contains(location)) throw new InvalidOperationException("Locations are already connected");
 
