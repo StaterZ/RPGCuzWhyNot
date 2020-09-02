@@ -53,23 +53,10 @@ namespace RPGCuzWhyNot {
 				}
 
 				string callname = args[1];
-				foreach (IItem item in Inventory) {
-					if (item.Callname != callname) continue;
-					if (item is IWearable w) {
-						if (Wearing.MoveItem(w)) {
-							uint covers = (uint)w.CoversParts;
-							string target = "";
-							if ((w.CoversParts & BodyParts.Chest) == 0)
-								target = " your " + ((BodyParts)(covers & ~(covers - 1))).ToString().ToLower();
-							Console.WriteLine($"You take {w.Name} from your inventory and put it on{target}.");
-						}
-						return;
-					} else {
-						Console.WriteLine($"{item.Name} is not wearable");
-						return;
-					}
-				}
-				Console.WriteLine("Item not found, does it exist?");
+				if (Inventory.ContainsCallname(callname, out IItem item) || location.items.ContainsCallname(callname, out item))
+					Wear(item);
+				else
+					Console.WriteLine("Item not found, does it exist?");
 			}));
 			commandHandler.AddCommand(new Command(new[] { "unwear" }, "Remove something worn", args => {
 				if (args.Length < 2) {
@@ -77,28 +64,18 @@ namespace RPGCuzWhyNot {
 					return;
 				}
 
-				string callname = args[1];
-				foreach (IWearable piece in Wearing)
-					if (piece.Callname == callname) {
-						Inventory.MoveItem(piece);
-						Console.WriteLine($"You remove {piece.Name} and put it in your inventory");
-						return;
-					}
-				Console.WriteLine("You're wearing nothing such");
+				if (Wearing.ContainsCallname(args[1], out IWearable item)) {
+					if (Inventory.MoveItem(item))
+						Console.WriteLine($"You remove {item.Name} and put it in your inventory");
+				} else
+					Console.WriteLine("You're wearing nothing such");
 			}));
 			commandHandler.AddCommand(new Command(new[] { "wearing", "armor" }, "List what is currently being worn", args => {
 				if (args.Length > 1) {
 					Console.WriteLine($"'{args[0]}' does not take any arguments");
 					return;
 				}
-				if (Wearing.Count == 0) {
-					Console.WriteLine("You are not wearing anything");
-					return;
-				}
-				Console.WriteLine("You are currently wearing:");
-				foreach (IWearable w in Wearing) {
-					Console.WriteLine($"  {w.ListingWithStats()}");
-				}
+				ListWearing();
 			}));
 			commandHandler.AddCommand(new Command(new[] { "wield" }, "Wield something", args => {
 				if (args.Length < 2) {
@@ -107,20 +84,10 @@ namespace RPGCuzWhyNot {
 				}
 
 				string callname = args[1];
-				foreach (IItem item in Inventory) {
-					if (item.Callname != callname) continue;
-					if (item is IWieldable w) {
-						if (Wielding.MoveItem(w)) {
-							string handPlural = w.HandsRequired != 1 ? "s" : "";
-							Console.WriteLine($"You take {w.Name} from your inventory and wield it in your hand{handPlural}.");
-						}
-						return;
-					} else {
-						Console.WriteLine($"{item.Name} is not wieldable.");
-						return;
-					}
-				}
-				Console.WriteLine("Item not found, does it exist?");
+				if (Inventory.ContainsCallname(callname, out IItem item) || location.items.ContainsCallname(callname, out item))
+					Wield(item);
+				else
+					Console.WriteLine("Item not found, does it exist?");
 			}));
 			commandHandler.AddCommand(new Command(new[] { "unwield" }, "Remove something wielded", args => {
 				if (args.Length < 2) {
@@ -129,27 +96,66 @@ namespace RPGCuzWhyNot {
 				}
 
 				string callname = args[1];
-				foreach (IWieldable item in Wielding)
-					if (item.Callname == callname) {
-						Inventory.MoveItem(item);
+				if (Wielding.ContainsCallname(callname, out var item))
+					if (Inventory.MoveItem(item))
 						Console.WriteLine($"You unwield {item.Name} and put it in your inventory.");
-						return;
-					}
-				Console.WriteLine("You're wielding nothing such.");
+					else
+						Console.WriteLine($"Couldn't unwield {item.Name}.");
+				else
+					Console.WriteLine("You're wielding nothing such.");
 			}));
 			commandHandler.AddCommand(new Command(new[] { "wielding" }, "List what is currently being wielded", args => {
 				if (args.Length > 1) {
 					Console.WriteLine($"'{args[0]}' does not take any arguments");
 					return;
 				}
-				if (Wielding.Count == 0) {
-					Console.WriteLine("You are unarmed.");
+				ListWielding();
+			}));
+			commandHandler.AddCommand(new Command(new[] { "equip" }, "Equip something, either by wearing it, or wielding it", args => {
+				if (args.Length < 2) {
+					Console.WriteLine("No item specified");
 					return;
 				}
-				Console.WriteLine("You are currently wielding:");
-				foreach (IWieldable w in Wielding) {
-					Console.WriteLine($"  {w.ListingWithStats()}");
+
+				string callname = args[1];
+				if (Inventory.ContainsCallname(callname, out IItem item) || location.items.ContainsCallname(callname, out item))
+					if (item is IWearable)
+						if (item is IWieldable)
+							Console.WriteLine($"That is ambiguous, as {item.Name} is be both wielded and worn.");
+						else
+							Wear(item);
+					else if (item is IWieldable)
+						Wield(item);
+					else
+						Console.WriteLine($"{item.Name} is neither wieldable, nor wearable.");
+				else
+					Console.WriteLine("Item not found, does it exist?");
+			}));
+			commandHandler.AddCommand(new Command(new[] { "unequip" }, "Remove something worn or wielded", args => {
+				if (args.Length < 2) {
+					Console.WriteLine("No item specified");
+					return;
 				}
+
+				string callname = args[1];
+				bool wielding = ((IInventory)Wielding).ContainsCallname(callname, out IItem item);
+				string action = wielding ? "unwield" : "remove";
+				if (wielding || ((IInventory)Wearing).ContainsCallname(callname, out item))
+					if (Inventory.MoveItem(item))
+						Console.WriteLine($"You {action} {item.Name} and put it in your inventory.");
+					else
+						Console.WriteLine($"Couldn't {action} {item.Name}.");
+				else
+					Console.WriteLine("You have nothing such equiped.");
+			}));
+			commandHandler.AddCommand(new Command(new[] { "equipped" }, "List what is currently worn and wielded", args => {
+				if (args.Length > 1) {
+					Console.WriteLine($"'{args[0]}' does not take any arguments");
+					return;
+				}
+				ListWielding();
+				Console.WriteLine();
+				ListWearing();
 			}));
 			commandHandler.AddCommand(new Command(new[] { "take", "pickup", "grab" }, "Take an item from the current location", args => {
 				if (args.Length < 2) {
@@ -157,9 +163,13 @@ namespace RPGCuzWhyNot {
 					return;
 				}
 
-				if (!TryPickup(args[1])) {
+				if (location.items.ContainsCallname(args[1], out IItem item))
+					if (Inventory.MoveItem(item))
+						Console.WriteLine($"You picked up {item.Name} and put it in your inventory.");
+					else
+						Console.WriteLine($"Couldn't pick up {item.Name}.");
+				else
 					Console.WriteLine("Can't see that here.");
-				}
 			}));
 			commandHandler.AddCommand(new Command(new[] { "drop" }, "Drop an item on the current location", args => {
 				if (args.Length < 2) {
@@ -168,14 +178,15 @@ namespace RPGCuzWhyNot {
 				}
 
 				string callname = args[1];
-				foreach (IItem item in Inventory) {
-					if (item.Callname == callname) {
-						location.items.MoveItem(item);
+				if (Inventory.ContainsCallname(callname, out IItem item)
+				|| ((IInventory)Wielding).ContainsCallname(callname, out item)
+				|| ((IInventory)Wearing).ContainsCallname(callname, out item))
+					if (location.items.MoveItem(item))
 						Console.WriteLine($"You dropped {item.Name} in {location.Name}");
-						return;
-					}
-				}
-				Console.WriteLine("I don't know what that is.");
+					else
+						Console.WriteLine($"Couldn't drop {item.Name}.");
+				else
+					Console.WriteLine("I don't know what that is.");
 			}));
 			commandHandler.AddCommand(new Command(new[] { "inventory" }, "List the items in your inventory", args => {
 				if (Inventory.Count <= 0) {
@@ -228,16 +239,62 @@ namespace RPGCuzWhyNot {
 			}
 		}
 
-		private bool TryPickup(string callName) {
-			IItem item = location.GetItemByCallName(callName);
+		private string ItemSource(IItem item) {
+			if (item.ContainedInventory == Inventory)
+				return " from your inventory";
+			else if (item.ContainedInventory == location.items)
+				return " from the ground";
+			else
+				return "";
+		}
 
-			if (item != null) {
-				Inventory.MoveItem(item);
-				Console.WriteLine($"You picked up: {item}.");
-				return true;
+		private void Wear(IItem item) {
+			if (item is IWearable w) {
+				if (Wearing.MoveItem(w)) {
+					uint covers = (uint)w.CoversParts;
+					string target = "";
+					if ((w.CoversParts & BodyParts.Chest) == 0)
+						target = " your " + ((BodyParts)(covers & ~(covers - 1))).ToString().ToLower();
+					Console.WriteLine($"You take {w.Name}{ItemSource(w)} and put it on{target}.");
+				}
+				return;
+			} else {
+				Console.WriteLine($"{item.Name} can not be worn.");
+				return;
 			}
+		}
 
-			return false;
+		private void Wield(IItem item) {
+			if (item is IWieldable w) {
+				if (Wielding.MoveItem(w)) {
+					string handPlural = w.HandsRequired != 1 ? "s" : "";
+					Console.WriteLine($"You take {w.Name}{ItemSource(w)} and wield it in your hand{handPlural}.");
+				}
+			} else {
+				Console.WriteLine($"{item.Name} can not be wielded.");
+			}
+		}
+
+		private void ListWearing() {
+			if (Wearing.Count == 0) {
+				Console.WriteLine("You are not wearing anything");
+				return;
+			}
+			Console.WriteLine("You are currently wearing:");
+			foreach (IWearable w in Wearing) {
+				Console.WriteLine($"  {w.ListingWithStats()}");
+			}
+		}
+
+		private void ListWielding() {
+			if (Wielding.Count == 0) {
+				Console.WriteLine("You are unarmed.");
+				return;
+			}
+			Console.WriteLine("You are currently wielding:");
+			foreach (IWieldable w in Wielding) {
+				Console.WriteLine($"  {w.ListingWithStats()}");
+			}
 		}
 	}
 }

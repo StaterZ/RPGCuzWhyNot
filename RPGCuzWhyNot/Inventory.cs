@@ -6,6 +6,7 @@ namespace RPGCuzWhyNot {
 	public interface IInventory {
 		IHasInventory Owner { get; }
 		bool RemoveItem(IItem item);
+		bool ContainsCallname(string callnamem, out IItem item);
 	}
 
 	public class ItemInventory : IInventory, IList<IItem> {
@@ -16,10 +17,24 @@ namespace RPGCuzWhyNot {
 		public ItemInventory(IHaveItems owner) => Owner = owner;
 		IHasInventory IInventory.Owner => Owner;
 
-		public void MoveItem(IItem item) {
-			item.ContainedInventory?.RemoveItem(item);
+		public bool MoveItem(IItem item) {
+			IInventory inv = item.ContainedInventory;
+			if (inv != null && !inv.RemoveItem(item))
+				return false;
 			items.Add(item);
 			item.ContainedInventory = this;
+			return true;
+		}
+
+		public bool ContainsCallname(string callname, out IItem item) {
+			foreach (IItem i in items) {
+				if (i.Callname == callname) {
+					item = i;
+					return true;
+				}
+			}
+			item = default;
+			return false;
 		}
 
 		bool IInventory.RemoveItem(IItem item) => Remove(item);
@@ -53,6 +68,28 @@ namespace RPGCuzWhyNot {
 				item.ContainedInventory = this;
 				return true;
 			}
+			return false;
+		}
+
+		public bool ContainsCallname(string callname, out I item) {
+			foreach (I i in items) {
+				if (i.Callname == callname) {
+					item = i;
+					return true;
+				}
+			}
+			item = default;
+			return false;
+		}
+
+		bool IInventory.ContainsCallname(string callname, out IItem item) {
+			foreach (IItem i in items) {
+				if (i.Callname == callname) {
+					item = i;
+					return true;
+				}
+			}
+			item = default;
 			return false;
 		}
 

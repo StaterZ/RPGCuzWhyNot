@@ -72,6 +72,7 @@
     <Compile Include="Races\Humanoids\Humanoid.cs" />
     <Compile Include="Races\Race.cs" />
     <Compile Include="WearableItem.cs" />
+    <Compile Include="WieldableItem.cs" />
     <Compile Include="WieldableWearableItem.cs" />
   </ItemGroup>
   <ItemGroup>
