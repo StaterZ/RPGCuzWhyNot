@@ -1,4 +1,4 @@
-﻿namespace RPGCuzWhyNot {
+﻿namespace RPGCuzWhyNot.Races.Humanoids {
 	public abstract class Humanoid : Race {
 		public Gender gender;
 
