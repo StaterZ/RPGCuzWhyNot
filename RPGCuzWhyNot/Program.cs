@@ -6,7 +6,7 @@ namespace RPGCuzWhyNot {
 
 		private static readonly char[] commandArgumentSeparators = new char[] { ' ' };
 
-		private static void Main(string[] args) {
+		private static void Main() {
 			//construct world
 			Location village = new Location(
 				"village",

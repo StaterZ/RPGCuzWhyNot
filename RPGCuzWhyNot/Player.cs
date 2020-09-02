@@ -183,15 +183,6 @@ namespace RPGCuzWhyNot {
 			return true;
 		}
 
-		private bool TryGoto(Location newLocation) {
-			if (location.HasPathTo(newLocation)) {
-				location = newLocation;
-				return true;
-			}
-
-			return false;
-		}
-
 		private bool TryPickup(string callName) {
 			IItem item = location.GetItemByCallName(callName);
 
