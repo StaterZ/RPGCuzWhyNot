@@ -5,8 +5,8 @@ namespace RPGCuzWhyNot {
 		public int HandsRequired { get; set; } = 2;
 		public int MeleeDamage { get; set; } = 2;
 
-		public WieldableWearableItem(string name, string callname, string descInv, string descGround)
-			: base(name, callname, descInv, descGround) { }
+		public WieldableWearableItem(string name, string callName, string descInv, string descGround)
+			: base(name, callName, descInv, descGround) { }
 	}
 }
 

@@ -4,19 +4,19 @@ using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace RPGCuzWhyNot {
-	public class Location : IThing, IHaveItems {
+	public class Location : IThing, IHasItemInventory {
 		public string Name { get; }
-		public string Callname { get; }
+		public string CallName { get; }
 		public readonly string description;
 		public readonly string pathDescription;
 		public readonly ReadOnlyCollection<Location> Paths;
 		public readonly ItemInventory items;
-		ItemInventory IHaveItems.Inventory => items;
+		ItemInventory IHasItemInventory.Inventory => items;
 
 		private readonly List<Location> paths = new List<Location>();
 
 		public Location(string callName, string name, string description, string pathDescription) {
-			Callname = callName;
+			CallName = callName;
 			Name = name;
 			this.description = description;
 			this.pathDescription = pathDescription;
@@ -37,7 +37,7 @@ namespace RPGCuzWhyNot {
 
 		public bool GetConnectedLocationByCallName(string callName, out Location connectedLocation) {
 			foreach (Location location in paths) {
-				if (location.Callname == callName) {
+				if (location.CallName == callName) {
 					connectedLocation = location;
 					return true;
 				}
@@ -58,7 +58,7 @@ namespace RPGCuzWhyNot {
 		}
 
 		public IItem GetItemByCallName(string itemCallName) {
-			return items.FirstOrDefault(item => item.Callname == itemCallName);
+			return items.FirstOrDefault(item => item.CallName == itemCallName);
 		}
 
 		public void PrintEnterInformation() {
@@ -71,11 +71,11 @@ namespace RPGCuzWhyNot {
 		public void PrintInformation() {
 			Console.WriteLine(description);
 			foreach (Location location in paths) {
-				Console.WriteLine(location.pathDescription + " [" + location.Callname + "]");
+				Console.WriteLine(location.pathDescription + " [" + location.CallName + "]");
 			}
 
 			foreach (IItem item in items) {
-				Console.WriteLine($"{item.DescriptionOnGround} [{item.Callname}]");
+				Console.WriteLine($"{item.DescriptionOnGround} [{item.CallName}]");
 			}
 		}
 

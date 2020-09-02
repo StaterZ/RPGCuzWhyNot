@@ -4,7 +4,7 @@ namespace RPGCuzWhyNot {
 	public interface IHasInventory : IThing {
 	}
 
-	public interface IHaveItems : IHasInventory {
+	public interface IHasItemInventory : IHasInventory {
 		ItemInventory Inventory { get; }
 	}
 

@@ -3,11 +3,11 @@
 namespace RPGCuzWhyNot {
 	public class WearableItem : SimpleItem, IWearable {
 		public int Defense { get; set; } = 1;
-		public BodyParts CoversParts { get; set; } = BodyParts.Head;
-		public WearableLayers CoversLayers { get; set; } = WearableLayers.Outer;
+		public BodyParts CoverdParts { get; set; } = BodyParts.Head;
+		public WearableLayers CoverdLayers { get; set; } = WearableLayers.Outer;
 
-		public WearableItem(string name, string callname, string descInInv, string descOnGround = default)
-			: base(name, callname, descInInv, descOnGround) { }
+		public WearableItem(string name, string callName, string descInInv, string descOnGround = default)
+			: base(name, callName, descInInv, descOnGround) { }
 	}
 }
 
