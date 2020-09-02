@@ -1,4 +1,5 @@
 ﻿using System;
+using RPGCuzWhyNot.Races;
 using StaterZ.Core.HealthSystem;
 
 namespace RPGCuzWhyNot {
@@ -8,7 +9,7 @@ namespace RPGCuzWhyNot {
 		public Race race;
 		public Location location;
 		public Health health;
-		public Alignment alignment { get; set; }
+		public Alignment Alignment { get; set; }
 
 		public virtual void Attack(Character target) {
 		}

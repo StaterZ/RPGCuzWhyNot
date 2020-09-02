@@ -10,7 +10,7 @@ namespace StaterZ.Core.HealthSystem {
 		public HealthChangeInfoSuccess Success {
 	        get {
 		        if (attemptedDelta != Delta) return HealthChangeInfoSuccess.PartialDelivery;
-		        if (inflictor?.alignment != null && health.alignment != null && !inflictor.alignment.CanHarm(health.alignment)) return HealthChangeInfoSuccess.AlignmentConflict; //can you hurt me?
+		        if (inflictor?.Alignment != null && health.alignment != null && !inflictor.Alignment.CanHarm(health.alignment)) return HealthChangeInfoSuccess.AlignmentConflict; //can you hurt me?
 		        if (health.IsDead) return HealthChangeInfoSuccess.AlreadyDead; //is the health component dead?
                 return HealthChangeInfoSuccess.FullDelivery;
 	        }
