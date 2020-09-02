@@ -56,7 +56,11 @@ namespace RPGCuzWhyNot {
 					if (item.Callname != callname) continue;
 					if (item is IWearable w) {
 						if (Wearing.MoveItem(w)) {
-							Console.WriteLine($"You take {w.Name} from your inventory and put it on");
+							uint covers = (uint)w.CoversParts;
+							string target = "";
+							if ((w.CoversParts & BodyParts.Chest) == 0)
+								target = " your " + ((BodyParts)(covers & ~(covers - 1))).ToString().ToLower();
+							Console.WriteLine($"You take {w.Name} from your inventory and put it on{target}.");
 						}
 						return;
 					} else {

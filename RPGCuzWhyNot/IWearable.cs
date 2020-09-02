@@ -53,17 +53,18 @@ namespace RPGCuzWhyNot {
 		}
 	}
 
+	// the order is deliberate, lower values have higher prorities, used when bit-twiddling
 	[Flags]
 	public enum BodyParts {
-		Head = 1 << 0, // hats
-		Face = 1 << 1, // masks
-		Neck = 1 << 2, // necklaces
-		Chest = 1 << 3, // shirts
-		Legs = 1 << 4, // pants
+		Chest = 1 << 0, // shirts
+		Head = 1 << 1, // hats
+		Arms = 1 << 2, // long-sleeved clothing
+		Legs = 1 << 3, // pants
+		Hands = 1 << 4, // gloves
 		Feet = 1 << 5, // shoes
-		Arms = 1 << 6, // long-sleeved clothing
-		Wrists = 1 << 7, // bracelets
-		Hands = 1 << 8, // gloves
+		Face = 1 << 6, // masks
+		Neck = 1 << 7, // necklaces
+		Wrists = 1 << 8, // bracelets
 	}
 
 	[Flags]
