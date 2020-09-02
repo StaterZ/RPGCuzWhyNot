@@ -24,7 +24,10 @@ namespace RPGCuzWhyNot {
 				Console.WriteLine($"{ctx.inflictor} killed you!");
 			};
 
-			//init commands
+			LoadCommands();
+		}
+
+		private void LoadCommands() {
 			commandHandler.AddCommand(new Command(new[] { "go", "goto", "enter" }, "Go to another location", args => {
 				if (args.Length < 2) {
 					Console.WriteLine("Where to?");
@@ -258,8 +261,8 @@ namespace RPGCuzWhyNot {
 			}
 		}
 
-		private void Wear(IItem item) {
-			if (item is IWearable wearable) {
+		private void Wear(IThing thing) {
+			if (thing is IWearable wearable) {
 				if (Wearing.MoveItem(wearable)) {
 					int covers = (int)wearable.CoverdParts;
 					string target = string.Empty;
@@ -270,18 +273,18 @@ namespace RPGCuzWhyNot {
 					Console.WriteLine($"You take {wearable.Name}{ItemSource(wearable)} and put it on{target}.");
 				}
 			} else {
-				Console.WriteLine($"{item.Name} can not be worn.");
+				Console.WriteLine($"{thing.Name} can not be worn.");
 			}
 		}
 
-		private void Wield(IItem item) {
-			if (item is IWieldable wieldable) {
+		private void Wield(IThing thing) {
+			if (thing is IWieldable wieldable) {
 				if (Wielding.MoveItem(wieldable)) {
 					string handPlural = wieldable.HandsRequired != 1 ? "s" : string.Empty;
 					Console.WriteLine($"You take {wieldable.Name}{ItemSource(wieldable)} and wield it in your hand{handPlural}.");
 				}
 			} else {
-				Console.WriteLine($"{item.Name} can not be wielded.");
+				Console.WriteLine($"{thing.Name} can not be wielded.");
 			}
 		}
 
@@ -291,8 +294,8 @@ namespace RPGCuzWhyNot {
 				return;
 			}
 			Console.WriteLine("You are currently wearing:");
-			foreach (IWearable w in Wearing) {
-				Console.WriteLine($"  {w.ListingWithStats()}");
+			foreach (IWearable wearable in Wearing) {
+				Console.WriteLine($"  {wearable.ListingWithStats()}");
 			}
 		}
 
@@ -302,8 +305,8 @@ namespace RPGCuzWhyNot {
 				return;
 			}
 			Console.WriteLine("You are currently wielding:");
-			foreach (IWieldable w in Wielding) {
-				Console.WriteLine($"  {w.ListingWithStats()}");
+			foreach (IWieldable weildable in Wielding) {
+				Console.WriteLine($"  {weildable.ListingWithStats()}");
 			}
 		}
 	}
