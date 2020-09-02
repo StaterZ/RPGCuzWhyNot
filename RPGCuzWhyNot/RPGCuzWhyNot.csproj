@@ -56,18 +56,18 @@
     <Compile Include="HealthSystem\HealthChangeInfoSuccess.cs" />
     <Compile Include="HealthSystem\IArmor.cs" />
     <Compile Include="HealthSystem\IInflictor.cs" />
-    <Compile Include="IHasInventory.cs" />
-    <Compile Include="IItem.cs" />
-    <Compile Include="IInventory.cs" />
-    <Compile Include="InventoryBase.cs" />
-    <Compile Include="ItemInventory.cs" />
+    <Compile Include="Inventory\IHasInventory.cs" />
+    <Compile Include="Inventory\Item\IItem.cs" />
+    <Compile Include="Inventory\IInventory.cs" />
+    <Compile Include="Inventory\InventoryBase.cs" />
+    <Compile Include="Inventory\ItemInventory.cs" />
     <Compile Include="IThing.cs" />
-    <Compile Include="IWearable.cs" />
-    <Compile Include="IWieldable.cs" />
+    <Compile Include="Inventory\Item\IWearable.cs" />
+    <Compile Include="Inventory\Item\IWieldable.cs" />
     <Compile Include="Races\Humanoids\Dwarf.cs" />
     <Compile Include="Races\Humanoids\Human.cs" />
     <Compile Include="Enemies\TheMother.cs" />
-    <Compile Include="SimpleItem.cs" />
+    <Compile Include="Inventory\Item\SimpleItem.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
@@ -75,13 +75,13 @@
     <Compile Include="Races\Humanoids\Humanoid.cs" />
     <Compile Include="Races\Race.cs" />
     <Compile Include="ThingExt.cs" />
-    <Compile Include="WearableItem.cs" />
-    <Compile Include="WearableLayers.cs" />
-    <Compile Include="WearablesInventory.cs" />
-    <Compile Include="WieldableExt.cs" />
-    <Compile Include="WieldableItem.cs" />
-    <Compile Include="WieldablesInventory.cs" />
-    <Compile Include="WieldableWearableItem.cs" />
+    <Compile Include="Inventory\Item\WearableItem.cs" />
+    <Compile Include="Inventory\Item\WearableLayers.cs" />
+    <Compile Include="Inventory\WearablesInventory.cs" />
+    <Compile Include="Inventory\Item\WieldableExt.cs" />
+    <Compile Include="Inventory\Item\WieldableItem.cs" />
+    <Compile Include="Inventory\WieldablesInventory.cs" />
+    <Compile Include="Inventory\Item\WieldableWearableItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

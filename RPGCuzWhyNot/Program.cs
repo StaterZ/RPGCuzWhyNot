@@ -1,10 +1,12 @@
 ﻿using System;
+using RPGCuzWhyNot.Inventory;
+using RPGCuzWhyNot.Races.Humanoids;
 
 namespace RPGCuzWhyNot {
 	public static class Program {
 		public static Player player;
 
-		private static readonly char[] commandArgumentSeparators = new char[] { ' ' };
+		private static readonly char[] commandArgumentSeparators = { ' ' };
 
 		private static void Main() {
 			//construct world

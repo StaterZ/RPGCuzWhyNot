@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using RPGCuzWhyNot.Inventory;
+using RPGCuzWhyNot.Inventory.Item;
 
 namespace RPGCuzWhyNot {
 	public class Location : IThing, IHasItemInventory {

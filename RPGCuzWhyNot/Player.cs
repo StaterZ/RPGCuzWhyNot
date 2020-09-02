@@ -1,4 +1,6 @@
 ﻿using System;
+using RPGCuzWhyNot.Inventory;
+using RPGCuzWhyNot.Inventory.Item;
 using StaterZ.Core.HealthSystem;
 
 namespace RPGCuzWhyNot {
@@ -96,7 +98,7 @@ namespace RPGCuzWhyNot {
 				}
 
 				string callName = args[1];
-				if (Wielding.ContainsCallname(callName, out var item)) {
+				if (Wielding.ContainsCallname(callName, out IWieldable item)) {
 					if (Inventory.MoveItem(item)) {
 						Console.WriteLine($"You unwield {item.Name} and put it in your inventory.");
 					} else {
@@ -119,7 +121,7 @@ namespace RPGCuzWhyNot {
 				if (Inventory.ContainsCallName(callName, out IItem item) || location.items.ContainsCallName(callName, out item)) {
 					if (item is IWearable) {
 						if (item is IWieldable) {
-							Console.WriteLine($"That's ambiguous, as {item.Name} can be both wielded and worn.");
+							Console.WriteLine($"That's ambiguous, as {item.Name} can be wielded and worn.");
 						} else {
 							Wear(item);
 						}
