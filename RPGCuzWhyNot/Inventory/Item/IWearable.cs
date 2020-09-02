@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Text;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text;
 
-namespace RPGCuzWhyNot {
+namespace RPGCuzWhyNot.Inventory.Item {
 	public interface IWearable : IItem {
 		int Defense { get; }
 		// string WornDescription { get; }

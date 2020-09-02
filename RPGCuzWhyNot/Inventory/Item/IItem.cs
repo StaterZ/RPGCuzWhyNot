@@ -1,6 +1,4 @@
-﻿
-
-namespace RPGCuzWhyNot {
+﻿namespace RPGCuzWhyNot.Inventory.Item {
 	public interface IItem : IThing {
 		string DescriptionInInventory { get; }
 		string DescriptionOnGround { get; }

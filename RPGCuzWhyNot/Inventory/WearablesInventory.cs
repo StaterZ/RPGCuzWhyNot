@@ -1,6 +1,7 @@
 ﻿using System;
+using RPGCuzWhyNot.Inventory.Item;
 
-namespace RPGCuzWhyNot {
+namespace RPGCuzWhyNot.Inventory {
 	public class WearablesInventory : InventoryBase<IWearable, ICanWear> {
 		public WearablesInventory(ICanWear owner) : base(owner) { }
 
@@ -15,7 +16,7 @@ namespace RPGCuzWhyNot {
 					string layers = (wearable.CoverdLayers & piece.CoverdLayers).FancyBitFlagEnum(out int count);
 					string layerPlural = count != 1 ? "s" : "";
 					string parts = (wearable.CoverdParts & piece.CoverdParts).FancyBitFlagEnum();
-					Console.WriteLine($"  {piece.ListingName()}, they both cover the {layers} layer{layerPlural} on the {parts}");
+					Console.WriteLine($"  {WearableExt.ListingName(piece)}, they both cover the {layers} layer{layerPlural} on the {parts}");
 				}
 				failed = true;
 			}

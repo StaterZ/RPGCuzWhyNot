@@ -1,6 +1,6 @@
-﻿
+﻿using RPGCuzWhyNot.Inventory.Item;
 
-namespace RPGCuzWhyNot {
+namespace RPGCuzWhyNot.Inventory {
 	public class SimpleItem : IItem {
 		public string Name { get; }
 		public string CallName { get; }

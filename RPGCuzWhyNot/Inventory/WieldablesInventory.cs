@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RPGCuzWhyNot {
+namespace RPGCuzWhyNot.Inventory {
 	public class WieldablesInventory : InventoryBase<IWieldable, ICanWield> {
 		public int HandsAvailable { get; set; }
 

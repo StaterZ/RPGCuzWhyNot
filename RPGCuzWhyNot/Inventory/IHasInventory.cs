@@ -1,6 +1,4 @@
-﻿
-
-namespace RPGCuzWhyNot {
+﻿namespace RPGCuzWhyNot.Inventory {
 	public interface IHasInventory : IThing {
 	}
 

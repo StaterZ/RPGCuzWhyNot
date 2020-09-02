@@ -1,7 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using RPGCuzWhyNot.Inventory.Item;
 
-namespace RPGCuzWhyNot {
+namespace RPGCuzWhyNot.Inventory {
 	public class ItemInventory : IInventory, IList<IItem> {
 		private readonly List<IItem> items = new List<IItem>();
 		public int Count => items.Count;

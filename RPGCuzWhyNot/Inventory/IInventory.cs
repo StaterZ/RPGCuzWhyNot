@@ -1,4 +1,6 @@
-﻿namespace RPGCuzWhyNot {
+﻿using RPGCuzWhyNot.Inventory.Item;
+
+namespace RPGCuzWhyNot.Inventory {
 	public interface IInventory {
 		IHasInventory Owner { get; }
 		bool RemoveItem(IItem item);

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using RPGCuzWhyNot.Inventory.Item;
 
-namespace RPGCuzWhyNot {
+namespace RPGCuzWhyNot.Inventory {
 	public abstract class InventoryBase<I, O> : IInventory, IList<I> where I : IItem where O : IHasInventory {
 		protected List<I> items = new List<I>();
 		public O Owner { get; }
