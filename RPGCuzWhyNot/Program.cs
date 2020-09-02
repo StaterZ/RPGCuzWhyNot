@@ -14,12 +14,12 @@ namespace RPGCuzWhyNot {
 				"A small village stands before you.",
 				"The smoke of a little village can be seen in the distance."
 			);
-			village.AddItem(new SimpleWearableItem(
+			village.AddItem(new WieldableWearableItem(
 				"Rusty Bucket",
 				"bucket",
 				"A rusty old bucket",
 				"There is a rusty old bucket on the ground."
-			));
+			) { MeleeDamage = 3, HandsRequired = 1 });
 
 			Location dragonNest = new Location(
 				"nest",

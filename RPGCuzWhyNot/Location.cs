@@ -50,7 +50,7 @@ namespace RPGCuzWhyNot {
 			if (items.Contains(item))
 				throw new InvalidOperationException("Item already added");
 
-			items.MoveTo(item);
+			items.MoveItem(item);
 		}
 
 		public bool RemoveItem(IItem item) {

@@ -1,16 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using StaterZ.Core.HealthSystem;
 
 namespace RPGCuzWhyNot {
-	public class Player : Character, IHaveItems, ICanWear {
+	public class Player : Character, IHaveItems, ICanWear, ICanWield {
 		public ItemInventory Inventory { get; }
 		public WearablesInventory Wearing { get; }
+		public WieldablesInventory Wielding { get; }
 		public readonly CommandHandler commandHandler = new CommandHandler();
 
 		public Player() {
 			Inventory = new ItemInventory(this);
 			Wearing = new WearablesInventory(this);
+			Wielding = new WieldablesInventory(this, 2);
 
 			//init health
 			health = new Health(100);
@@ -45,7 +46,7 @@ namespace RPGCuzWhyNot {
 					Console.WriteLine(loc);
 				}
 			}));
-			commandHandler.AddCommand(new Command(new[] { "wear", "equip" }, "Wear something", args => {
+			commandHandler.AddCommand(new Command(new[] { "wear" }, "Wear something", args => {
 				if (args.Length < 2) {
 					Console.WriteLine("No item specified");
 					return;
@@ -79,7 +80,7 @@ namespace RPGCuzWhyNot {
 				string callname = args[1];
 				foreach (IWearable piece in Wearing)
 					if (piece.Callname == callname) {
-						Inventory.MoveTo(piece);
+						Inventory.MoveItem(piece);
 						Console.WriteLine($"You remove {piece.Name} and put it in your inventory");
 						return;
 					}
@@ -96,6 +97,57 @@ namespace RPGCuzWhyNot {
 				}
 				Console.WriteLine("You are currently wearing:");
 				foreach (IWearable w in Wearing) {
+					Console.WriteLine($"  {w.ListingWithStats()}");
+				}
+			}));
+			commandHandler.AddCommand(new Command(new[] { "wield" }, "Wield something", args => {
+				if (args.Length < 2) {
+					Console.WriteLine("No item specified");
+					return;
+				}
+
+				string callname = args[1];
+				foreach (IItem item in Inventory) {
+					if (item.Callname != callname) continue;
+					if (item is IWieldable w) {
+						if (Wielding.MoveItem(w)) {
+							string handPlural = w.HandsRequired != 1 ? "s" : "";
+							Console.WriteLine($"You take {w.Name} from your inventory and wield it in your hand{handPlural}.");
+						}
+						return;
+					} else {
+						Console.WriteLine($"{item.Name} is not wieldable.");
+						return;
+					}
+				}
+				Console.WriteLine("Item not found, does it exist?");
+			}));
+			commandHandler.AddCommand(new Command(new[] { "unwield" }, "Remove something wielded", args => {
+				if (args.Length < 2) {
+					Console.WriteLine("No item specified");
+					return;
+				}
+
+				string callname = args[1];
+				foreach (IWieldable item in Wielding)
+					if (item.Callname == callname) {
+						Inventory.MoveItem(item);
+						Console.WriteLine($"You unwield {item.Name} and put it in your inventory.");
+						return;
+					}
+				Console.WriteLine("You're wielding nothing such.");
+			}));
+			commandHandler.AddCommand(new Command(new[] { "wielding" }, "List what is currently being wielded", args => {
+				if (args.Length > 1) {
+					Console.WriteLine($"'{args[0]}' does not take any arguments");
+					return;
+				}
+				if (Wielding.Count == 0) {
+					Console.WriteLine("You are unarmed.");
+					return;
+				}
+				Console.WriteLine("You are currently wielding:");
+				foreach (IWieldable w in Wielding) {
 					Console.WriteLine($"  {w.ListingWithStats()}");
 				}
 			}));
@@ -118,7 +170,7 @@ namespace RPGCuzWhyNot {
 				string callname = args[1];
 				foreach (IItem item in Inventory) {
 					if (item.Callname == callname) {
-						location.items.MoveTo(item);
+						location.items.MoveItem(item);
 						Console.WriteLine($"You dropped {item.Name} in {location.Name}");
 						return;
 					}
@@ -180,7 +232,7 @@ namespace RPGCuzWhyNot {
 			IItem item = location.GetItemByCallName(callName);
 
 			if (item != null) {
-				Inventory.MoveTo(item);
+				Inventory.MoveItem(item);
 				Console.WriteLine($"You picked up: {item}.");
 				return true;
 			}

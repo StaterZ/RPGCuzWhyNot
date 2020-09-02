@@ -16,14 +16,14 @@ namespace RPGCuzWhyNot {
 		public ItemInventory(IHaveItems owner) => Owner = owner;
 		IHasInventory IInventory.Owner => Owner;
 
-		public void MoveTo(IItem item) {
+		public void MoveItem(IItem item) {
 			item.ContainedInventory?.RemoveItem(item);
 			items.Add(item);
 			item.ContainedInventory = this;
 		}
 
 		bool IInventory.RemoveItem(IItem item) => Remove(item);
-		void ICollection<IItem>.Add(IItem item) => MoveTo(item);
+		void ICollection<IItem>.Add(IItem item) => MoveItem(item);
 		bool ICollection<IItem>.IsReadOnly => false;
 		public int IndexOf(IItem item) => ((IList<IItem>)items).IndexOf(item);
 		public void Insert(int index, IItem item) => ((IList<IItem>)items).Insert(index, item);
@@ -36,26 +36,28 @@ namespace RPGCuzWhyNot {
 		IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)items).GetEnumerator();
 	}
 
-	public abstract class Inventory<I, O> : IInventory, IList<I> where I : IItem where O : IHasInventory {
+	public abstract class InventoryBase<I, O> : IInventory, IList<I> where I : IItem where O : IHasInventory {
 		protected List<I> items = new List<I>();
 		public O Owner { get; }
 		IHasInventory IInventory.Owner => Owner;
-		public Inventory(O owner) => Owner = owner;
+		public InventoryBase(O owner) => Owner = owner;
 
-		protected virtual bool Move(I item, bool silent = false) {
-			items.Add(item);
-			return true;
-		}
+		protected abstract bool CheckMove(I item, bool silent);
 
 		public bool MoveItem(I item, bool silent = false) {
-			item.ContainedInventory?.RemoveItem(item);
-			bool res = Move(item, silent);
-			item.ContainedInventory = this;
-			return res;
+			if (CheckMove(item, silent)) {
+				IInventory inv = item.ContainedInventory;
+				if (inv != null && !inv.RemoveItem(item))
+					return false;
+				items.Add(item);
+				item.ContainedInventory = this;
+				return true;
+			}
+			return false;
 		}
 
 		void ICollection<I>.Add(I item) {
-			if (!Move(item, false))
+			if (!MoveItem(item, false))
 				throw new InvalidOperationException();
 		}
 
@@ -79,10 +81,10 @@ namespace RPGCuzWhyNot {
 		IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)items).GetEnumerator();
 	}
 
-	public class WearablesInventory : Inventory<IWearable, ICanWear> {
+	public class WearablesInventory : InventoryBase<IWearable, ICanWear> {
 		public WearablesInventory(ICanWear owner) : base(owner) { }
 
-		protected override bool Move(IWearable wearable, bool silent = false) {
+		protected override bool CheckMove(IWearable wearable, bool silent = false) {
 			bool failed = false;
 			foreach (IWearable piece in items) {
 				if (!wearable.IsCompatibleWith(piece)) {
@@ -97,10 +99,27 @@ namespace RPGCuzWhyNot {
 					failed = true;
 				}
 			}
-			if (failed)
-				return false;
-			items.Add(wearable);
-			return true;
+			return !failed;
+		}
+	}
+
+	public class WieldablesInventory : InventoryBase<IWieldable, ICanWield> {
+		public int HandsAvailable { get; set; }
+
+		public WieldablesInventory(ICanWield owner, int handsAvailable) : base(owner) => HandsAvailable = handsAvailable;
+
+		protected override bool CheckMove(IWieldable item, bool silent) {
+			bool res = GetNumberOfHandsInUse() + item.HandsRequired <= HandsAvailable;
+			if (!res && !silent)
+				Console.WriteLine($"There are too few hands to wield any more things");
+			return res;
+		}
+
+		public int GetNumberOfHandsInUse() {
+			int n = 0;
+			foreach (IWieldable wieldable in items)
+				n += wieldable.HandsRequired;
+			return n;
 		}
 	}
 }

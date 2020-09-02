@@ -12,8 +12,8 @@ namespace RPGCuzWhyNot {
 		WearablesInventory Wearing { get; }
 	}
 
-	//public interface ICanWield : IHasInventory {
-	//	WieldingInventory Wielding { get; }
-	//}
+	public interface ICanWield : IHasInventory {
+		WieldablesInventory Wielding { get; }
+	}
 }
 
