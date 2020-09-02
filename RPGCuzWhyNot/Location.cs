@@ -35,10 +35,10 @@ namespace RPGCuzWhyNot {
 
 		public bool GetConnectedLocationByCallName(string callName, out Location connectedLocation) {
 			foreach (Location location in paths) {
-				if (location.CallName == callName) {
-					connectedLocation = location;
-					return true;
-				}
+				if (location.CallName != callName) continue;
+
+				connectedLocation = location;
+				return true;
 			}
 			connectedLocation = default;
 			return false;
