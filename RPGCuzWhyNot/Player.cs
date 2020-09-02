@@ -105,6 +105,22 @@ namespace RPGCuzWhyNot {
 					Console.WriteLine("Can't see that here.");
 				}
 			}));
+			commandHandler.AddCommand(new Command(new[] { "drop" }, "Drop an item on the current location", args => {
+				if (args.Length < 2) {
+					Console.WriteLine("Drop what?");
+					return;
+				}
+
+				string callname = args[1];
+				foreach (IItem item in Inventory) {
+					if (item.Callname == callname) {
+						location.items.MoveTo(item);
+						Console.WriteLine($"You dropped {item.Name} in {location.Name}");
+						return;
+					}
+				}
+				Console.WriteLine("I don't know what that is.");
+			}));
 			commandHandler.AddCommand(new Command(new[] { "inventory" }, "List the items in your inventory", args => {
 				if (Inventory.Count <= 0) {
 					Console.WriteLine("Your inventory is empty.");
