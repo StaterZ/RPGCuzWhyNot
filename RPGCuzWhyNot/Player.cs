@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using StaterZ.Core.HealthSystem;
 
 namespace RPGCuzWhyNot {
-	public class Player : Character {
-		public readonly List<IItem> inventory = new List<IItem>();
-		public readonly List<IWearable> wearing = new List<IWearable>();
+	public class Player : Character, IHaveItems, ICanWear {
+		public ItemInventory Inventory { get; }
+		public WearablesInventory Wearing { get; }
 		public readonly CommandHandler commandHandler = new CommandHandler();
 
 		public Player() {
+			Inventory = new ItemInventory(this);
+			Wearing = new WearablesInventory(this);
+
 			//init health
 			health = new Health(100);
 			health.OnDamage += ctx => {
@@ -49,12 +52,10 @@ namespace RPGCuzWhyNot {
 				}
 
 				string callname = args[1];
-				for (int i = 0; i < inventory.Count; ++i) {
-					IItem item = inventory[i];
+				foreach (IItem item in Inventory) {
 					if (item.Callname != callname) continue;
 					if (item is IWearable w) {
-						if (Wear(w)) {
-							inventory.RemoveAt(i);
+						if (Wearing.MoveItem(w)) {
 							Console.WriteLine($"You take {w.Name} from your inventory and put it on");
 						}
 						return;
@@ -72,15 +73,10 @@ namespace RPGCuzWhyNot {
 				}
 
 				string callname = args[1];
-				foreach (IWearable piece in wearing)
+				foreach (IWearable piece in Wearing)
 					if (piece.Callname == callname) {
-						wearing.Remove(piece);
-						if (piece is IItem item) {
-							AddToInventory(item);
-							Console.WriteLine($"You remove {piece.Name} and put it in your inventory");
-						} else {
-							Console.WriteLine($"You remove {piece.Name} and throw it away");
-						}
+						Inventory.MoveTo(piece);
+						Console.WriteLine($"You remove {piece.Name} and put it in your inventory");
 						return;
 					}
 				Console.WriteLine("You're wearing nothing such");
@@ -90,12 +86,12 @@ namespace RPGCuzWhyNot {
 					Console.WriteLine($"'{args[0]}' does not take any arguments");
 					return;
 				}
-				if (wearing.Count == 0) {
-					Console.WriteLine("Currently not wearing anything");
+				if (Wearing.Count == 0) {
+					Console.WriteLine("You are not wearing anything");
 					return;
 				}
-				Console.WriteLine("Currently wearing:");
-				foreach (IWearable w in wearing) {
+				Console.WriteLine("You are currently wearing:");
+				foreach (IWearable w in Wearing) {
 					Console.WriteLine($"  {w.ListingWithStats()}");
 				}
 			}));
@@ -109,26 +105,28 @@ namespace RPGCuzWhyNot {
 					Console.WriteLine("Can't see that here.");
 				}
 			}));
-			commandHandler.AddCommand(new Command(new[] { "inventory" }, "List the items in the inventory", args => {
-				if (inventory.Count <= 0) {
+			commandHandler.AddCommand(new Command(new[] { "inventory" }, "List the items in your inventory", args => {
+				if (Inventory.Count <= 0) {
 					Console.WriteLine("Your inventory is empty.");
+					return;
 				}
 
 				Console.WriteLine("Inventory:");
-				foreach (IItem item in inventory) {
+				foreach (IItem item in Inventory) {
 					Console.Write("  ");
-					Console.WriteLine(item);
+					Console.WriteLine(item.ListingName());
 				}
 			}));
 			commandHandler.AddCommand(new Command(new[] { "items" }, "List the items nearby", args => {
-				if (location.Items.Count == 0) {
+				if (location.items.Count == 0) {
 					Console.WriteLine("You look around but can't find anything of use.");
+					return;
 				}
 
 				Console.WriteLine("You look around and see:");
-				foreach (IItem item in location.Items) {
+				foreach (IItem item in location.items) {
 					Console.Write("  ");
-					Console.WriteLine(item);
+					Console.WriteLine(item.ListingName());
 				}
 			}));
 			commandHandler.AddCommand(new Command(new[] { "help", "commands" }, "Show this list", args => {
@@ -158,37 +156,11 @@ namespace RPGCuzWhyNot {
 			}
 		}
 
-		public void AddToInventory(IItem item) {
-			inventory.Add(item);
-		}
-
-		private bool Wear(IWearable wearable, bool silent = false) {
-			bool failed = false;
-			foreach (IWearable piece in wearing) {
-				if (!wearable.IsCompatibleWith(piece)) {
-					if (!silent) {
-						if (!failed)
-							Console.WriteLine($"Cannot wear {wearable.Name} together with:");
-						string layers = (wearable.CoversLayers & piece.CoversLayers).FancyBitFlagEnum(out int count);
-						string layerPlural = count != 1 ? "s" : "";
-						string parts = (wearable.CoversParts & piece.CoversParts).FancyBitFlagEnum();
-						Console.WriteLine($"  {piece.ListingName()}, they both cover the {layers} layer{layerPlural} on the {parts}");
-					}
-					failed = true;
-				}
-			}
-			if (failed)
-				return false;
-			wearing.Add(wearable);
-			return true;
-		}
-
 		private bool TryPickup(string callName) {
 			IItem item = location.GetItemByCallName(callName);
 
 			if (item != null) {
-				location.RemoveItem(item);
-				inventory.Add(item);
+				Inventory.MoveTo(item);
 				Console.WriteLine($"You picked up: {item}.");
 				return true;
 			}
@@ -197,3 +169,4 @@ namespace RPGCuzWhyNot {
 		}
 	}
 }
+

@@ -3,7 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 
 namespace RPGCuzWhyNot {
-	public interface IWearable : IThing {
+	public interface IWearable : IItem {
 		int Defense { get; }
 		// string WornDescription { get; }
 		BodyParts CoversParts { get; }

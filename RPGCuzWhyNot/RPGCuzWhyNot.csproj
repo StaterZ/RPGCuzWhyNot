@@ -55,7 +55,9 @@
     <Compile Include="HealthSystem\HealthChangeInfoSuccess.cs" />
     <Compile Include="HealthSystem\IArmor.cs" />
     <Compile Include="HealthSystem\IInflictor.cs" />
+    <Compile Include="IHasInventory.cs" />
     <Compile Include="IItem.cs" />
+    <Compile Include="Inventory.cs" />
     <Compile Include="IThing.cs" />
     <Compile Include="IWearable.cs" />
     <Compile Include="Races\Humanoids\Dwarf.cs" />

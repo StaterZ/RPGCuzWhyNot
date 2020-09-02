@@ -4,25 +4,24 @@ using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace RPGCuzWhyNot {
-	public class Location : IThing {
+	public class Location : IThing, IHaveItems {
 		public string Name { get; }
 		public string Callname { get; }
 		public readonly string description;
 		public readonly string pathDescription;
 		public readonly ReadOnlyCollection<Location> Paths;
-		public readonly ReadOnlyCollection<IItem> Items;
+		public readonly ItemInventory items;
+		ItemInventory IHaveItems.Inventory => items;
 
 		private readonly List<Location> paths = new List<Location>();
-		private readonly List<IItem> items = new List<IItem>();
 
 		public Location(string callName, string name, string description, string pathDescription) {
 			Callname = callName;
 			Name = name;
 			this.description = description;
 			this.pathDescription = pathDescription;
-
+			items = new ItemInventory(this);
 			Paths = paths.AsReadOnly();
-			Items = items.AsReadOnly();
 		}
 
 		public bool HasPathTo(Location location) {
@@ -51,7 +50,7 @@ namespace RPGCuzWhyNot {
 			if (items.Contains(item))
 				throw new InvalidOperationException("Item already added");
 
-			items.Add(item);
+			items.MoveTo(item);
 		}
 
 		public bool RemoveItem(IItem item) {

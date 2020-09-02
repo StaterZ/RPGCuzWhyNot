@@ -6,6 +6,7 @@ namespace RPGCuzWhyNot {
 		public string Callname { get; }
 		public string DescriptionInInventory { get; }
 		public string DescriptionOnGround { get; }
+		public IInventory ContainedInventory { get; set; }
 
 		public SimpleItem(string name, string callName, string descriptionInInventory, string descriptionOnGround = default) {
 			Name = name;
@@ -14,9 +15,7 @@ namespace RPGCuzWhyNot {
 			DescriptionOnGround = descriptionOnGround ?? descriptionInInventory;
 		}
 
-		public override string ToString() {
-			return $"{Name} [{Callname}]";
-		}
+		public override string ToString() => this.ListingName();
 	}
 }
 
