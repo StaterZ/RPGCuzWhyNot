@@ -4,7 +4,7 @@ using StaterZ.Core.HealthSystem;
 namespace RPGCuzWhyNot.Enemies {
 	public class TheMother : Character {
 		public TheMother() {
-			name = "Din Mamma";
+			Name = "Din Mamma";
 			health = new Health(9001);
 			health.OnDeath += Die;
 		}
