@@ -58,18 +58,20 @@ namespace RPGCuzWhyNot {
 
 		private static int charsBeepCounter;
 		public static void SlowWrite(string text, int beepFrequency = 200, int charsPerSec = 100) {
-			const int charsPerBeep = 15;
-			int millisPerChar = 1000 / charsPerSec;
+			using (new CursorVisibilityScope(false)) {
+				const int charsPerBeep = 15;
+				int millisPerChar = 1000 / charsPerSec;
 
-			foreach (char c in text) {
-				SmartWrite(c);
-				charsBeepCounter++;
+				foreach (char c in text) {
+					SmartWrite(c);
+					charsBeepCounter++;
 
-				if (charsBeepCounter >= charsPerBeep) {
-					charsBeepCounter = 0;
-					Console.Beep(beepFrequency, millisPerChar);
-				} else {
-					Thread.Sleep(millisPerChar);
+					if (charsBeepCounter >= charsPerBeep) {
+						charsBeepCounter = 0;
+						Console.Beep(beepFrequency, millisPerChar);
+					} else {
+						Thread.Sleep(millisPerChar);
+					}
 				}
 			}
 		}
