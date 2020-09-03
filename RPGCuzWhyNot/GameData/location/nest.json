@@ -1,0 +1,9 @@
+﻿{
+  "name": "The Elder Dragons Nest",
+  "description": "A large lair sprawls out around you. The deep ominous sound of the dragon breathing can be heard further in.",
+  "pathDescription": "In the horizon a dragons nest can be seen",
+  "paths": [
+    "formation",
+    "village"
+  ]
+}

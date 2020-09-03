@@ -26,11 +26,13 @@ namespace RPGCuzWhyNot {
 			Paths = paths.AsReadOnly();
 		}
 
-		public void AddPathTo(Location location) {
-			if (paths.Contains(location)) throw new InvalidOperationException("Locations are already connected");
+		public bool AddPathTo(Location location) {
+			if (paths.Contains(location))
+				return false;
 
 			paths.Add(location);
 			location.paths.Add(this);
+			return true;
 		}
 
 		public bool GetConnectedLocationByCallName(string callName, out Location connectedLocation) {

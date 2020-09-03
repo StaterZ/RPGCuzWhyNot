@@ -6,4 +6,9 @@
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     </PropertyGroup>
 
+    <!-- Copy the game data to the output directory -->
+    <ItemGroup>
+        <Content Include="GameData\**\*.*" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+
 </Project>

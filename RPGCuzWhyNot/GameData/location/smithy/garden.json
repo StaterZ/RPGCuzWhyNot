@@ -1,0 +1,12 @@
+{
+	"name": "Ancient Garden",
+	"description": "You stand in the old garden.",
+	"pathDescription": "There is an old looking garden in the distance.",
+	"items": [
+		"flower",
+		"bucket"
+	],
+	"paths": [
+		"smithy"
+	]
+}

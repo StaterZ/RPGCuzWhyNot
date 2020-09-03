@@ -1,0 +1,13 @@
+﻿{
+  "name": "The Village",
+  "description": "A small village stands before you.",
+  "pathDescription": "The smoke of a little village can be seen in the distance.",
+  "items": [
+    "bucket"
+  ],
+  "paths": [
+    "nest",
+    "formation",
+    "smithy"
+  ]
+}

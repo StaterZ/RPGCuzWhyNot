@@ -1,0 +1,12 @@
+﻿{
+  "name": "Rusty Bucket",
+  "inventoryDescription": "A rusty old bucket",
+  "groundDescription": "There is an old rusty bucket on the ground.",
+  "wieldable": true,
+  "wearable": true,
+  "meleeDamage": 3,
+  "handsRequired": 1,
+  "defense": 1,
+  "coveredParts": "head",
+  "coveredLayers": "outer"
+}
