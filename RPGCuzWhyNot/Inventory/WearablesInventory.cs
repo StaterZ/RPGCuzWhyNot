@@ -1,5 +1,4 @@
-﻿using System;
-using RPGCuzWhyNot.Inventory.Item;
+﻿using RPGCuzWhyNot.Inventory.Item;
 
 namespace RPGCuzWhyNot.Inventory {
 	public class WearablesInventory : InventoryBase<IWearable, ICanWear> {
@@ -13,10 +12,10 @@ namespace RPGCuzWhyNot.Inventory {
 				if (!silent) {
 					if (!failed)
 						ConsoleUtils.SlowWriteLine($"Cannot wear {wearable.Name} together with:");
-					string layers = (wearable.CoverdLayers & piece.CoverdLayers).FancyBitFlagEnum(out int count);
+					string layers = (wearable.CoveredLayers & piece.CoveredLayers).FancyBitFlagEnum(out int count).ToLowerInvariant();
 					string layerPlural = count != 1 ? "s" : "";
-					string parts = (wearable.CoverdParts & piece.CoverdParts).FancyBitFlagEnum();
-					ConsoleUtils.SlowWriteLine($"  {WearableExt.ListingName(piece)}, they both cover the {layers} layer{layerPlural} on the {parts}");
+					string parts = (wearable.CoveredParts & piece.CoveredParts).FancyBitFlagEnum().ToLowerInvariant();
+					ConsoleUtils.SlowWriteLine($"  {piece.ListingName()}, they both cover the {layers} layer{layerPlural} on the {parts}");
 				}
 				failed = true;
 			}
@@ -24,3 +23,4 @@ namespace RPGCuzWhyNot.Inventory {
 		}
 	}
 }
+

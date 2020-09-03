@@ -1,4 +1,4 @@
-﻿namespace RPGCuzWhyNot.Inventory {
+﻿namespace RPGCuzWhyNot.Inventory.Item {
 	public class WieldableWearableItem : WearableItem, IWieldable {
 		public int HandsRequired { get; set; }
 		public int MeleeDamage { get; set; }

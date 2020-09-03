@@ -63,6 +63,7 @@
     <Compile Include="Inventory\IInventory.cs" />
     <Compile Include="Inventory\InventoryBase.cs" />
     <Compile Include="Inventory\ItemInventory.cs" />
+    <Compile Include="Inventory\Item\WearableExt.cs" />
     <Compile Include="IThing.cs" />
     <Compile Include="Inventory\Item\IWearable.cs" />
     <Compile Include="Inventory\Item\IWieldable.cs" />

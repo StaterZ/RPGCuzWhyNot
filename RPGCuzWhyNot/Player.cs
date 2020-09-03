@@ -71,7 +71,7 @@ namespace RPGCuzWhyNot {
 					return;
 				}
 
-				if (Wearing.ContainsCallname(args[1], out IWearable item)) {
+				if (Wearing.ContainsCallName(args[1], out IWearable item)) {
 					if (Inventory.MoveItem(item)) {
 						ConsoleUtils.SlowWriteLine($"You remove {item.Name} and put it in your inventory");
 					}
@@ -102,7 +102,7 @@ namespace RPGCuzWhyNot {
 				}
 
 				string callName = args[1];
-				if (Wielding.ContainsCallname(callName, out IWieldable item)) {
+				if (Wielding.ContainsCallName(callName, out IWieldable item)) {
 					if (Inventory.MoveItem(item)) {
 						ConsoleUtils.SlowWriteLine($"You unwield {item.Name} and put it in your inventory.");
 					} else {
@@ -265,9 +265,9 @@ namespace RPGCuzWhyNot {
 		private void Wear(IThing thing) {
 			if (thing is IWearable wearable) {
 				if (Wearing.MoveItem(wearable)) {
-					int covers = (int)wearable.CoverdParts;
+					int covers = (int)wearable.CoveredParts;
 					string target = string.Empty;
-					if ((wearable.CoverdParts & BodyParts.Chest) == 0) {
+					if ((wearable.CoveredParts & BodyParts.Chest) == 0) {
 						target = " your " + ((BodyParts)(covers & ~(covers - 1))).ToString().ToLower();
 					}
 

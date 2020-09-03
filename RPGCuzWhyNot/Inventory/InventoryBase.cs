@@ -4,18 +4,18 @@ using System.Collections.Generic;
 using RPGCuzWhyNot.Inventory.Item;
 
 namespace RPGCuzWhyNot.Inventory {
-	public abstract class InventoryBase<I, O> : IInventory, IList<I> where I : IItem where O : IHasInventory {
-		protected List<I> items = new List<I>();
-		public O Owner { get; }
+	public abstract class InventoryBase<ItemT, OwnerT> : IInventory, IEnumerable<ItemT> where ItemT : IItem where OwnerT : IHasInventory {
+		protected List<ItemT> items = new List<ItemT>();
+		public OwnerT Owner { get; }
 		IHasInventory IInventory.Owner => Owner;
-		protected InventoryBase(O owner) => Owner = owner;
+		protected InventoryBase(OwnerT owner) => Owner = owner;
 
-		protected abstract bool CheckMove(I item, bool silent);
+		protected abstract bool CheckMove(ItemT item, bool silent);
 
-		public bool MoveItem(I item, bool silent = false) {
+		public bool MoveItem(ItemT item, bool silent = false) {
 			if (CheckMove(item, silent)) {
 				IInventory inv = item.ContainedInventory;
-				if (inv != null && !inv.RemoveItem(item))
+				if (inv != null && !inv.Remove(item))
 					return false;
 				items.Add(item);
 				item.ContainedInventory = this;
@@ -24,8 +24,8 @@ namespace RPGCuzWhyNot.Inventory {
 			return false;
 		}
 
-		public bool ContainsCallname(string callName, out I item) {
-			foreach (I i in items) {
+		public bool ContainsCallName(string callName, out ItemT item) {
+			foreach (ItemT i in items) {
 				if (i.CallName == callName) {
 					item = i;
 					return true;
@@ -36,38 +36,27 @@ namespace RPGCuzWhyNot.Inventory {
 		}
 
 		bool IInventory.ContainsCallName(string callName, out IItem item) {
-			foreach (IItem i in items) {
-				if (i.CallName == callName) {
-					item = i;
-					return true;
-				}
-			}
-			item = default;
+			var res = ContainsCallName(callName, out ItemT i);
+			item = i;
+			return res;
+		}
+
+		bool IInventory.Remove(IItem item) {
+			if (item is ItemT i)
+				return Remove(i);
 			return false;
 		}
 
-		void ICollection<I>.Add(I item) {
-			if (!MoveItem(item, false))
-				throw new InvalidOperationException();
+		public bool Remove(ItemT item) {
+			return items.Remove(item);
 		}
 
-		bool IInventory.RemoveItem(IItem item) {
-			if (!(item is I i))
-				return false;
-			return Remove(i);
-		}
+		public int Count => items.Count;
+		public ItemT this[int index] => items[index];
 
-		public int Count => ((ICollection<I>)items).Count;
-		public I this[int index] { get => ((IList<I>)items)[index]; set => ((IList<I>)items)[index] = value; }
-		public int IndexOf(I item) => ((IList<I>)items).IndexOf(item);
-		public void Insert(int index, I item) => ((IList<I>)items).Insert(index, item);
-		public void RemoveAt(int index) => ((IList<I>)items).RemoveAt(index);
-		public void Clear() => ((ICollection<I>)items).Clear();
-		public bool Contains(I item) => ((ICollection<I>)items).Contains(item);
-		public void CopyTo(I[] array, int arrayIndex) => ((ICollection<I>)items).CopyTo(array, arrayIndex);
-		public bool Remove(I item) => ((ICollection<I>)items).Remove(item);
-		public IEnumerator<I> GetEnumerator() => ((IEnumerable<I>)items).GetEnumerator();
-		bool ICollection<I>.IsReadOnly => false;
+		public void Clear() => items.Clear();
+		public IEnumerator<ItemT> GetEnumerator() => items.GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)items).GetEnumerator();
 	}
 }
+

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RPGCuzWhyNot {
+namespace RPGCuzWhyNot.Inventory.Item {
 	[Flags]
 	public enum WearableLayers {
 		Inner = 1 << 0, // regular clothing
@@ -8,3 +8,4 @@ namespace RPGCuzWhyNot {
 		Outer = 1 << 2, // heavy armor, like full plate armor
 	}
 }
+

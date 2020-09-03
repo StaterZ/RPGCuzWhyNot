@@ -1,4 +1,4 @@
-﻿namespace RPGCuzWhyNot.Inventory {
+﻿namespace RPGCuzWhyNot.Inventory.Item {
 	public class WieldableItem : SimpleItem, IWieldable {
 		public int HandsRequired { get; set; } = 1;
 		public int MeleeDamage { get; set; } = 2;

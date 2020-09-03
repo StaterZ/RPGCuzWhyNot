@@ -1,4 +1,4 @@
-﻿using System;
+﻿using RPGCuzWhyNot.Inventory.Item;
 
 namespace RPGCuzWhyNot.Inventory {
 	public class WieldablesInventory : InventoryBase<IWieldable, ICanWield> {
@@ -25,3 +25,4 @@ namespace RPGCuzWhyNot.Inventory {
 		}
 	}
 }
+

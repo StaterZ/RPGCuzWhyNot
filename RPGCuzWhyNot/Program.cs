@@ -1,5 +1,5 @@
 ﻿using System;
-using RPGCuzWhyNot.Inventory;
+using RPGCuzWhyNot.Inventory.Item;
 using RPGCuzWhyNot.Races.Humanoids;
 
 namespace RPGCuzWhyNot {
