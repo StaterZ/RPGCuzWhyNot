@@ -15,8 +15,7 @@ namespace RPGCuzWhyNot {
 			Location village = new Location(
 				"village",
 				"The Village",
-				"A small village stands before you.",
-				"The smoke of a little village can be seen in the distance."
+				"A small village stands before you."
 			);
 			village.AddItem(new WieldableWearableItem(
 				"Rusty Bucket",
@@ -35,40 +34,31 @@ namespace RPGCuzWhyNot {
 			Location dragonNest = new Location(
 				"nest",
 				"The Elder Dragons Nest",
-				"A large lair sprawls out around you. The deep ominous sound of the dragon breathing can be heard further in.",
-				"In the horizon a dragons nest can be seen"
+				"A large lair sprawls out around you. The deep ominous sound of the dragon breathing can be heard further in."
 			);
 			Location stoneFormation = new Location(
 				"formation",
 				"The Arcane Construct",
-				"A great many stones sprawl out across the terrain.\nThey seem sprinkled around randomly across the ground.\nThe stones are full of intricately carved lines and symbols. They seem to emmit a soft purple glow.",
-				"A weird configuration of stones can be seen"
+				"A great many stones sprawl out across the terrain.\nThey seem sprinkled around randomly across the ground.\nThe stones are full of intricately carved lines and symbols. They seem to emmit a soft purple glow."
 			);
 			Location smithy = new Location(
 				"smithy",
 				"Orhibalds Smithy",
-				"You walk in to the smithy. The heat of the great forge and the sweat of the dirty smith purge the air.",
-				"A smithy can be seen in the city"
-			);
-			Location smith = new Location(
-				"orhibald",
-				"Orhibald (Smith)",
-				"You walk up to the smith. He turns around to look at you.",
-				"A smith can be seen a the forge"
-			);
-			Location smithyCustomer = new Location(
-				"customer",
-				"Unknown Smithy Customer",
-				"You walk up to the customer in line. She glares angrily as you approach...",
-				"A customer casually stands leaning against a pillar"
+				"You walk in to the smithy. The heat of the great forge and the sweat of the dirty smith purge the air."
 			);
 
-			village.AddPathTo(dragonNest);
-			village.AddPathTo(stoneFormation);
-			stoneFormation.AddPathTo(dragonNest);
-			village.AddPathTo(smithy);
-			smithy.AddPathTo(smith);
-			smithy.AddPathTo(smithyCustomer);
+
+			village.AddPathTo(dragonNest, "In the horizon a dragons nest can be seen atop a great mountain.");
+			dragonNest.AddPathTo(village, "The smoke of a little village can be seen in the distance.");
+
+			village.AddPathTo(stoneFormation, "A weird configuration of stones can be seen");
+			stoneFormation.AddPathTo(village, "A village can be seen a few hundred meters away");
+
+			stoneFormation.AddPathTo(dragonNest, "In the horizon a dragons nest can be seen atop a great mountain.");
+			dragonNest.AddPathTo(stoneFormation, "A weird configuration of stones can be seen far bellow the vgreat mountain");
+
+			village.AddPathTo(smithy, "A smithy can be seen in the city.");
+			smithy.AddPathTo(village, "A door out of the smithy can be seen behind you.");
 
 			//construct player
 			player = new Player {

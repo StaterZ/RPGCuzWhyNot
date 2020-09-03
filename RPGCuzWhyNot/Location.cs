@@ -11,35 +11,44 @@ namespace RPGCuzWhyNot {
 		public string CallName { get; }
 		public readonly string description;
 		public readonly string pathDescription;
-		public readonly ReadOnlyCollection<Location> Paths;
+		public readonly ReadOnlyCollection<Path> Paths;
 		public readonly ItemInventory items;
 		ItemInventory IHasItemInventory.Inventory => items;
+		public string ListingName => ThingExt.ListingName(this);
 
-		private readonly List<Location> paths = new List<Location>();
+		private readonly List<Path> paths = new List<Path>();
 
-		public Location(string callName, string name, string description, string pathDescription) {
+		public class Path {
+			public readonly Location location;
+			public readonly string description;
+
+			protected internal Path(Location location, string description) {
+				this.location = location;
+				this.description = description;
+			}
+		}
+
+		public Location(string callName, string name, string description) {
 			CallName = callName;
 			Name = name;
 			this.description = description;
-			this.pathDescription = pathDescription;
 			items = new ItemInventory(this);
 			Paths = paths.AsReadOnly();
 		}
 
-		public void AddPathTo(Location location) {
-			if (paths.Contains(location)) throw new InvalidOperationException("Locations are already connected");
-
-			paths.Add(location);
-			location.paths.Add(this);
+		public void AddPathTo(Location location, string description) {
+			if (paths.Any(path => path.location == location)) throw new InvalidOperationException("A path already exists");
+			paths.Add(new Path(location, description));
 		}
 
 		public bool GetConnectedLocationByCallName(string callName, out Location connectedLocation) {
-			foreach (Location location in paths) {
-				if (location.CallName != callName) continue;
+			foreach (Path path in paths) {
+				if (path.location.CallName != callName) continue;
 
-				connectedLocation = location;
+				connectedLocation = path.location;
 				return true;
 			}
+
 			connectedLocation = default;
 			return false;
 		}
@@ -73,8 +82,8 @@ namespace RPGCuzWhyNot {
 
 		public void PrintInformation() {
 			ConsoleUtils.SlowWriteLine(description);
-			foreach (Location location in paths) {
-				ConsoleUtils.SlowWriteLine($"{location.pathDescription} [{location.CallName}]");
+			foreach (Path path in paths) {
+				ConsoleUtils.SlowWriteLine($"{path.description} [{path.location.CallName}]");
 			}
 
 			foreach (IItem item in items) {
@@ -85,8 +94,6 @@ namespace RPGCuzWhyNot {
 		public override string ToString() {
 			return ListingName;
 		}
-
-		public string ListingName => ThingExt.ListingName(this);
 	}
 }
 

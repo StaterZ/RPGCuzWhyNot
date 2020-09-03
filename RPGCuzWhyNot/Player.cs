@@ -47,9 +47,9 @@ namespace RPGCuzWhyNot {
 			}));
 			commandHandler.AddCommand(new Command(new[] { "ls", "list", "locations" }, "List all locations accessible from the current one", args => {
 				ConsoleUtils.SlowWriteLine("Locations:");
-				foreach (Location loc in location.Paths) {
+				foreach (Location.Path path in location.Paths) {
 					Console.Write("  ");
-					ConsoleUtils.SlowWriteLine(loc.ToString());
+					ConsoleUtils.SlowWriteLine(path.ToString());
 				}
 			}));
 			commandHandler.AddCommand(new Command(new[] { "wear" }, "Wear something", args => {
