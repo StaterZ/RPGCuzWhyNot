@@ -49,7 +49,7 @@ namespace RPGCuzWhyNot {
 				ConsoleUtils.SlowWriteLine("Locations:");
 				foreach (Location.Path path in location.Paths) {
 					Console.Write("  ");
-					ConsoleUtils.SlowWriteLine(path.ToString());
+					ConsoleUtils.SlowWriteLine(path.location.ToString());
 				}
 			}));
 			commandHandler.AddCommand(new Command(new[] { "wear" }, "Wear something", args => {
