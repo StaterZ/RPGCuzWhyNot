@@ -111,7 +111,7 @@ namespace RPGCuzWhyNot {
 			}
 
 			foreach (CharacterLocationData characterLocationData in characters) {
-				Terminal.WriteLine($"{characterLocationData.glanceDescription} [{characterLocationData.character.CallName}]");
+				Terminal.WriteLine($"{characterLocationData.glanceDescription} {{magenta}}([{characterLocationData.character.CallName}])");
 			}
 		}
 
