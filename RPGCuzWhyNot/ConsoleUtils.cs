@@ -166,34 +166,34 @@ namespace RPGCuzWhyNot {
 
 		private static readonly char[] wheelLookup = { '/', '-', '\\', '|' };
 		public static void FakeLoad(int millis) {
-			ConsoleColor fg = Console.ForegroundColor;
+			using (new CursorVisibilityScope(false)) {
+				int startX = Console.CursorLeft;
+				int startY = Console.CursorTop;
 
-			int startX = Console.CursorLeft;
-			int startY = Console.CursorTop;
+				using (new FGColorScope(ConsoleColor.Yellow)) {
+					Console.Write("Fetching... ");
 
-			Console.ForegroundColor = ConsoleColor.Yellow;
-			Console.Write("Fetching... ");
+					int x = Console.CursorLeft;
+					int y = Console.CursorTop;
 
-			int x = Console.CursorLeft;
-			int y = Console.CursorTop;
+					for (int i = 0; i < millis / 100; i++)
+					{
+						SmartWrite(wheelLookup[i % wheelLookup.Length]);
+						Console.CursorLeft = x;
+						Console.CursorTop = y;
+						Thread.Sleep(100);
+					}
+				}
 
-			Console.CursorVisible = false;
-			for (int i = 0; i < millis / 100; i++) {
-				Console.Write(wheelLookup[i % wheelLookup.Length]);
-				Console.CursorLeft = x;
-				Console.CursorTop = y;
-				Thread.Sleep(100);
+				Console.CursorLeft = startX;
+				Console.CursorTop = startY;
+				using (new FGColorScope(ConsoleColor.Green)) {
+					Console.WriteLine("Loading... Done!");
+				}
+				Console.Beep(1000, 100);
 			}
+		}
 
-			Console.CursorVisible = true;
-
-			Console.ForegroundColor = ConsoleColor.Green;
-			Console.CursorLeft = startX;
-			Console.CursorTop = startY;
-			Console.WriteLine("Loading... Done!");
-			Console.Beep(1000, 100);
-
-			Console.ForegroundColor = fg;
 		}
 	}
 }
