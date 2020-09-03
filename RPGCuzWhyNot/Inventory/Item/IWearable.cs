@@ -4,6 +4,8 @@
 		// string WornDescription { get; }
 		BodyParts CoveredParts { get; }
 		WearableLayers CoveredLayers { get; }
+
+		string ListingWithStats();
 	}
 }
 

@@ -1,5 +1,4 @@
-﻿using System;
-using RPGCuzWhyNot.Races;
+﻿using RPGCuzWhyNot.Races;
 using StaterZ.Core.HealthSystem;
 
 namespace RPGCuzWhyNot {
@@ -17,5 +16,8 @@ namespace RPGCuzWhyNot {
 		public void Say(string message) {
 			ConsoleUtils.SlowWriteLine($"{Name}: {message}");
 		}
+
+		public virtual string ListingName() => ThingExt.ListingName(this);
 	}
 }
+

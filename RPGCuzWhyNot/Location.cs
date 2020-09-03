@@ -85,5 +85,8 @@ namespace RPGCuzWhyNot {
 		public override string ToString() {
 			return this.ListingName();
 		}
+
+		public string ListingName() => ThingExt.ListingName(this);
 	}
 }
+
