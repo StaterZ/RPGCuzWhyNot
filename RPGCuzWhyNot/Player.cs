@@ -214,7 +214,7 @@ namespace RPGCuzWhyNot {
 				}
 			}));
 			commandHandler.AddCommand(new Command(new[] { "items" }, "List the items nearby", args => {
-				if (location.items.Count == 0) {
+				if (location.items.Count <= 0) {
 					ConsoleUtils.SlowWriteLine("You look around but can't find anything of use.");
 					return;
 				}
@@ -244,6 +244,23 @@ namespace RPGCuzWhyNot {
 			}));
 			commandHandler.AddCommand(new Command(new[] { "clear" }, "Clear the console", args => {
 				Console.Clear();
+			}));
+			commandHandler.AddCommand(new Command(new[] { "speak", "talk", "converse" }, "Begin a conversatrion with someone", args => {
+				if (args.Length < 2) {
+					ConsoleUtils.SlowWriteLine($"{args[0]} with who?");
+					return;
+				}
+
+				if (location.GetCharacterByCallName(args[1], out Character conversationPartner)) {
+					using (new FGColorScope(ConsoleColor.Cyan)) {
+						//ConsoleUtils.PrintDivider('#');
+						ConsoleUtils.SlowWriteLine($"A conversation with <{conversationPartner.Name}> has begun:");
+
+						throw new NotImplementedException();
+					}
+				} else {
+					ConsoleUtils.SlowWriteLine("Who now?");
+				}
 			}));
 		}
 

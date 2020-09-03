@@ -1,6 +1,7 @@
 ﻿using System;
 using RPGCuzWhyNot.Inventory.Item;
 using RPGCuzWhyNot.Races.Humanoids;
+using RPGCuzWhyNot.NPCs;
 
 namespace RPGCuzWhyNot {
 	public static class Program {
@@ -10,6 +11,7 @@ namespace RPGCuzWhyNot {
 
 		private static void Main() {
 			ConsoleUtils.colorScopes.Add(new ConsoleUtils.ColorScope('[', ']', true, true, ConsoleColor.Magenta));
+			ConsoleUtils.colorScopes.Add(new ConsoleUtils.ColorScope('<', '>', true, true, ConsoleColor.Green));
 
 			//construct world
 			Location village = new Location(
@@ -46,6 +48,8 @@ namespace RPGCuzWhyNot {
 				"Orhibalds Smithy",
 				"You walk in to the smithy. The heat of the great forge and the sweat of the dirty smith purge the air."
 			);
+			smithy.AddNPC(new Orchibald(), "A smith can be seen by a large forge", "You walk up to the smith. He turns around to look at you.");
+			smithy.AddNPC(new SmithyCustomer(), "A customer casually stands leaning against a pillar.", "You walk up to the customer. She glares angrily as you approach...");
 
 
 			village.AddPathTo(dragonNest, "In the horizon a dragons nest can be seen atop a great mountain.");

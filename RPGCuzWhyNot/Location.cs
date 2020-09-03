@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using RPGCuzWhyNot.Inventory;
 using RPGCuzWhyNot.Inventory.Item;
+using RPGCuzWhyNot.NPCs;
 
 namespace RPGCuzWhyNot {
 	public class Location : IThing, IHasItemInventory {
@@ -12,11 +13,13 @@ namespace RPGCuzWhyNot {
 		public readonly string description;
 		public readonly string pathDescription;
 		public readonly ReadOnlyCollection<Path> Paths;
+		public readonly ReadOnlyCollection<CharacterLocationData> Characters;
 		public readonly ItemInventory items;
 		ItemInventory IHasItemInventory.Inventory => items;
 		public string ListingName => ThingExt.ListingName(this);
 
 		private readonly List<Path> paths = new List<Path>();
+		private readonly List<CharacterLocationData> characters = new List<CharacterLocationData>();
 
 		public class Path {
 			public readonly Location location;
@@ -34,6 +37,7 @@ namespace RPGCuzWhyNot {
 			this.description = description;
 			items = new ItemInventory(this);
 			Paths = paths.AsReadOnly();
+			Characters = characters.AsReadOnly();
 		}
 
 		public void AddPathTo(Location location, string description) {
@@ -50,6 +54,18 @@ namespace RPGCuzWhyNot {
 			}
 
 			connectedLocation = default;
+			return false;
+		}
+
+		public bool GetCharacterByCallName(string callName, out Character character) {
+			foreach (CharacterLocationData characterLocationData in characters) {
+				if (characterLocationData.character.CallName != callName) continue;
+
+				character = characterLocationData.character;
+				return true;
+			}
+
+			character = default;
 			return false;
 		}
 
@@ -80,6 +96,10 @@ namespace RPGCuzWhyNot {
 			}
 		}
 
+		public void AddNPC(NPC npc, string glanceDescription, string approachDescription) {
+			characters.Add(new CharacterLocationData(npc, glanceDescription, approachDescription));
+		}
+
 		public void PrintInformation() {
 			ConsoleUtils.SlowWriteLine(description);
 			foreach (Path path in paths) {
@@ -88,6 +108,10 @@ namespace RPGCuzWhyNot {
 
 			foreach (IItem item in items) {
 				ConsoleUtils.SlowWriteLine($"{item.DescriptionOnGround} [{item.CallName}]");
+			}
+
+			foreach (CharacterLocationData characterLocationData in characters) {
+				ConsoleUtils.SlowWriteLine($"{characterLocationData.glanceDescription} [{characterLocationData.character.CallName}]");
 			}
 		}
 
