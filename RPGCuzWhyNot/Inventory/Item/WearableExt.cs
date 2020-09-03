@@ -23,15 +23,20 @@ namespace RPGCuzWhyNot.Inventory.Item {
 				}
 			}
 			count = res.Count;
-
-			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i < res.Count; ++i) {
-				if (i > 0) {
-					sb.Append(i < res.Count - 1 ? ", " : "and ");
-				}
-				sb.Append(res[i]);
+			switch (res.Count) {
+				case 0: return "";
+				case 1: return res[0];
+				case 2: return $"{res[0]} and {res[1]}";
+				default:
+					StringBuilder sb = new StringBuilder();
+					for (int i = 0; i < res.Count - 1; ++i) {
+						sb.Append(res[i]);
+						sb.Append(", ");
+					}
+					sb.Append("and ");
+					sb.Append(res[res.Count - 1]);
+					return sb.ToString();
 			}
-			return sb.ToString();
 		}
 	}
 }

@@ -23,7 +23,14 @@ namespace RPGCuzWhyNot {
 				"bucket",
 				"A rusty old bucket",
 				"There is a rusty old bucket on the ground."
-			) { MeleeDamage = 3, HandsRequired = 1 });
+			) {
+				MeleeDamage = 3,
+				HandsRequired = 1,
+
+				Defense = 1,
+				CoveredParts = BodyParts.Head,
+				CoveredLayers = WearableLayers.Outer,
+			});
 
 			Location dragonNest = new Location(
 				"nest",

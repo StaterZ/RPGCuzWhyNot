@@ -7,9 +7,9 @@ using System.Threading;
 namespace RPGCuzWhyNot {
 	public static class ConsoleUtils {
 		/// <summary>
-		/// asks a qusetion to the player
+		/// Asks a question to the player.
 		/// </summary>
-		/// <param name="question">the question to display to the player</param>
+		/// <param name="question">The question to display to the player.</param>
 		/// <returns></returns>
 		public static string Ask(string question) {
 			SlowWrite(question);
@@ -17,10 +17,10 @@ namespace RPGCuzWhyNot {
 		}
 
 		/// <summary>
-		/// asks a qusetion to the player but limit what they can respond with
+		/// Asks a question to the player, but limits what they can respond with.
 		/// </summary>
-		/// <param name="question">the question to display to the player</param>
-		/// <param name="options">the valid things the player can respond with</param>
+		/// <param name="question">The question to display to the player.</param>
+		/// <param name="options">The options the player can respond with.</param>
 		/// <returns></returns>
 		public static string Ask(string question, params string[] options) {
 			SlowWrite(question + "   " + StringifyArray("[", ", ", "]", options));
@@ -52,24 +52,24 @@ namespace RPGCuzWhyNot {
 			return builder.ToString();
 		}
 
-		public static void SlowWriteLine(string text, int frequensy = 200, float charsPerSec = 100) {
-			SlowWrite(text + '\n', frequensy, charsPerSec);
+		public static void SlowWriteLine(string text, int beepFrequency = 200, int charsPerSec = 100) {
+			SlowWrite(text + '\n', beepFrequency, charsPerSec);
 		}
 
-		private static int charsPrinted;
-		public static void SlowWrite(string text, int frequensy = 200, float charsPerSec = 100) {
+		private static int charsBeepCounter;
+		public static void SlowWrite(string text, int beepFrequency = 200, int charsPerSec = 100) {
 			const int charsPerBeep = 15;
-			int milisPerChar = (int)Math.Round(1 / charsPerSec * 1000);
+			int millisPerChar = 1000 / charsPerSec;
 
 			foreach (char c in text) {
-
 				SmartWrite(c);
-				charsPrinted++;
+				charsBeepCounter++;
 
-				if (charsPrinted % charsPerBeep == 0) {
-					Console.Beep(frequensy, milisPerChar);
+				if (charsBeepCounter >= charsPerBeep) {
+					charsBeepCounter = 0;
+					Console.Beep(beepFrequency, millisPerChar);
 				} else {
-					Thread.Sleep(milisPerChar);
+					Thread.Sleep(millisPerChar);
 				}
 			}
 		}
@@ -158,20 +158,15 @@ namespace RPGCuzWhyNot {
 
 		public static void PrintDivider(char c, ConsoleColor color) {
 			ConsoleColor fg = Console.ForegroundColor;
-
 			Console.ForegroundColor = color;
-			StringBuilder builder = new StringBuilder();
-			for (int i = 0; i < Console.WindowWidth; i++) {
-				builder.Append(c);
-			}
-			builder.AppendLine();
-			SlowWriteLine(builder.ToString());
+
+			SlowWriteLine(new string(c, Console.WindowWidth) + "\n");
 
 			Console.ForegroundColor = fg;
 		}
 
 		private static readonly char[] wheelLookup = { '/', '-', '\\', '|' };
-		public static void FakeLoad(int milis) {
+		public static void FakeLoad(int millis) {
 			ConsoleColor fg = Console.ForegroundColor;
 
 			int startX = Console.CursorLeft;
@@ -184,7 +179,7 @@ namespace RPGCuzWhyNot {
 			int y = Console.CursorTop;
 
 			Console.CursorVisible = false;
-			for (int i = 0; i < milis / 100; i++) {
+			for (int i = 0; i < millis / 100; i++) {
 				Console.Write(wheelLookup[i % wheelLookup.Length]);
 				Console.CursorLeft = x;
 				Console.CursorTop = y;
