@@ -12,7 +12,7 @@ namespace RPGCuzWhyNot {
 		/// <param name="question">The question to display to the player.</param>
 		/// <returns></returns>
 		public static string Ask(string question) {
-			SlowWrite(question);
+			Terminal.Write(question);
 			return Console.ReadLine();
 		}
 
@@ -23,7 +23,7 @@ namespace RPGCuzWhyNot {
 		/// <param name="options">The options the player can respond with.</param>
 		/// <returns></returns>
 		public static string Ask(string question, params string[] options) {
-			SlowWrite(question + "   " + StringifyArray("[", ", ", "]", options));
+			Terminal.Write(question + "   " + StringifyArray("[", ", ", "]", options));
 
 			while (true) {
 				string answer = Console.ReadLine();
@@ -32,7 +32,7 @@ namespace RPGCuzWhyNot {
 					return answer;
 				}
 
-				SlowWriteLine("Invalid answer");
+				Terminal.WriteLine("Invalid answer");
 			}
 		}
 
@@ -52,112 +52,8 @@ namespace RPGCuzWhyNot {
 			return builder.ToString();
 		}
 
-		public static void SlowWriteLine(string text, int beepFrequency = 200, int charsPerSec = 100) {
-			SlowWrite(text + '\n', beepFrequency, charsPerSec);
-		}
-
-		private static int charsBeepCounter;
-		public static void SlowWrite(string text, int beepFrequency = 200, int charsPerSec = 100) {
-			const int charsPerBeep = 15;
-			int millisPerChar = 1000 / charsPerSec;
-
-			foreach (char c in text) {
-				SmartWrite(c);
-				charsBeepCounter++;
-
-				if (charsBeepCounter >= charsPerBeep) {
-					charsBeepCounter = 0;
-					Console.Beep(beepFrequency, millisPerChar);
-				} else {
-					Thread.Sleep(millisPerChar);
-				}
-			}
-		}
-
-		private static readonly Stack<ColorState> colorStates = new Stack<ColorState>();
-
-		public static void SmartWrite(char c) {
-			ColorScope stop = null;
-			ColorScope start = null;
-			foreach (ColorScope colorScope in colorScopes) {
-				if (c == colorScope.stop) {
-					stop = colorScope;
-					break;
-				}
-				if (c == colorScope.start) {
-					start = colorScope;
-					break;
-				}
-			}
-
-			void Start() {
-				colorStates.Push(new ColorState(Console.ForegroundColor, Console.BackgroundColor));
-
-				if (start.fg.HasValue) {
-					Console.ForegroundColor = start.fg.Value;
-				}
-				if (start.bg.HasValue) {
-					Console.BackgroundColor = start.bg.Value;
-				}
-			}
-
-			void Stop() {
-				ColorState prev = colorStates.Pop();
-				
-				Console.ForegroundColor = prev.fg;
-				Console.BackgroundColor = prev.bg;
-			}
-
-			if (stop != null && !stop.includeStart) {
-				Stop();
-			}
-			if (start != null && start.includeStart) {
-				Start();
-			}
-
-			Console.Write(c);
-
-			if (start != null && !start.includeStart) {
-				Start();
-			}
-
-			if (stop != null && stop.includeStart) {
-				Stop();
-			}
-		}
-
-		public static readonly List<ColorScope> colorScopes = new List<ColorScope>();
-
-		public class ColorScope {
-			public readonly char start;
-			public readonly char stop;
-			public readonly bool includeStart;
-			public readonly bool includeStop;
-			public readonly ConsoleColor? fg;
-			public readonly ConsoleColor? bg;
-
-			public ColorScope(char start, char stop, bool includeStart, bool includeStop, ConsoleColor? fg, ConsoleColor? bg = null) {
-				this.start = start;
-				this.stop = stop;
-				this.includeStart = includeStart;
-				this.includeStop = includeStop;
-				this.fg = fg;
-				this.bg = bg;
-			}
-		}
-
-		public class ColorState {
-			public readonly ConsoleColor fg;
-			public readonly ConsoleColor bg;
-
-			public ColorState(ConsoleColor fg, ConsoleColor bg) {
-				this.fg = fg;
-				this.bg = bg;
-			}
-		}
-
 		public static void PrintDivider(char c) {
-			SlowWriteLine(new string(c, Console.WindowWidth) + "\n");
+			Terminal.WriteLine(new string(c, Console.WindowWidth) + "\n");
 		}
 
 		private static readonly char[] wheelLookup = { '/', '-', '\\', '|' };

@@ -14,7 +14,7 @@ namespace RPGCuzWhyNot {
 		}
 
 		public void Say(string message) {
-			ConsoleUtils.SlowWriteLine($"{Name}: {message}");
+			Terminal.WriteLine($"{Name}: {message}");
 		}
 
 		public virtual string ListingName => ThingExt.ListingName(this);

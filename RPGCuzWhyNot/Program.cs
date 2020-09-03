@@ -9,7 +9,6 @@ namespace RPGCuzWhyNot {
 		private static readonly char[] commandArgumentSeparators = { ' ' };
 
 		private static void Main() {
-			ConsoleUtils.colorScopes.Add(new ConsoleUtils.ColorScope('[', ']', true, true, ConsoleColor.Magenta));
 
 			//construct world
 			Location village = new Location(
@@ -19,7 +18,7 @@ namespace RPGCuzWhyNot {
 				"The smoke of a little village can be seen in the distance."
 			);
 			village.AddItem(new WieldableWearableItem(
-				"Rusty Bucket",
+				"{DarkYellow}(Rusty Bucket)",
 				"bucket",
 				"A rusty old bucket",
 				"There is a rusty old bucket on the ground."
@@ -78,6 +77,12 @@ namespace RPGCuzWhyNot {
 					gender = Humanoid.Gender.Male
 				}
 			};
+
+			player.Inventory.MoveItem(new SimpleItem(
+				"{Blue}(Blue) potion",
+				"blue",
+				"A bottle containing some " + "blue" + " liquid."
+			));
 
 			//some basic event loop
 			player.location.PrintEnterInformation();

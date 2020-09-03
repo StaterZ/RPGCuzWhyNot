@@ -63,22 +63,22 @@ namespace RPGCuzWhyNot {
 			string title = $"----- [ {Name} ] -----";
 
 			using (new FGColorScope(ConsoleColor.Yellow)) {
-				ConsoleUtils.SlowWriteLine(title);
+				Terminal.WriteLine(title);
 			}
 			PrintInformation();
 			using (new FGColorScope(ConsoleColor.Yellow)) {
-				ConsoleUtils.SlowWriteLine(new string('-', title.Length));
+				Terminal.WriteLine(new string('-', title.Length));
 			}
 		}
 
 		public void PrintInformation() {
-			ConsoleUtils.SlowWriteLine(description);
+			Terminal.WriteLine(description);
 			foreach (Location location in paths) {
-				ConsoleUtils.SlowWriteLine($"{location.pathDescription} [{location.CallName}]");
+				Terminal.WriteLine($"{location.pathDescription} {{magenta}}([{location.CallName}])");
 			}
 
 			foreach (IItem item in items) {
-				ConsoleUtils.SlowWriteLine($"{item.DescriptionOnGround} [{item.CallName}]");
+				Terminal.WriteLine($"{item.DescriptionOnGround} {{magenta}}([{item.CallName}])");
 			}
 		}
 
