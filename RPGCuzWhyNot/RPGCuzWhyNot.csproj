@@ -47,6 +47,7 @@
     <Compile Include="BodyParts.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="CommandHandler.cs" />
+    <Compile Include="CursorVisibilityScope.cs" />
     <Compile Include="FGColorScope.cs" />
     <Compile Include="HealthSystem\IAlignment.cs" />
     <Compile Include="HealthSystem\BasicAlignment.cs" />
@@ -67,6 +68,10 @@
     <Compile Include="IThing.cs" />
     <Compile Include="Inventory\Item\IWearable.cs" />
     <Compile Include="Inventory\Item\IWieldable.cs" />
+    <Compile Include="IConverseable.cs" />
+    <Compile Include="NPCLocationData.cs" />
+    <Compile Include="NPCs\NPC.cs" />
+    <Compile Include="NPCs\Orchibald.cs" />
     <Compile Include="Races\Humanoids\Dwarf.cs" />
     <Compile Include="Races\Humanoids\Human.cs" />
     <Compile Include="Enemies\TheMother.cs" />
@@ -77,6 +82,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Races\Humanoids\Humanoid.cs" />
     <Compile Include="Races\Race.cs" />
+    <Compile Include="Referal.cs" />
     <Compile Include="ThingExt.cs" />
     <Compile Include="Inventory\Item\WearableItem.cs" />
     <Compile Include="Inventory\Item\WearableLayers.cs" />
