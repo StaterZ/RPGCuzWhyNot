@@ -47,9 +47,9 @@ namespace RPGCuzWhyNot {
 			}));
 			commandHandler.AddCommand(new Command(new[] { "ls", "list", "locations" }, "List all locations accessible from the current one", args => {
 				Terminal.WriteLine("Locations:");
-				foreach (Location loc in location.Paths) {
+				foreach (Location.Path path in location.Paths) {
 					Terminal.Write("  ");
-					Terminal.WriteLine(loc.ToString());
+					Terminal.WriteLine(path.location.ListingName);
 				}
 			}));
 			commandHandler.AddCommand(new Command(new[] { "wear" }, "Wear something", args => {
@@ -214,7 +214,7 @@ namespace RPGCuzWhyNot {
 				}
 			}));
 			commandHandler.AddCommand(new Command(new[] { "items" }, "List the items nearby", args => {
-				if (location.items.Count == 0) {
+				if (location.items.Count <= 0) {
 					Terminal.WriteLine("You look around but can't find anything of use.");
 					return;
 				}
@@ -250,6 +250,23 @@ namespace RPGCuzWhyNot {
 			}));
 			commandHandler.AddCommand(new Command(new[] { "clear" }, "Clear the console", args => {
 				Console.Clear();
+			}));
+			commandHandler.AddCommand(new Command(new[] { "speak", "talk", "converse" }, "Begin a conversation with someone", args => {
+				if (args.Length < 2) {
+					Terminal.WriteLine($"{args[0]} with who?");
+					return;
+				}
+
+				if (location.GetCharacterByCallName(args[1], out Character conversationPartner)) {
+					using (new FGColorScope(ConsoleColor.Cyan)) {
+						//ConsoleUtils.PrintDivider('#');
+						Terminal.WriteLine($"A conversation with <{conversationPartner.Name}> has begun:");
+
+						throw new NotImplementedException();
+					}
+				} else {
+					Terminal.WriteLine("Who now?");
+				}
 			}));
 		}
 

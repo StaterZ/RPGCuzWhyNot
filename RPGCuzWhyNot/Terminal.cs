@@ -37,12 +37,23 @@ namespace RPGCuzWhyNot {
 			ForegroundColor = fg;
 		}
 
+		public static void WriteLine(string text, int frequency, int charsPerSecond = -1) => Write(text + "\n", frequency, charsPerSecond);
+		public static void Write(string text, int frequency, int charsPerSecond = -1) {
+			PushState(Save.BeepFrequency | Save.MillisPerChar);
+			if (charsPerSecond < 0)
+				MillisPerChar = 1000 / charsPerSecond;
+			BeepFrequency = frequency;
+			WriteLine(text);
+			PopState();
+		}
+
 		public static void WriteLine() => Write("\n");
 		public static void WriteLine(string text) {
 			Write(text);
 			Write("\n");
 		}
 
+		public static void Write(char c) => WriteChar(c);
 		public static void Write(string text) {
 			for (int i = 0; i < text.Length;) {
 				char c = text[i++];
