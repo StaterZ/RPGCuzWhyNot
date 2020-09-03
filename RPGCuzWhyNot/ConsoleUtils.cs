@@ -194,6 +194,8 @@ namespace RPGCuzWhyNot {
 			}
 		}
 
+		public static void Sleep(int millis) {
+			Thread.Sleep(millis);
 		}
 	}
 }
