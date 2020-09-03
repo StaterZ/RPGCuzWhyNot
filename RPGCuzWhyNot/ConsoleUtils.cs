@@ -156,13 +156,8 @@ namespace RPGCuzWhyNot {
 			}
 		}
 
-		public static void PrintDivider(char c, ConsoleColor color) {
-			ConsoleColor fg = Console.ForegroundColor;
-			Console.ForegroundColor = color;
-
+		public static void PrintDivider(char c) {
 			SlowWriteLine(new string(c, Console.WindowWidth) + "\n");
-
-			Console.ForegroundColor = fg;
 		}
 
 		private static readonly char[] wheelLookup = { '/', '-', '\\', '|' };
