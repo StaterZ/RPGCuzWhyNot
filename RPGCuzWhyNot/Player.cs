@@ -245,7 +245,7 @@ namespace RPGCuzWhyNot {
 			commandHandler.AddCommand(new Command(new[] { "clear" }, "Clear the console", args => {
 				Console.Clear();
 			}));
-			commandHandler.AddCommand(new Command(new[] { "speak", "talk", "converse" }, "Begin a conversatrion with someone", args => {
+			commandHandler.AddCommand(new Command(new[] { "speak", "talk", "converse" }, "Begin a conversation with someone", args => {
 				if (args.Length < 2) {
 					ConsoleUtils.SlowWriteLine($"{args[0]} with who?");
 					return;
