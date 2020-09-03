@@ -242,6 +242,9 @@ namespace RPGCuzWhyNot {
 					ConsoleUtils.SlowWriteLine($"{formattedCommandCallNames[i].PadRight(longestFormattedCommandCallName)} - {commandHandler.commands[i].helpText}", 200, 300);
 				}
 			}));
+			commandHandler.AddCommand(new Command(new[] { "clear" }, "Clear the console", args => {
+				Console.Clear();
+			}));
 		}
 
 		public void ReactToCommand(string[] args) {
