@@ -35,7 +35,7 @@ namespace RPGCuzWhyNot.Data {
 		[JsonPropertyName("coveredLayers")]
 		public WearableLayers CoveredLayers { get; set; }
 
-		public IItem Instantiate() {
+		public IItem Create() {
 			IItem item;
 			if (Wearable && Wieldable)
 				item = new WieldableWearableItem(Name, CallName, DescriptionInInventory, DescriptionOnGround);

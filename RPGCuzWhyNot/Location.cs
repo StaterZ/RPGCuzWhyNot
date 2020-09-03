@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using RPGCuzWhyNot.Inventory;
 using RPGCuzWhyNot.Inventory.Item;
+using RPGCuzWhyNot.NPCs;
 
 namespace RPGCuzWhyNot {
 	public class Location : IThing, IHasItemInventory {
@@ -11,38 +12,60 @@ namespace RPGCuzWhyNot {
 		public string CallName { get; }
 		public readonly string description;
 		public readonly string pathDescription;
-		public readonly ReadOnlyCollection<Location> Paths;
+		public readonly ReadOnlyCollection<Path> Paths;
+		public readonly ReadOnlyCollection<CharacterLocationData> Characters;
 		public readonly ItemInventory items;
 		ItemInventory IHasItemInventory.Inventory => items;
+		public string ListingName => ThingExt.ListingName(this);
 
-		private readonly List<Location> paths = new List<Location>();
+		private readonly List<Path> paths = new List<Path>();
+		private readonly List<CharacterLocationData> characters = new List<CharacterLocationData>();
 
-		public Location(string callName, string name, string description, string pathDescription) {
+		public class Path {
+			public readonly Location location;
+			public readonly string description;
+
+			protected internal Path(Location location, string description) {
+				this.location = location;
+				this.description = description;
+			}
+		}
+
+		public Location(string callName, string name, string description) {
 			CallName = callName;
 			Name = name;
 			this.description = description;
-			this.pathDescription = pathDescription;
 			items = new ItemInventory(this);
 			Paths = paths.AsReadOnly();
+			Characters = characters.AsReadOnly();
 		}
 
-		public bool AddPathTo(Location location) {
-			if (paths.Contains(location))
-				return false;
-
-			paths.Add(location);
-			location.paths.Add(this);
-			return true;
+		public void AddPathTo(Location location, string description) {
+			if (paths.Any(path => path.location == location)) throw new InvalidOperationException("A path already exists");
+			paths.Add(new Path(location, description));
 		}
 
 		public bool GetConnectedLocationByCallName(string callName, out Location connectedLocation) {
-			foreach (Location location in paths) {
-				if (location.CallName != callName) continue;
+			foreach (Path path in paths) {
+				if (path.location.CallName != callName) continue;
 
-				connectedLocation = location;
+				connectedLocation = path.location;
 				return true;
 			}
+
 			connectedLocation = default;
+			return false;
+		}
+
+		public bool GetCharacterByCallName(string callName, out Character character) {
+			foreach (CharacterLocationData characterLocationData in characters) {
+				if (characterLocationData.character.CallName != callName) continue;
+
+				character = characterLocationData.character;
+				return true;
+			}
+
+			character = default;
 			return false;
 		}
 
@@ -65,30 +88,36 @@ namespace RPGCuzWhyNot {
 			string title = $"----- [ {Name} ] -----";
 
 			using (new FGColorScope(ConsoleColor.Yellow)) {
-				ConsoleUtils.SlowWriteLine(title);
+				Terminal.WriteLine(title);
 			}
 			PrintInformation();
 			using (new FGColorScope(ConsoleColor.Yellow)) {
-				ConsoleUtils.SlowWriteLine(new string('-', title.Length));
+				Terminal.WriteLine(new string('-', title.Length));
 			}
 		}
 
+		public void AddNPC(NPC npc, string glanceDescription, string approachDescription) {
+			characters.Add(new CharacterLocationData(npc, glanceDescription, approachDescription));
+		}
+
 		public void PrintInformation() {
-			ConsoleUtils.SlowWriteLine(description);
-			foreach (Location location in paths) {
-				ConsoleUtils.SlowWriteLine($"{location.pathDescription} [{location.CallName}]");
+			Terminal.WriteLine(description);
+			foreach (Path path in paths) {
+				Terminal.WriteLine($"{path.description} {{magenta}}([{path.location.CallName}])");
 			}
 
 			foreach (IItem item in items) {
-				ConsoleUtils.SlowWriteLine($"{item.DescriptionOnGround} [{item.CallName}]");
+				Terminal.WriteLine($"{item.DescriptionOnGround} {{magenta}}([{item.CallName}])");
+			}
+
+			foreach (CharacterLocationData characterLocationData in characters) {
+				Terminal.WriteLine($"{characterLocationData.glanceDescription} [{characterLocationData.character.CallName}]");
 			}
 		}
 
 		public override string ToString() {
 			return ListingName;
 		}
-
-		public string ListingName => ThingExt.ListingName(this);
 	}
 }
 

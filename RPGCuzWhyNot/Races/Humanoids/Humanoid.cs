@@ -2,9 +2,16 @@
 	public abstract class Humanoid : Race {
 		public Gender gender;
 
-		public enum Gender { //No stupid LBTQ shit here now, alright!? Nice and simple...
-			Male,
-			Female
+		public class Gender {
+			public static readonly Gender Male = new Gender(new Referal("he", "him", "his", "his", "himself"));
+			public static readonly Gender Female = new Gender(new Referal("she", "her", "her", "hers", "herself"));
+			public static readonly Gender Neutral = new Gender(new Referal("they", "them", "their", "theirs", "themselves"));
+
+			public readonly Referal referal;
+
+			public Gender(Referal referal) {
+				this.referal = referal;
+			}
 		}
 	}
 }

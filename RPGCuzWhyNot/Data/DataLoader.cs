@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using RPGCuzWhyNot.Inventory.Item;
 
 // TODO: Validate prototypes when loading.
 // TODO: Add character prototypes when they have been implemented in the rest of the game.
@@ -21,24 +22,52 @@ namespace RPGCuzWhyNot.Data {
 
 		private static Dictionary<string, ItemPrototype> itemPrototypes;
 		private static Dictionary<string, LocationPrototype> locationPrototypes;
-		private static Dictionary<string, Location> locations = new Dictionary<string, Location>();
+		private static Dictionary<string, Location> locations;
 
-		public static ReadOnlyDictionary<string, Location> Locations { get; private set; } =
-			new ReadOnlyDictionary<string, Location>(locations);
+		public static ReadOnlyDictionary<string, ItemPrototype> ItemPrototypes { get; private set; }
+		public static ReadOnlyDictionary<string, LocationPrototype> LocationPrototypes { get; private set; }
+		public static ReadOnlyDictionary<string, Location> Locations { get; private set; }
 
+		/// <summary>
+		/// Load all the game data files into the registry.
+		/// </summary>
 		public static void LoadGameData() {
-			locationPrototypes = LoadPrototypesFromPath<LocationPrototype>(LocationsPath)
-				.ToDictionary(proto => proto.CallName);
 			itemPrototypes = LoadPrototypesFromPath<ItemPrototype>(ItemsPath)
+				.ToDictionary(proto => proto.CallName);
+			locationPrototypes = LoadPrototypesFromPath<LocationPrototype>(LocationsPath)
 				.ToDictionary(proto => proto.CallName);
 
 			locations = locationPrototypes.Values
-				.Select(proto => proto.Instantiate())
+				.Select(proto => proto.Create())
 				.ToDictionary(location => location.CallName);
 
+			ItemPrototypes = new ReadOnlyDictionary<string, ItemPrototype>(itemPrototypes);
+			LocationPrototypes = new ReadOnlyDictionary<string, LocationPrototype>(locationPrototypes);
 			Locations = new ReadOnlyDictionary<string, Location>(locations);
 
 			SetupLocations();
+		}
+
+		/// <summary>
+		/// Construct an item from the prototype registry.
+		/// </summary>
+		/// <param name="name">The call name of the item</param>
+		public static IItem CreateItem(string name) {
+			if (!itemPrototypes.TryGetValue(name, out ItemPrototype itemPrototype))
+				throw new Exception($"An item prototype with the name '{name}' was not found.");
+
+			return itemPrototype.Create();
+		}
+
+		/// <summary>
+		/// Get an existing location from the registry.
+		/// </summary>
+		/// <param name="name">The call name of the location.</param>
+		public static Location GetLocation(string name) {
+			if (!locations.TryGetValue(name, out Location location))
+				throw new Exception($"A location with the name '{name} was not found.");
+
+			return location;
 		}
 
 		private static List<TProto> LoadPrototypesFromPath<TProto>(string path) where TProto : Prototype {
@@ -47,7 +76,14 @@ namespace RPGCuzWhyNot.Data {
 
 			foreach (string filePath in dataFiles) {
 				string fileContent = File.ReadAllText(filePath);
-				TProto prototype = JsonSerializer.Deserialize<TProto>(fileContent, serializerOptions);
+				TProto prototype;
+				try {
+					prototype = JsonSerializer.Deserialize<TProto>(fileContent, serializerOptions);
+				}
+				catch (JsonException e) {
+					throw new Exception($"Failed to deserialize data file: {filePath}", e);
+				}
+
 				prototype.CallName = Path.GetFileNameWithoutExtension(filePath);
 				prototypes.Add(prototype);
 			}
@@ -60,11 +96,11 @@ namespace RPGCuzWhyNot.Data {
 				LocationPrototype locationPrototype = locationPrototypes[name];
 
 				// Add all the paths to the location.
-				foreach (string path in locationPrototype.Paths) {
-					if (!locations.TryGetValue(path, out Location destination))
-						throw new Exception($"Referenced location '{path}' not found");
+				foreach ((string pathName, string pathDescription) in locationPrototype.Paths) {
+					if (!locations.TryGetValue(pathName, out Location destination))
+						throw new Exception($"Referenced location '{pathName}' not found");
 
-					location.AddPathTo(destination);
+					location.AddPathTo(destination, pathDescription);
 				}
 
 				// Create the items in the location.
@@ -72,7 +108,7 @@ namespace RPGCuzWhyNot.Data {
 					if (!itemPrototypes.TryGetValue(itemName, out ItemPrototype item))
 						throw new Exception($"Referenced item '{itemName}' not found");
 
-					location.items.MoveItem(item.Instantiate());
+					location.items.MoveItem(item.Create());
 				}
 			}
 		}

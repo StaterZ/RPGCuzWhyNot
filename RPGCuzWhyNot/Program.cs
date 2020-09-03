@@ -2,6 +2,7 @@
 using RPGCuzWhyNot.Data;
 using RPGCuzWhyNot.Inventory.Item;
 using RPGCuzWhyNot.Races.Humanoids;
+using RPGCuzWhyNot.NPCs;
 
 namespace RPGCuzWhyNot {
 	public static class Program {
@@ -10,18 +11,22 @@ namespace RPGCuzWhyNot {
 		private static readonly char[] commandArgumentSeparators = { ' ' };
 
 		private static void Main() {
-			ConsoleUtils.colorScopes.Add(new ConsoleUtils.ColorScope('[', ']', true, true, ConsoleColor.Magenta));
-
 			DataLoader.LoadGameData();
+
+			Location smithy = DataLoader.GetLocation("smithy");
+			smithy.AddNPC(new Orchibald(), "A smith can be seen by a large forge", "You walk up to the smith. He turns around to look at you.");
+			smithy.AddNPC(new SmithyCustomer(), "A customer casually stands leaning against a pillar.", "You walk up to the customer. She glares angrily as you approach...");
 
 			//construct player
 			player = new Player {
 				Name = "Bengt",
-				location = DataLoader.Locations["village"],
+				location = DataLoader.GetLocation("village"),
 				race = new Human {
 					gender = Humanoid.Gender.Male
 				}
 			};
+
+			player.Inventory.MoveItem(DataLoader.CreateItem("blue"));
 
 			//some basic event loop
 			player.location.PrintEnterInformation();

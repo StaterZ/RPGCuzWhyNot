@@ -1,8 +1,0 @@
-{
-  "name": "Unknown Smithy Customer",
-  "description": "You walk up to the customer in line. She glares angrily as you approach...",
-  "pathDescription": "A customer casually stands leaning against a pillar",
-  "paths": [
-    "smithy"
-  ]
-}

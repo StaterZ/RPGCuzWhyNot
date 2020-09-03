@@ -1,8 +1,0 @@
-{
-  "name": "Orhibald (Smith)",
-  "description": "You walk up to the smith. He turns around to look at you.",
-  "pathDescription": "A smith can be seen a the forge",
-  "paths": [
-    "smithy"
-  ]
-}

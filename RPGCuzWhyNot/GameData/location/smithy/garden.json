@@ -1,12 +1,11 @@
 {
-	"name": "Ancient Garden",
-	"description": "You stand in the old garden.",
-	"pathDescription": "There is an old looking garden in the distance.",
-	"items": [
-		"flower",
-		"bucket"
-	],
-	"paths": [
-		"smithy"
-	]
+  "name": "Ancient Garden",
+  "description": "An medium sized old garden stands before you.",
+  "paths": {
+    "smithy": "The door back into the smithy stands behind you."
+  },
+  "items": [
+    "flower",
+    "bucket"
+  ]
 }

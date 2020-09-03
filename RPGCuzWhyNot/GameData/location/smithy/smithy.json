@@ -1,11 +1,8 @@
 {
   "name": "Orhibalds Smithy",
   "description": "You walk in to the smithy. The heat of the great forge and the sweat of the dirty smith purge the air.",
-  "pathDescription": "A smithy can be seen in the city",
-  "paths": [
-    "village",
-    "orhibald",
-    "customer",
-    "garden"
-  ]
+  "paths": {
+    "village": "A door out of the smithy can be seen behind you.",
+    "garden": "An old garden can be seen out the back door."
+  }
 }

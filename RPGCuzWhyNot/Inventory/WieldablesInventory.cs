@@ -9,7 +9,7 @@ namespace RPGCuzWhyNot.Inventory {
 		protected override bool CheckMove(IWieldable item, bool silent) {
 			bool res = GetNumberOfHandsInUse() + item.HandsRequired <= HandsAvailable;
 			if (!res && !silent) {
-				ConsoleUtils.SlowWriteLine($"There are too few hands to wield any more things");
+				Terminal.WriteLine("There are too few hands to wield any more things.");
 			}
 
 			return res;

@@ -11,17 +11,14 @@ namespace RPGCuzWhyNot.Data {
 		[JsonPropertyName("description")]
 		public string Description { get; set; }
 
-		[JsonPropertyName("pathDescription")]
-		public string PathDescription { get; set; }
-
 		[JsonPropertyName("items")]
 		public List<string> Items { get; set; } = new List<string>();
 
 		[JsonPropertyName("paths")]
-		public List<string> Paths { get; set; } = new List<string>();
+		public Dictionary<string, string> Paths { get; set; } = new Dictionary<string, string>();
 
-		public Location Instantiate() {
-			return new Location(CallName, Name, Description, PathDescription);
+		public Location Create() {
+			return new Location(CallName, Name, Description);
 		}
 	}
 }
