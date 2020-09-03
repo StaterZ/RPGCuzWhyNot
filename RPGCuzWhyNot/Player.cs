@@ -34,7 +34,7 @@ namespace RPGCuzWhyNot {
 				}
 
 				if (location.GetConnectedLocationByCallName(args[1], out Location newLocation)) {
-					ConsoleUtils.FakeLoad(1000);
+					//ConsoleUtils.FakeLoad(1000);
 					location = newLocation;
 					location.PrintEnterInformation();
 				} else {
