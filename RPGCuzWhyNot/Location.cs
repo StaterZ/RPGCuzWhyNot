@@ -83,10 +83,10 @@ namespace RPGCuzWhyNot {
 		}
 
 		public override string ToString() {
-			return this.ListingName();
+			return ListingName;
 		}
 
-		public string ListingName() => ThingExt.ListingName(this);
+		public string ListingName => ThingExt.ListingName(this);
 	}
 }
 
