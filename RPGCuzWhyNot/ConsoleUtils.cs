@@ -74,16 +74,18 @@ namespace RPGCuzWhyNot {
 			}
 		}
 
-		private static readonly Stack<ColorState> colorStates = new Stack<ColorState>();
+		private static readonly Stack<(ColorScope scope, ColorState state)> colorStack = new Stack<(ColorScope scope, ColorState state)>();
 
 		public static void SmartWrite(char c) {
-			ColorScope stop = null;
+			ColorScope stop;
+			if (colorStack.Count > 0 && c == colorStack.Peek().scope.stop) {
+				stop = colorStack.Peek().scope;
+			}else{
+				stop = null;
+			}
+
 			ColorScope start = null;
 			foreach (ColorScope colorScope in colorScopes) {
-				if (c == colorScope.stop) {
-					stop = colorScope;
-					break;
-				}
 				if (c == colorScope.start) {
 					start = colorScope;
 					break;
@@ -91,7 +93,7 @@ namespace RPGCuzWhyNot {
 			}
 
 			void Start() {
-				colorStates.Push(new ColorState(Console.ForegroundColor, Console.BackgroundColor));
+				colorStack.Push((start, new ColorState(Console.ForegroundColor, Console.BackgroundColor)));
 
 				if (start.fg.HasValue) {
 					Console.ForegroundColor = start.fg.Value;
@@ -102,10 +104,10 @@ namespace RPGCuzWhyNot {
 			}
 
 			void Stop() {
-				ColorState prev = colorStates.Pop();
+				(ColorScope scope, ColorState state) prev = colorStack.Pop();
 				
-				Console.ForegroundColor = prev.fg;
-				Console.BackgroundColor = prev.bg;
+				Console.ForegroundColor = prev.state.fg;
+				Console.BackgroundColor = prev.state.bg;
 			}
 
 			if (stop != null && !stop.includeStart) {
