@@ -29,10 +29,10 @@ namespace RPGCuzWhyNot.Data {
 		[JsonPropertyName("defense")]
 		public int Defense { get; set; }
 
-		[JsonPropertyName("coveredParts")]
+		[JsonPropertyName("coveredParts"), JsonConverter(typeof(JsonEnumConverter))]
 		public BodyParts CoveredParts { get; set; }
 
-		[JsonPropertyName("coveredLayers")]
+		[JsonPropertyName("coveredLayers"), JsonConverter(typeof(JsonEnumConverter))]
 		public WearableLayers CoveredLayers { get; set; }
 
 		public IItem Create() {
