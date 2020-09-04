@@ -294,8 +294,8 @@ namespace RPGCuzWhyNot {
 				if (Wearing.MoveItem(wearable)) {
 					int covers = (int)wearable.CoveredParts;
 					string target = string.Empty;
-					if ((wearable.CoveredParts & BodyParts.Chest) == 0) {
-						target = " your " + ((BodyParts)(covers & ~(covers - 1))).ToString().ToLower();
+					if ((wearable.CoveredParts & WearableSlots.Chest) == 0) {
+						target = " your " + ((WearableSlots)(covers & ~(covers - 1))).ToString().ToLower();
 					}
 
 					Terminal.WriteLine($"You take {wearable.Name}{source} and put it on{target}.");
