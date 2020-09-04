@@ -16,7 +16,7 @@ namespace RPGCuzWhyNot {
 		public readonly ReadOnlyCollection<CharacterLocationData> Characters;
 		public readonly ItemInventory items;
 		ItemInventory IHasItemInventory.Inventory => items;
-		public string ListingName => ThingExt.ListingName(this);
+		public string ListingName => ThingExt.DefaultListingName(this);
 
 		private readonly List<Path> paths = new List<Path>();
 		private readonly List<CharacterLocationData> characters = new List<CharacterLocationData>();

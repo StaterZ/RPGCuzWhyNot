@@ -15,7 +15,7 @@ namespace RPGCuzWhyNot.Inventory {
 					string layers = (wearable.CoveredLayers & piece.CoveredLayers).FancyBitFlagEnum(out int count).ToLowerInvariant();
 					string layerPlural = count != 1 ? "s" : "";
 					string parts = (wearable.CoveredParts & piece.CoveredParts).FancyBitFlagEnum().ToLowerInvariant();
-					Terminal.WriteLine($"  {piece.ListingName()}, they both cover the {layers} layer{layerPlural} on the {parts}");
+					Terminal.WriteLine($"  {piece.ListingName}, they both cover the {layers} layer{layerPlural} on the {parts}");
 				}
 				failed = true;
 			}

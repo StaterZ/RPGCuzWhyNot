@@ -7,7 +7,7 @@
 			: base(name, callName, descInv, descGround) { }
 
 		public override string ListingWithStats
-			=> ContainedInventory is WieldablesInventory ? WieldableExt.ListingWithStats(this) : WearableExt.ListingWithStats(this);
+			=> ContainedInventory is WieldablesInventory ? WieldableExt.DefaultListingWithStats(this) : WearableExt.DefaultListingWithStats(this);
 	}
 }
 

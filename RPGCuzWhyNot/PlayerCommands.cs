@@ -206,7 +206,7 @@ namespace RPGCuzWhyNot {
 				Terminal.WriteLine("Inventory:");
 				foreach (IItem item in Inventory) {
 					Terminal.Write("  ");
-					Terminal.WriteLine(item.ListingName());
+					Terminal.WriteLine(item.ListingName);
 				}
 			}));
 			commandHandler.AddCommand(new Command(new[] { "items" }, "List the items nearby", args => {
@@ -218,7 +218,7 @@ namespace RPGCuzWhyNot {
 				Terminal.WriteLine("You look around and see:");
 				foreach (IItem item in Location.items) {
 					Terminal.Write("  ");
-					Terminal.WriteLine(item.ListingName());
+					Terminal.WriteLine(item.ListingName);
 				}
 			}));
 			commandHandler.AddCommand(new Command(new[] { "help", "commands" }, "Show this list", args => {
