@@ -126,8 +126,18 @@ namespace RPGCuzWhyNot {
 				}
 			}
 			if (doPop) {
-				int parenEnd = text.IndexOf(')', parenStart);
-				if (parenEnd < 0)
+				int parenEnd = parenStart + 1;
+				int parenDepth = 1;
+				for (; parenEnd < text.Length; ++parenEnd) {
+					switch (text[parenEnd]) {
+						case '(': ++parenDepth; break;
+						case ')': --parenDepth; break;
+					}
+					if (parenDepth == 0) {
+						break;
+					}
+				}
+				if (parenEnd == text.Length)
 					throw new ArgumentException();
 				string message = text.Substring(parenStart + 1, parenEnd - (parenStart + 1));
 				Write(message);
