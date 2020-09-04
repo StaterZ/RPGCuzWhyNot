@@ -29,11 +29,12 @@ namespace RPGCuzWhyNot {
 
 		private void LoadCommands() {
 			commandHandler.AddCommand(new Command(new[] { "go", "goto", "enter" }, "Go to another location", args => {
-				if (args.Length < 2) {
+				if (args.FirstArgument == "") {
 					Terminal.WriteLine("Where to?");
 				}
 
-				if (location.GetConnectedLocationByCallName(args[1], out Location newLocation)) {
+				string callName = args.FirstArgument;
+				if (location.GetConnectedLocationByCallName(callName, out Location newLocation)) {
 					//ConsoleUtils.FakeLoad(1000);
 					location = newLocation;
 					location.PrintEnterInformation();
@@ -53,12 +54,12 @@ namespace RPGCuzWhyNot {
 				}
 			}));
 			commandHandler.AddCommand(new Command(new[] { "wear" }, "Wear something", args => {
-				if (args.Length < 2) {
+				if (args.FirstArgument == "") {
 					Terminal.WriteLine("No item specified");
 					return;
 				}
 
-				string callName = args[1];
+				string callName = args.FirstArgument;
 				if (Inventory.ContainsCallName(callName, out IItem item)
 				|| location.items.ContainsCallName(callName, out item)
 				|| ((IInventory)Wielding).ContainsCallName(callName, out item)) {
@@ -68,12 +69,13 @@ namespace RPGCuzWhyNot {
 				}
 			}));
 			commandHandler.AddCommand(new Command(new[] { "unwear" }, "Remove something worn", args => {
-				if (args.Length < 2) {
+				if (args.FirstArgument == "") {
 					Terminal.WriteLine("No item specified");
 					return;
 				}
 
-				if (Wearing.ContainsCallName(args[1], out IWearable item)) {
+				string callName = args.FirstArgument;
+				if (Wearing.ContainsCallName(callName, out IWearable item)) {
 					if (Inventory.MoveItem(item)) {
 						Terminal.WriteLine($"You remove {item.Name} and put it in your inventory");
 					}
@@ -85,12 +87,12 @@ namespace RPGCuzWhyNot {
 				ListWearing();
 			}));
 			commandHandler.AddCommand(new Command(new[] { "wield" }, "Wield something", args => {
-				if (args.Length < 2) {
+				if (args.FirstArgument == "") {
 					Terminal.WriteLine("No item specified");
 					return;
 				}
 
-				string callName = args[1];
+				string callName = args.FirstArgument;
 				if (Inventory.ContainsCallName(callName, out IItem item)
 				|| location.items.ContainsCallName(callName, out item)
 				|| ((IInventory)Wearing).ContainsCallName(callName, out item)) {
@@ -100,12 +102,12 @@ namespace RPGCuzWhyNot {
 				}
 			}));
 			commandHandler.AddCommand(new Command(new[] { "unwield" }, "Remove something wielded", args => {
-				if (args.Length < 2) {
+				if (args.FirstArgument == "") {
 					Terminal.WriteLine("No item specified");
 					return;
 				}
 
-				string callName = args[1];
+				string callName = args.FirstArgument;
 				if (Wielding.ContainsCallName(callName, out IWieldable item)) {
 					if (Inventory.MoveItem(item)) {
 						Terminal.WriteLine($"You unwield {item.Name} and put it in your inventory.");
@@ -120,12 +122,12 @@ namespace RPGCuzWhyNot {
 				ListWielding();
 			}));
 			commandHandler.AddCommand(new Command(new[] { "equip" }, "Equip something, either by wearing it, or wielding it", args => {
-				if (args.Length < 2) {
+				if (args.FirstArgument == "") {
 					Terminal.WriteLine("No item specified");
 					return;
 				}
 
-				string callName = args[1];
+				string callName = args.FirstArgument;
 				if (Inventory.ContainsCallName(callName, out IItem item) || location.items.ContainsCallName(callName, out item)) {
 					if (item is IWearable) {
 						if (item is IWieldable) {
@@ -143,12 +145,12 @@ namespace RPGCuzWhyNot {
 				}
 			}));
 			commandHandler.AddCommand(new Command(new[] { "unequip" }, "Remove something worn or wielded", args => {
-				if (args.Length < 2) {
+				if (args.FirstArgument == "") {
 					Terminal.WriteLine("No item specified");
 					return;
 				}
 
-				string callName = args[1];
+				string callName = args.FirstArgument;
 				bool wielding = ((IInventory)Wielding).ContainsCallName(callName, out IItem item);
 				string action = wielding ? "unwield" : "remove";
 				if (wielding || ((IInventory)Wearing).ContainsCallName(callName, out item)) {
@@ -162,8 +164,8 @@ namespace RPGCuzWhyNot {
 				}
 			}));
 			commandHandler.AddCommand(new Command(new[] { "equipped", "gear" }, "List what is currently worn and wielded", args => {
-				if (args.Length > 1) {
-					Terminal.WriteLine($"'{args[0]}' does not take any arguments");
+				if (args.FirstArgument != "") {
+					Terminal.WriteLine($"'{args.CommandName}' does not take any arguments");
 					return;
 				}
 				ListWielding();
@@ -171,12 +173,13 @@ namespace RPGCuzWhyNot {
 				ListWearing();
 			}));
 			commandHandler.AddCommand(new Command(new[] { "take", "pickup", "grab" }, "Take an item from the current location", args => {
-				if (args.Length < 2) {
+				if (args.FirstArgument == "") {
 					Terminal.WriteLine("Take what?");
 					return;
 				}
 
-				if (location.items.ContainsCallName(args[1], out IItem item)) {
+				string callName = args.FirstArgument;
+				if (location.items.ContainsCallName(callName, out IItem item)) {
 					if (Inventory.MoveItem(item)) {
 						Terminal.WriteLine($"You picked up {item.Name} and put it in your inventory.");
 					} else {
@@ -187,12 +190,12 @@ namespace RPGCuzWhyNot {
 				}
 			}));
 			commandHandler.AddCommand(new Command(new[] { "drop" }, "Drop an item on the current location", args => {
-				if (args.Length < 2) {
+				if (args.FirstArgument == "") {
 					Terminal.WriteLine("Drop what?");
 					return;
 				}
 
-				string callName = args[1];
+				string callName = args.FirstArgument;
 				if (Inventory.ContainsCallName(callName, out IItem item)
 				|| ((IInventory)Wielding).ContainsCallName(callName, out item)
 				|| ((IInventory)Wearing).ContainsCallName(callName, out item)) {
@@ -256,12 +259,13 @@ namespace RPGCuzWhyNot {
 				Console.Clear();
 			}));
 			commandHandler.AddCommand(new Command(new[] { "speak", "talk", "converse" }, "Begin a conversation with someone", args => {
-				if (args.Length < 2) {
-					Terminal.WriteLine($"{args[0]} with who?");
+				if (args.FirstArgument == "") {
+					Terminal.WriteLine($"{args.CommandName} with who?");
 					return;
 				}
 
-				if (location.GetCharacterByCallName(args[1], out Character conversationPartner)) {
+				string callName = args.FirstArgument;
+				if (location.GetCharacterByCallName(callName, out Character conversationPartner)) {
 					using (new FGColorScope(ConsoleColor.Cyan)) {
 						//ConsoleUtils.PrintDivider('#');
 						Terminal.WriteLine($"A conversation with <{conversationPartner.Name}> has begun:");
@@ -274,10 +278,8 @@ namespace RPGCuzWhyNot {
 			}));
 		}
 
-		public void ReactToCommand(string[] args) {
-			if (args.Length == 0) return;
-
-			if (!commandHandler.TryHandle(args)) {
+		public void ReactToCommand(string message) {
+			if (!commandHandler.TryHandle(message)) {
 				Terminal.WriteLine("I don't understand.");
 			}
 		}

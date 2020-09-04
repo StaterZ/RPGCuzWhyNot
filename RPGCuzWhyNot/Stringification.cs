@@ -5,11 +5,15 @@ using System.Text;
 namespace RPGCuzWhyNot {
 	public static class Stringification {
 		public static string StringifyArray(string start, string separator, string end, string[] array) {
+			return StringifyArray(start, separator, end, array, 0, array.Length);
+		}
+
+		public static string StringifyArray(string start, string separator, string end, string[] array, int begin, int count) {
 			StringBuilder builder = new StringBuilder();
 
 			builder.Append(start);
-			for (int i = 0; i < array.Length; i++) {
-				if (i > 0) {
+			for (int i = begin; i < begin + count; i++) {
+				if (i != begin) {
 					builder.Append(separator);
 				}
 

@@ -8,8 +8,6 @@ namespace RPGCuzWhyNot {
 	public static class Program {
 		public static Player player;
 
-		private static readonly char[] commandArgumentSeparators = { ' ' };
-
 		private static void Main() {
 			DataLoader.LoadGameData();
 
@@ -33,9 +31,8 @@ namespace RPGCuzWhyNot {
 			while (true) {
 				Console.WriteLine();
 				string commandText = ConsoleUtils.Ask("|> ").ToLower();
-				string[] segments = commandText.Split(commandArgumentSeparators, StringSplitOptions.RemoveEmptyEntries);
 				Console.WriteLine();
-				player.ReactToCommand(segments);
+				player.ReactToCommand(commandText);
 			}
 		}
 	}
