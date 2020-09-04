@@ -23,7 +23,7 @@ namespace RPGCuzWhyNot {
 		/// <param name="options">The options the player can respond with.</param>
 		/// <returns></returns>
 		public static string Ask(string question, params string[] options) {
-			Terminal.Write(question + "   " + StringifyArray("[", ", ", "]", options));
+			Terminal.Write(question + "   " + Stringification.StringifyArray("[", ", ", "]", options));
 
 			while (true) {
 				string answer = Console.ReadLine();
@@ -34,22 +34,6 @@ namespace RPGCuzWhyNot {
 
 				Terminal.WriteLine("Invalid answer");
 			}
-		}
-
-		public static string StringifyArray(string start, string separator, string end, string[] array) {
-			StringBuilder builder = new StringBuilder();
-
-			builder.Append(start);
-			for (int i = 0; i < array.Length; i++) {
-				if (i > 0) {
-					builder.Append(separator);
-				}
-
-				builder.Append(array[i]);
-			}
-			builder.Append(end);
-
-			return builder.ToString();
 		}
 
 		public static void PrintDivider(char c) {

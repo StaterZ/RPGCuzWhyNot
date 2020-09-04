@@ -230,7 +230,7 @@ namespace RPGCuzWhyNot {
 				string[] formattedCommandCallNames = new string[commandHandler.commands.Count];
 				int longestFormattedCommandCallName = 0;
 				for (int i = 0; i < commandHandler.commands.Count; i++) {
-					string formattedCommandCallName = ConsoleUtils.StringifyArray("[", ", ", "]", commandHandler.commands[i].callNames);
+					string formattedCommandCallName = Stringification.StringifyArray("[", ", ", "]", commandHandler.commands[i].callNames);
 					formattedCommandCallNames[i] = formattedCommandCallName;
 
 					if (formattedCommandCallName.Length > longestFormattedCommandCallName) {
