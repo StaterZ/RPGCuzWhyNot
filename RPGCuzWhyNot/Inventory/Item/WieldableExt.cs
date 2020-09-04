@@ -1,7 +1,8 @@
 ﻿namespace RPGCuzWhyNot.Inventory.Item {
 	public static class WieldableExt {
 		public static string ListingWithStats(this IWieldable w) {
-			return $"{w.ListingName()}  {w.MeleeDamage} Melee Damage";
+			string plus = w.MeleeDamage > 0 ? "+" : "";
+			return $"{w.ListingName()}  {plus}{w.MeleeDamage} Melee Damage";
 		}
 	}
 }

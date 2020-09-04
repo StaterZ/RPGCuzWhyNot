@@ -5,6 +5,9 @@
 
 		public WieldableWearableItem(string name, string callName, string descInv, string descGround)
 			: base(name, callName, descInv, descGround) { }
+
+		public override string ListingWithStats
+			=> ContainedInventory is WieldablesInventory ? WieldableExt.ListingWithStats(this) : WearableExt.ListingWithStats(this);
 	}
 }
 

@@ -324,7 +324,7 @@ namespace RPGCuzWhyNot {
 			}
 			Terminal.WriteLine("You are currently wearing:");
 			foreach (IWearable wearable in Wearing) {
-				Terminal.WriteLine($"  {wearable.ListingWithStats()}");
+				Terminal.WriteLine($"  {wearable.ListingWithStats}");
 			}
 		}
 
@@ -335,7 +335,7 @@ namespace RPGCuzWhyNot {
 			}
 			Terminal.WriteLine("You are currently wielding:");
 			foreach (IWieldable weildable in Wielding) {
-				Terminal.WriteLine($"  {weildable.ListingWithStats()}");
+				Terminal.WriteLine($"  {weildable.ListingWithStats}");
 			}
 		}
 	}

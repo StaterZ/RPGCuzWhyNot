@@ -5,7 +5,7 @@
 		WearableSlots CoveredParts { get; set; }
 		WearableLayers CoveredLayers { get; set; }
 
-		string ListingWithStats();
+		string ListingWithStats { get; }
 	}
 }
 
