@@ -41,7 +41,7 @@ namespace RPGCuzWhyNot {
 					Terminal.WriteLine("I don't know where that is.");
 				}
 			}));
-			commandHandler.AddCommand(new Command(new[] { "where" }, "Show information about the current location", args => {
+			commandHandler.AddCommand(new Command(new[] { "where", "location" }, "Show information about the current location", args => {
 				Terminal.WriteLine($"You are in: {location}");
 				location.PrintInformation();
 			}));
@@ -161,7 +161,7 @@ namespace RPGCuzWhyNot {
 					Terminal.WriteLine("You have nothing such equiped.");
 				}
 			}));
-			commandHandler.AddCommand(new Command(new[] { "equipped" }, "List what is currently worn and wielded", args => {
+			commandHandler.AddCommand(new Command(new[] { "equipped", "gear" }, "List what is currently worn and wielded", args => {
 				if (args.Length > 1) {
 					Terminal.WriteLine($"'{args[0]}' does not take any arguments");
 					return;
