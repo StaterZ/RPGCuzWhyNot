@@ -24,7 +24,7 @@ namespace RPGCuzWhyNot {
 				}
 			};
 
-			player.Inventory.MoveItem(DataLoader.CreateItem("blue"));
+			player.Inventory.MoveItem(DataLoader.CreateItem("blue potion"));
 
 			//some basic event loop
 			player.location.PrintEnterInformation();
