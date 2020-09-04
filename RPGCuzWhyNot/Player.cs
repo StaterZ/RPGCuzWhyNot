@@ -59,7 +59,9 @@ namespace RPGCuzWhyNot {
 				}
 
 				string callName = args[1];
-				if (Inventory.ContainsCallName(callName, out IItem item) || location.items.ContainsCallName(callName, out item)) {
+				if (Inventory.ContainsCallName(callName, out IItem item)
+				|| location.items.ContainsCallName(callName, out item)
+				|| ((IInventory)Wielding).ContainsCallName(callName, out item)) {
 					Wear(item);
 				} else {
 					Terminal.WriteLine("Item not found, does it exist?");
@@ -89,7 +91,9 @@ namespace RPGCuzWhyNot {
 				}
 
 				string callName = args[1];
-				if (Inventory.ContainsCallName(callName, out IItem item) || location.items.ContainsCallName(callName, out item)) {
+				if (Inventory.ContainsCallName(callName, out IItem item)
+				|| location.items.ContainsCallName(callName, out item)
+				|| ((IInventory)Wearing).ContainsCallName(callName, out item)) {
 					Wield(item);
 				} else {
 					Terminal.WriteLine("Item not found, does it exist?");
