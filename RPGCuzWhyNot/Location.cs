@@ -86,6 +86,7 @@ namespace RPGCuzWhyNot {
 
 		public void PrintEnterInformation() {
 			string title = $"----- [ {Name} ] -----";
+			NumericCallNames.Clear();
 
 			using (new FGColorScope(ConsoleColor.Yellow)) {
 				Terminal.WriteLine(title);
@@ -103,15 +104,18 @@ namespace RPGCuzWhyNot {
 		public void PrintInformation() {
 			Terminal.WriteLine(description);
 			foreach (Path path in paths) {
-				Terminal.WriteLine($"{path.description} {{magenta}}([{path.location.CallName}])");
+				Terminal.WriteLine($"{NumericCallNames.NumberHeading}{path.description} {{magenta}}([{path.location.CallName}])");
+				NumericCallNames.Add(path.location);
 			}
 
 			foreach (IItem item in items) {
-				Terminal.WriteLine($"{item.DescriptionOnGround} {{magenta}}([{item.CallName}])");
+				Terminal.WriteLine($"{NumericCallNames.NumberHeading}{item.DescriptionOnGround} {{magenta}}([{item.CallName}])");
+				NumericCallNames.Add(item);
 			}
 
 			foreach (CharacterLocationData characterLocationData in characters) {
-				Terminal.WriteLine($"{characterLocationData.glanceDescription} {{magenta}}([{characterLocationData.character.CallName}])");
+				Terminal.WriteLine($"{NumericCallNames.NumberHeading}{characterLocationData.glanceDescription} {{magenta}}([{characterLocationData.character.CallName}])");
+				NumericCallNames.Add(characterLocationData.character);
 			}
 		}
 
