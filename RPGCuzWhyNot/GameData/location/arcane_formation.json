@@ -1,9 +1,10 @@
 {
+  "callName": "formation",
   "name": "The Arcane Construct",
   "description": "A great many stones sprawl out across the terrain.\nThey seem sprinkled around randomly across the ground.\nThe stones are full of intricately carved lines and symbols. They seem to emmit a soft purple glow.",
   "paths": {
     "village": "A village can be seen a few hundred meters away",
-    "nest": "In the horizon a dragons nest can be seen atop a great mountain."
+    "dragons_nest": "In the horizon a dragons nest can be seen atop a great mountain."
   },
   "items": [
     "missile"

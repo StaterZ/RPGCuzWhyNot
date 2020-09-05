@@ -1,8 +1,9 @@
 ﻿{
+  "callName": "nest",
   "name": "The Elder Dragons Nest",
   "description": "A large lair sprawls out around you. The deep ominous sound of the dragon breathing can be heard further in.",
   "paths": {
     "village": "The smoke of a little village can be seen in the distance.",
-    "formation": "A weird configuration of stones can be seen far below the great mountain."
+    "arcane_formation": "A weird configuration of stones can be seen far below the great mountain."
   }
 }

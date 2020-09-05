@@ -4,7 +4,10 @@ using RPGCuzWhyNot.Inventory.Item;
 
 namespace RPGCuzWhyNot.Data {
 	[Serializable]
-	public sealed class ItemPrototype : Prototype {
+	public sealed class ItemPrototype {
+		[JsonPropertyName("callName")]
+		public string CallName { get; set; }
+
 		[JsonPropertyName("name")]
 		public string Name { get; set; }
 
