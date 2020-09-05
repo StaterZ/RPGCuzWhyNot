@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -7,7 +7,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using RPGCuzWhyNot.Inventory.Item;
 
-// TODO: Validate prototypes when loading.
 // TODO: Add character prototypes when they have been implemented in the rest of the game.
 
 namespace RPGCuzWhyNot.Data {
@@ -34,6 +33,8 @@ namespace RPGCuzWhyNot.Data {
 		public static void LoadGameData() {
 			itemPrototypes = LoadPrototypesFromPath<ItemPrototype>(ItemsPath);
 			locationPrototypes = LoadPrototypesFromPath<LocationPrototype>(LocationsPath);
+
+			ValidatePrototypes();
 
 			locations = new Dictionary<string, Location>(locationPrototypes.Count);
 			foreach ((string id, LocationPrototype prototype) in locationPrototypes) {
@@ -70,7 +71,7 @@ namespace RPGCuzWhyNot.Data {
 			return location;
 		}
 
-		private static Dictionary<string, TProto> LoadPrototypesFromPath<TProto>(string path) {
+		private static Dictionary<string, TProto> LoadPrototypesFromPath<TProto>(string path) where TProto : Prototype {
 			string[] dataFiles = Directory.GetFiles(path, "*.json", SearchOption.AllDirectories);
 			var prototypes = new Dictionary<string, TProto>(dataFiles.Length);
 
@@ -84,7 +85,9 @@ namespace RPGCuzWhyNot.Data {
 					throw new DataLoaderException($"Failed to deserialize data file: {filePath}.", e);
 				}
 
+				// The data file name is used as the item id.
 				string id = Path.GetFileNameWithoutExtension(filePath);
+				prototype.Id = id;
 				if (!prototypes.TryAdd(id, prototype))
 					throw new DataLoaderException($"Duplicate prototype definition of '{id}': {filePath}.");
 			}
@@ -112,6 +115,43 @@ namespace RPGCuzWhyNot.Data {
 					location.items.MoveItem(item.Create());
 				}
 			}
+		}
+
+		private static void ValidatePrototypes() {
+			static void CheckThingPrototype(Prototype prototype) {
+				CheckRequiredProperty(prototype, prototype.CallName, "callName");
+				CheckRequiredProperty(prototype, prototype.Name, "name");
+			}
+
+			// Validate location prototypes.
+			foreach (LocationPrototype proto in locationPrototypes.Values) {
+				CheckThingPrototype(proto);
+				CheckRequiredProperty(proto, proto.Description, "description");
+
+				if (proto.Paths.ContainsKey(proto.Id))
+					throw new DataLoaderException($"Prototype '{proto.Id}' contains a path to itself.");
+			}
+
+			// Validate item prototypes.
+			foreach (ItemPrototype proto in itemPrototypes.Values) {
+				CheckThingPrototype(proto);
+				CheckRequiredProperty(proto, proto.DescriptionInInventory, "inventoryDescription");
+				CheckRequiredProperty(proto, proto.DescriptionOnGround, "groundDescription");
+
+				if (proto.Wearable) {
+					if (proto.CoveredParts == 0) ThrowMissingProperty(proto, "coveredParts");
+					if (proto.CoveredLayers == 0) ThrowMissingProperty(proto, "coveredLayers");
+				}
+			}
+		}
+
+		private static void CheckRequiredProperty(Prototype prototype, string value, string propertyName) {
+			if (string.IsNullOrWhiteSpace(value))
+				ThrowMissingProperty(prototype, propertyName);
+		}
+
+		private static void ThrowMissingProperty(Prototype prototype, string propertyName) {
+			throw new DataLoaderException($"Missing property '{propertyName}' in prototype '{prototype.Id}'.");
 		}
 	}
 }

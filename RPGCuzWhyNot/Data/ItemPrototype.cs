@@ -1,16 +1,10 @@
-using System;
+﻿using System;
 using System.Text.Json.Serialization;
 using RPGCuzWhyNot.Inventory.Item;
 
 namespace RPGCuzWhyNot.Data {
 	[Serializable]
-	public sealed class ItemPrototype {
-		[JsonPropertyName("callName")]
-		public string CallName { get; set; }
-
-		[JsonPropertyName("name")]
-		public string Name { get; set; }
-
+	public sealed class ItemPrototype : Prototype {
 		[JsonPropertyName("inventoryDescription")]
 		public string DescriptionInInventory { get; set; }
 

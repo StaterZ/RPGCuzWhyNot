@@ -1,16 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace RPGCuzWhyNot.Data {
 	[Serializable]
-	public class LocationPrototype {
-		[JsonPropertyName("callName")]
-		public string CallName { get; set; }
-
-		[JsonPropertyName("name")]
-		public string Name { get; set; }
-
+	public class LocationPrototype : Prototype {
 		[JsonPropertyName("description")]
 		public string Description { get; set; }
 
