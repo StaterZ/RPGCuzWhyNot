@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -115,6 +116,12 @@ namespace RPGCuzWhyNot {
 				NumericCallNames.Add(characterLocationData.character);
 			}
 		}
+
+		bool IHasInventory.MoveItem(IItem item, bool silent) => items.MoveItem(item, silent);
+		bool IHasInventory.ContainsCallName(string callName, out IItem item) => items.ContainsCallName(callName, out item);
+
+		IEnumerator<IItem> IEnumerable<IItem>.GetEnumerator() => items.GetEnumerator();
+		IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)items).GetEnumerator();
 	}
 }
 
