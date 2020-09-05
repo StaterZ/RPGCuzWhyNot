@@ -8,6 +8,11 @@ namespace RPGCuzWhyNot {
 			return StringifyArray(start, separator, end, array, 0, array.Length);
 		}
 
+		public static string StringifyArray(string start, string separator, string end, string[] array, Range range) {
+			var (begin, count) = range.GetOffsetAndLength(array.Length);
+			return StringifyArray(start, separator, end, array, begin, count);
+		}
+
 		public static string StringifyArray(string start, string separator, string end, string[] array, int begin, int count) {
 			StringBuilder builder = new StringBuilder();
 

@@ -27,12 +27,12 @@ namespace RPGCuzWhyNot {
 				for (int i = 1; i < parts.Length; ++i) {
 					string part = parts[i];
 					if (command.keywords.Contains(part)) {
-						args[paramName] = Stringification.StringifyArray("", " ", "", parts, argStart, i - argStart);
+						args[paramName] = Stringification.StringifyArray("", " ", "", parts, argStart..i);
 						argStart = i + 1;
 						paramName = part;
 					}
 				}
-				args[paramName] = Stringification.StringifyArray("", " ", "", parts, argStart, parts.Length - argStart);
+				args[paramName] = Stringification.StringifyArray("", " ", "", parts, argStart..);
 				command.effect(new CommandArguments(args));
 				return true;
 			}

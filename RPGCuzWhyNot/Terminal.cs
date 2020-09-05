@@ -107,7 +107,7 @@ namespace RPGCuzWhyNot {
 				PushState(Save.Everything & ~Save.CursorPosition);
 				doPop = true;
 			}
-			string cmds = text.Substring(offset, braceEnd - offset);
+			string cmds = text[offset..braceEnd];
 			int cmdStart = 0;
 			while (cmdStart < cmds.Length) {
 				int cmdEnd = cmds.IndexOf(';', cmdStart);
@@ -115,12 +115,12 @@ namespace RPGCuzWhyNot {
 					cmdEnd = cmds.Length;
 				int argSep = cmds.IndexOf(':', cmdStart, cmdEnd - cmdStart);
 				if (argSep < 0) {
-					string cmd = cmds.Substring(cmdStart, cmdEnd - cmdStart);
+					string cmd = cmds[cmdStart..cmdEnd];
 					HandleCommandWithoutArg(cmd);
 					cmdStart = cmdEnd + 1;
 				} else {
-					string cmd = cmds.Substring(cmdStart, argSep - cmdStart);
-					string arg = cmds.Substring(argSep + 1, cmdEnd - (argSep + 1));
+					string cmd = cmds[cmdStart..argSep];
+					string arg = cmds[(argSep + 1)..cmdEnd];
 					HandleCommandWithArg(cmd, arg);
 					cmdStart = cmdEnd + 1;
 				}
@@ -139,7 +139,7 @@ namespace RPGCuzWhyNot {
 				}
 				if (parenEnd == text.Length)
 					throw new ArgumentException();
-				string message = text.Substring(parenStart + 1, parenEnd - (parenStart + 1));
+				string message = text[(parenStart + 1)..parenEnd];
 				Write(message);
 				PopState();
 				return parenEnd + 1;
@@ -159,23 +159,24 @@ namespace RPGCuzWhyNot {
 					int sep = arg.IndexOf(',');
 					if (sep < 0) throw new ArgumentException();
 					string left, right;
-					left = arg.Substring(0, sep);
-					right = arg.Substring(sep + 1, arg.Length - (sep + 1));
+					left = arg[..sep];
+					right = arg[(sep + 1)..];
 					CursorPosition = new Position(int.Parse(left), int.Parse(right));
 					break;
 				case "push":
 					Save save = 0;
 					foreach (char c in arg) {
-						switch (c) {
-							case 'f': save |= Save.ForegroundColor; break;
-							case 'b': save |= Save.BackgroundColor; break;
-							case 'p': save |= Save.CursorPosition; break;
-							case 'm': save |= Save.MillisPerChar; break;
-							case 'h': save |= Save.BeepFrequency; break;
-							case 'c': save |= Save.CharsPerBeep; break;
-							case 'd': save |= Save.BeepDuration; break;
-							default: throw new ArgumentException();
-						}
+						save |= c switch
+						{
+							'f' => Save.ForegroundColor,
+							'b' => Save.BackgroundColor,
+							'p' => Save.CursorPosition,
+							'm' => Save.MillisPerChar,
+							'h' => Save.BeepFrequency,
+							'c' => Save.CharsPerBeep,
+							'd' => Save.BeepDuration,
+							_ => throw new ArgumentException(),
+						};
 					}
 					PushState(save);
 					break;
