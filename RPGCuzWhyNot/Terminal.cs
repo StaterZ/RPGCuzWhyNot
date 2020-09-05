@@ -113,11 +113,11 @@ namespace RPGCuzWhyNot {
 			int cmdStart = 0;
 			while (cmdStart < cmds.Length) {
 				int cmdEnd = cmds.IndexOf(';', cmdStart);
-				if (cmdEnd < 0) {
+				if (cmdEnd == -1) {
 					cmdEnd = cmds.Length;
 				}
 				int argSep = cmds.IndexOf(':', cmdStart, cmdEnd - cmdStart);
-				if (argSep < 0) {
+				if (argSep == -1) {
 					string cmd = cmds[cmdStart..cmdEnd];
 					HandleCommandWithoutArg(cmd);
 					cmdStart = cmdEnd + 1;
