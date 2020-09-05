@@ -10,6 +10,12 @@ namespace RPGCuzWhyNot {
 		public Health health;
 		public Alignment Alignment { get; set; }
 
+		//stats
+		public int speed;
+		public int strength;
+		public int accuracy;
+		public int fortitude;
+
 		public virtual void Attack(Character target) {
 		}
 
