@@ -158,14 +158,6 @@ namespace RPGCuzWhyNot {
 				case "ms/ch": MillisPerChar = int.Parse(arg); break;
 				case "bHz": BeepFrequency = int.Parse(arg); break;
 				case "bMs": BeepDuration = int.Parse(arg); break;
-				case "cursor":
-					int sep = arg.IndexOf(',');
-					if (sep < 0) throw new ArgumentException();
-					string left, right;
-					left = arg[..sep];
-					right = arg[(sep + 1)..];
-					CursorPosition = new Position(int.Parse(left), int.Parse(right));
-					break;
 				case "push":
 					Save save = 0;
 					foreach (char c in arg) {
