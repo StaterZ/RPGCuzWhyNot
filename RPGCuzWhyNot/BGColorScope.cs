@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace RPGCuzWhyNot {
-	public class BGColorScope : IDisposable {
+	public struct BGColorScope : IDisposable {
 		public BGColorScope(ConsoleColor color) {
 			Terminal.PushForegroundColor(color);
 		}

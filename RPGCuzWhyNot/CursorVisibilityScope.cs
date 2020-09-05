@@ -1,8 +1,7 @@
 ﻿using System;
 
-namespace RPGCuzWhyNot
-{
-	public class CursorVisibilityScope : IDisposable {
+namespace RPGCuzWhyNot {
+	public struct CursorVisibilityScope : IDisposable {
 		private readonly bool prevIsVisible;
 
 		public CursorVisibilityScope(bool isVisible) {
