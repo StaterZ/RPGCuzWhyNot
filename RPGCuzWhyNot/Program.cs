@@ -1,10 +1,7 @@
-﻿using System;
-using RPGCuzWhyNot.Data;
-using RPGCuzWhyNot.Enemies;
+﻿using RPGCuzWhyNot.Data;
 using RPGCuzWhyNot.Inventory.Item;
-using RPGCuzWhyNot.Races.Humanoids;
 using RPGCuzWhyNot.NPCs;
-using StaterZ.Core.HealthSystem;
+using RPGCuzWhyNot.Races.Humanoids;
 
 namespace RPGCuzWhyNot {
 	public static class Program {
@@ -73,12 +70,18 @@ namespace RPGCuzWhyNot {
 			while (true) {
 				//Players Turn
 				Terminal.WriteLine($"{player.Name}s Turn (You)");
-				player.PlanTurn(opponents);
+				PlanOfAction playersPlanOfAction = player.PlanTurn(opponents);
+				foreach (ItemAction action in playersPlanOfAction.actions) {
+					action.Execute();
+				}
 
 				//Opponents Turn
 				foreach (Character opponent in opponents) {
 					Terminal.WriteLine($"{opponent.Name}s Turn");
-					opponent.PlanTurn(player);
+					PlanOfAction opponentsPlanOfAction = opponent.PlanTurn(player);
+					foreach (ItemAction action in opponentsPlanOfAction.actions) {
+						action.Execute();
+					}
 				}
 			}
 		}

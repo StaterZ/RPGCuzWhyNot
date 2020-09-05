@@ -101,12 +101,7 @@ namespace RPGCuzWhyNot {
 					Terminal.WriteLine("I don't understand.");
 				}
 			}
-
-			//execution phase
 			Terminal.WriteLine("Now Executeing actions...");
-			foreach (ItemAction action in planOfAction.actions) {
-				action.Execute();
-			}
 
 			return planOfAction;
 		}
