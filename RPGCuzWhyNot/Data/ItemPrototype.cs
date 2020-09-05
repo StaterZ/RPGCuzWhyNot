@@ -26,8 +26,8 @@ namespace RPGCuzWhyNot.Data {
 		[JsonPropertyName("handsRequired")]
 		public int HandsRequired { get; set; }
 
-		[JsonPropertyName("meleeDamage")]
-		public int MeleeDamage { get; set;  }
+		[JsonPropertyName("itemActions")]
+		public ItemAction[] ItemActions { get; set;  }
 
 		[JsonPropertyName("defense")]
 		public int Defense { get; set; }
@@ -59,7 +59,7 @@ namespace RPGCuzWhyNot.Data {
 			if (IsWieldable) {
 				IWieldable wieldable = (IWieldable)item;
 				wieldable.HandsRequired = HandsRequired;
-				wieldable.MeleeDamage = MeleeDamage;
+				wieldable.ItemActions = ItemActions;
 			}
 
 			return item;

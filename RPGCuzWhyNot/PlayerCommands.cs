@@ -224,26 +224,7 @@ namespace RPGCuzWhyNot {
 			}));
 			commandHandler.AddCommand(new Command(new[] { "help", "commands" }, "Show this list", args => {
 				Terminal.WriteLine("Commands:");
-				string[] formattedCommandCallNames = new string[commandHandler.commands.Count];
-				int longestFormattedCommandCallName = 0;
-				for (int i = 0; i < commandHandler.commands.Count; i++) {
-					string formattedCommandCallName = Stringification.StringifyArray("[", ", ", "]", commandHandler.commands[i].callNames);
-					formattedCommandCallNames[i] = formattedCommandCallName;
-
-					if (formattedCommandCallName.Length > longestFormattedCommandCallName) {
-						longestFormattedCommandCallName = formattedCommandCallName.Length;
-					}
-				}
-				Terminal.PushState();
-				Terminal.MillisPerChar = 1000 / 300;
-				for (int i = 0; i < commandHandler.commands.Count; i++) {
-					Terminal.ForegroundColor = ConsoleColor.Magenta;
-					Terminal.Write(formattedCommandCallNames[i].PadRight(longestFormattedCommandCallName));
-					Terminal.ForegroundColor = ConsoleColor.White;
-					Terminal.Write(" - ");
-					Terminal.WriteLine(commandHandler.commands[i].helpText);
-				}
-				Terminal.PopState();
+				ConsoleUtils.DisplayHelp(commandHandler.commands);
 			}));
 			commandHandler.AddCommand(new Command(new[] { "clear" }, "Clear the console", args => {
 				Terminal.Clear();
@@ -284,12 +265,29 @@ namespace RPGCuzWhyNot {
 				}
 
 				if (!NumericCallNames.Get(throwableCallName, out IItem throwable)
-				&& !Inventory.ContainsCallName(throwableCallName, out throwable)) {
+				    && !Inventory.ContainsCallName(throwableCallName, out throwable)) {
 					Terminal.WriteLine("I don't understand what you're trying to throw.");
 				} else if (!args.Get("at", out string atCallName) || atCallName == "") {
 					Terminal.WriteLine($"You need something to throw {throwable.Name} at.");
 				} else {
 					Terminal.WriteLine($"{{darkgray}}((pretenting)) Threw {throwable.Name} at {atCallName}.");
+				}
+			}, new string[] { "at" }));
+			commandHandler.AddCommand(new Command(new string[] { "type" }, "Echo whats written", args => {
+				Terminal.WriteLine(args.FirstArgument);
+			}));
+			commandHandler.AddCommand(new Command(new string[] { "attack", "challenge", "confront" }, "attack someone", args => {
+				if (args.FirstArgument == "") {
+					Terminal.WriteLine($"{args.CommandName} who?");
+					return;
+				}
+
+				if (player.location.GetCharacterByCallName(args.FirstArgument, out Character opponent)) {
+					Terminal.WriteLine($"{{fg:Cyan}}(The combat with [{opponent.Name}] has begun!)");
+					Program.EnterCombat(opponent);
+					Terminal.WriteLine($"{{fg:Cyan}}(The combat with [{opponent.Name}] has ended!)");
+				} else {
+					Terminal.WriteLine("There's no one here called that.");
 				}
 			}, new string[] { "at" }));
 			commandHandler.AddCommand(new Command(new string[] { "type" }, "Echo whats written", args => {

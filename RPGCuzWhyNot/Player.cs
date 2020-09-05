@@ -1,4 +1,7 @@
-﻿using RPGCuzWhyNot.Inventory;
+﻿using System;
+using System.Linq;
+using RPGCuzWhyNot.Inventory;
+using RPGCuzWhyNot.Inventory.Item;
 using RPGCuzWhyNot.Races;
 using StaterZ.Core.HealthSystem;
 
@@ -21,6 +24,91 @@ namespace RPGCuzWhyNot {
 			health.OnDeath += ctx => {
 				Terminal.WriteLine($"{ctx.inflictor} killed you!");
 			};
+		}
+
+		public override PlanOfAction PlanTurn(params Character[] opponents) {
+			PlanOfAction planOfAction = new PlanOfAction();
+
+			//planning phace
+			bool isDonePlanningTurn = false;
+			Command confirm = new Command(new[] { "confirm", "done", "apply", "execute" }, "Confirm your actions and procced to the next turn.", args => {
+				isDonePlanningTurn = true;
+			});
+			Command undo = new Command(new[] { "undo", "revert" }, "Remove the last move you planned to do from the plan of action.", args => {
+				if (planOfAction.actions.Count > 0) {
+					ItemAction last = planOfAction.actions.Last();
+					planOfAction.actions.Remove(last);
+					Terminal.WriteLine($"Removed action [{last}] from stack.");
+				} else {
+					Terminal.WriteLine("You've got no plan of action. There's nothing to regret...");
+				}
+			});
+			Command plan = new Command(new[] { "ls", "list", "plan" }, "Remove the last move you planned to do from the plan of action.", args => {
+				if (planOfAction.actions.Count > 0) {
+					Terminal.WriteLine("{fg:Cyan}(Plan of action:)");
+					foreach (ItemAction action in planOfAction.actions) {
+						Terminal.WriteLine($" - {action.name}");
+					}
+				} else {
+					Terminal.WriteLine("You've got no plan!");
+				}
+			});
+
+			while (!isDonePlanningTurn) {
+				//find valid commands
+				CommandHandler handler = new CommandHandler();
+				handler.AddCommand(confirm);
+				handler.AddCommand(undo);
+				handler.AddCommand(plan);
+				handler.AddCommand(new Command(new[] { "help", "commands" }, "Show this list", args => {
+					Terminal.WriteLine("Commands:");
+					ConsoleUtils.DisplayHelp(handler.commands);
+				}));
+
+				foreach (IWieldable wieldable in Wielding) {
+					handler.AddCommand(new Command(new []{ wieldable.CallName }, "Do something with this item.", args => {
+						if (args.FirstArgument == "") {
+							Terminal.WriteLine("Do what with it?");
+							Terminal.WriteLine();
+						}
+
+						if (args.FirstArgument != "" && args.FirstArgument != "help") {
+							foreach (ItemAction itemAction in wieldable.ItemActions) {
+								if (itemAction.callNames.Contains(args.FirstArgument)) {
+									planOfAction.actions.Add(itemAction);
+									Terminal.WriteLine($"Added action [{itemAction.name}] to plan.");
+									return;
+								}
+							}
+
+							Terminal.WriteLine("No such action exists for this item.");
+						}
+
+						Terminal.WriteLine("Actions:");
+						if (wieldable.ItemActions.Any()) {
+							ConsoleUtils.DisplayHelp(wieldable.ItemActions.Select(itemAction => new Command(itemAction.callNames, itemAction.description, null)).ToArray());
+						} else {
+							Terminal.WriteLine("There's no actions for this item.");
+						}
+					}));
+				}
+
+				//get next command
+				Terminal.WriteLine();
+				string commandText = ConsoleUtils.Ask("|> ").ToLower();
+				Terminal.WriteLine();
+				if (!handler.TryHandle(commandText)) {
+					Terminal.WriteLine("I don't understand.");
+				}
+			}
+
+			//execution phase
+			Terminal.WriteLine("Now Executeing actions...");
+			foreach (ItemAction action in planOfAction.actions) {
+				action.Execute();
+			}
+
+			return planOfAction;
 		}
 	}
 }

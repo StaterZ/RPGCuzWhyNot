@@ -1,6 +1,6 @@
 ﻿{
   "callName": "sword",
-  "name": "Trusty Sword",
+  "name": "Greatsword",
   "inventoryDescription": "A shineing sword of the finest metal",
   "groundDescription": "There's a sword on the ground; shining brilliantly in the sunlight",
   "wieldable": true,
@@ -13,6 +13,7 @@
     {
       "callNames": [ "light attack", "light" ],
       "name": "Light Attack",
+      "description": "Swing the sword about and hope to hit something...",
       "requirements": {
         "strength": 2
       },
@@ -23,17 +24,19 @@
     {
       "callNames": [ "heavy attack", "heavy" ],
       "name": "Heavy Attack",
+      "description": "Swing the greatsword with all your might",
       "requirements": {
         "strength": 5
       },
       "effects": {
         "meleeDamage": 20,
-        "armorPierceing": 0.2 
+        "armorPierceing": 0.2
       }
     },
     {
       "callNames": [ "throw" ],
       "name": "Throw Sword",
+      "description": "Throw the sword at an enemy with great sword",
       "requirements": {
         "strength": 10,
         "accuracy": 5
