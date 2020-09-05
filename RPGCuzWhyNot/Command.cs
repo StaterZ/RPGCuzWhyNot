@@ -6,7 +6,7 @@ namespace RPGCuzWhyNot {
 		public readonly string helpText;
 		public readonly Action<CommandArguments> effect;
 		public readonly string[] keywords;
-		private readonly static string[] noKeywords = new string[0];
+		private static readonly string[] noKeywords = new string[0];
 
 		public Command(string[] callNames, string helpText, Action<CommandArguments> effect, string[] keywords = null) {
 			this.callNames = callNames;

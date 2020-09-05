@@ -12,10 +12,10 @@ namespace RPGCuzWhyNot.Data {
 		public string DescriptionOnGround { get; set; }
 
 		[JsonPropertyName("wieldable")]
-		public bool Wieldable { get; set; }
+		public bool IsWieldable { get; set; }
 
 		[JsonPropertyName("wearable")]
-		public bool Wearable { get; set; }
+		public bool IsWearable { get; set; }
 
 		[JsonPropertyName("handsRequired")]
 		public int HandsRequired { get; set; }
@@ -37,23 +37,23 @@ namespace RPGCuzWhyNot.Data {
 		/// </summary>
 		public IItem Create() {
 			IItem item;
-			if (Wearable && Wieldable)
+			if (IsWearable && IsWieldable)
 				item = new WieldableWearableItem(Name, CallName, DescriptionInInventory, DescriptionOnGround);
-			else if (Wearable)
+			else if (IsWearable)
 				item = new WearableItem(Name, CallName, DescriptionInInventory, DescriptionOnGround);
-			else if (Wieldable)
+			else if (IsWieldable)
 				item = new WieldableItem(Name, CallName, DescriptionInInventory, DescriptionOnGround);
 			else
 				item = new SimpleItem(Name, CallName, DescriptionInInventory, DescriptionOnGround);
 
-			if (Wearable) {
+			if (IsWearable) {
 				IWearable wearable = (IWearable)item;
 				wearable.Defense = Defense;
 				wearable.CoveredParts = CoveredParts;
 				wearable.CoveredLayers = CoveredLayers;
 			}
 
-			if (Wieldable) {
+			if (IsWieldable) {
 				IWieldable wieldable = (IWieldable)item;
 				wieldable.HandsRequired = HandsRequired;
 				wieldable.MeleeDamage = MeleeDamage;

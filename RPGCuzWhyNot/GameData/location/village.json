@@ -5,7 +5,8 @@
   "paths": {
     "dragons_nest": "In the horizon a dragons nest can be seen atop a great mountain.",
     "arcane_formation": "A weird configuration of stones can be seen",
-    "village_smithy": "A smithy can be seen in the city."
+    "village_smithy": "A smithy can be seen in the city.",
+    "taalmu": "A mysterious new location to explore."
   },
   "items": [
     "rusty_bucket"
