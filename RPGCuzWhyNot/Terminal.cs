@@ -82,14 +82,16 @@ namespace RPGCuzWhyNot {
 			++charBeepCounter;
 			if (charBeepCounter >= CharsPerBeep) {
 				charBeepCounter = 0;
-				if (BeepDuration > 0) {
-					Console.Beep(BeepFrequency, BeepDuration);
+				if (!Console.KeyAvailable) {
+					if (BeepDuration > 0) {
+						Console.Beep(BeepFrequency, BeepDuration);
+					}
+					int rem = MillisPerChar - BeepDuration;
+					if (rem > 0) {
+						Thread.Sleep(rem);
+					}
 				}
-				int rem = MillisPerChar - BeepDuration;
-				if (rem > 0) {
-					Thread.Sleep(rem);
-				}
-			} else {
+			} else if (!Console.KeyAvailable) {
 				Thread.Sleep(MillisPerChar);
 			}
 			if (doAlias) {
