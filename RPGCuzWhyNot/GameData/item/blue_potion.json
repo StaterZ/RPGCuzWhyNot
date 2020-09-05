@@ -1,5 +1,6 @@
 ﻿{
   "callName": "blue",
   "name": "{blue}(Blue) potion",
-  "inventoryDescription": "A bottle containing some blue liquid."
+  "inventoryDescription": "A bottle containing some blue liquid.",
+  "groundDescription": "A bottle containing some blue liquid."
 }
