@@ -24,6 +24,14 @@ namespace RPGCuzWhyNot {
 		public static int CharsPerBeep { get; set; } = 15;
 		public static int BeepDuration { get; set; } = 10;
 
+		public static Vec2 WindowSize {
+			get => new Vec2(Console.WindowWidth, Console.WindowHeight);
+			set {
+				Console.WindowWidth = value.x;
+				Console.WindowHeight = value.y;
+			}
+		}
+
 		// If MillisPerChar is greater than BeepDuration then the time not spend beeping will be used for sleeping.
 		// If MillisPerChar is less than BeepDuration then there will be noticable stutters when beeping.
 
@@ -258,6 +266,18 @@ namespace RPGCuzWhyNot {
 			public bool showChar;
 			public AliasEffect preEffect;
 			public AliasEffect postEffect;
+		}
+
+		public static void Beep(int frequency, int duration) {
+			Console.Beep(frequency, duration);
+		}
+
+		public static void Clear() {
+			Console.Clear();
+		}
+
+		public static string ReadLine() {
+			return Console.ReadLine();
 		}
 	}
 }

@@ -33,9 +33,9 @@ namespace RPGCuzWhyNot {
 			//some basic event loop
 			player.location.PrintEnterInformation();
 			while (true) {
-				Console.WriteLine();
+				Terminal.WriteLine();
 				string commandText = ConsoleUtils.Ask("|> ").ToLower();
-				Console.WriteLine();
+				Terminal.WriteLine();
 				commands.Handle(commandText);
 			}
 		}

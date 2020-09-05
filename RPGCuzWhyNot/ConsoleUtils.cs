@@ -13,7 +13,7 @@ namespace RPGCuzWhyNot {
 		/// <returns></returns>
 		public static string Ask(string question) {
 			Terminal.Write(question);
-			return Console.ReadLine();
+			return Terminal.ReadLine();
 		}
 
 		/// <summary>
@@ -26,7 +26,7 @@ namespace RPGCuzWhyNot {
 			Terminal.Write(question + "   " + Stringification.StringifyArray("[", ", ", "]", options));
 
 			while (true) {
-				string answer = Console.ReadLine();
+				string answer = Terminal.ReadLine();
 
 				if (options.Contains(answer)) {
 					return answer;
@@ -37,7 +37,7 @@ namespace RPGCuzWhyNot {
 		}
 
 		public static void PrintDivider(char c) {
-			Terminal.WriteLine(new string(c, Console.WindowWidth) + "\n");
+			Terminal.WriteLine(new string(c, Terminal.WindowSize.x));
 		}
 
 		private static readonly char[] wheelLookup = { '/', '-', '\\', '|' };
