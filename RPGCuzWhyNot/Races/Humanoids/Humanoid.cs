@@ -2,6 +2,10 @@
 	public abstract class Humanoid : Race {
 		public Gender gender;
 
+		protected Humanoid(Gender gender) {
+			this.gender = gender;
+		}
+
 		public class Gender {
 			public static readonly Gender Male = new Gender(new Referal("he", "him", "his", "his", "himself"));
 			public static readonly Gender Female = new Gender(new Referal("she", "her", "her", "hers", "herself"));

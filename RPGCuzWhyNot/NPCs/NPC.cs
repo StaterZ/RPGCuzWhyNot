@@ -1,4 +1,5 @@
-﻿using RPGCuzWhyNot.Races.Humanoids;
+﻿using RPGCuzWhyNot.Races;
+using RPGCuzWhyNot.Races.Humanoids;
 
 namespace RPGCuzWhyNot.NPCs
 {
@@ -9,6 +10,9 @@ namespace RPGCuzWhyNot.NPCs
 			} else {
 				Terminal.WriteLine($"No answer, it appears they're mute...");
 			}
+		}
+
+		protected NPC(Race race) : base(race) {
 		}
 	}
 }

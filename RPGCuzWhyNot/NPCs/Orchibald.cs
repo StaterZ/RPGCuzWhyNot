@@ -1,9 +1,11 @@
-﻿namespace RPGCuzWhyNot.NPCs
+﻿using RPGCuzWhyNot.Races.Humanoids;
+
+namespace RPGCuzWhyNot.NPCs
 {
 	public class Orchibald : NPC {
 		private const int voiceFrequency = 400;
 
-		public Orchibald() {
+		public Orchibald() : base(new Dwarf(Humanoid.Gender.Male)) {
 			CallName = "orhibald";
 			Name = "Orhibald (Smith)";
 
@@ -17,18 +19,9 @@
 			ConsoleUtils.Sleep(200);
 			Terminal.WriteLine("Just so you know *cough*", voiceFrequency);
 		}
-	}
 
-	public class SmithyCustomer : NPC {
-		private const int voiceFrequency = 1000;
-
-		public SmithyCustomer() {
-			CallName = "customer";
-			Name = "Unknown Smithy Customer";
-		}
-
-		public override void Converse(Character character, string response) {
-			Terminal.Write("Get away from me you vulgar beast!", voiceFrequency);
+		public override PlanOfAction PlanTurn(params Character[] opponents) {
+			throw new System.NotImplementedException();
 		}
 	}
 }

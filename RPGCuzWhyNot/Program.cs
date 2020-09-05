@@ -17,12 +17,9 @@ namespace RPGCuzWhyNot {
 			smithy.AddNPC(new SmithyCustomer(), "A customer casually stands leaning against a pillar.", "You walk up to the customer. She glares angrily as you approach...");
 
 			//construct player
-			player = new Player {
+			player = new Player(new Human(Humanoid.Gender.Male)) {
 				Name = "Bengt",
-				location = DataLoader.GetLocation("village"),
-				race = new Human {
-					gender = Humanoid.Gender.Male
-				}
+				location = DataLoader.GetLocation("village")
 			};
 
 			commands = new PlayerCommands(player);

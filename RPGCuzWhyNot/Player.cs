@@ -1,4 +1,5 @@
 ﻿using RPGCuzWhyNot.Inventory;
+using RPGCuzWhyNot.Races;
 using StaterZ.Core.HealthSystem;
 
 namespace RPGCuzWhyNot {
@@ -7,7 +8,7 @@ namespace RPGCuzWhyNot {
 		public WearablesInventory Wearing { get; }
 		public WieldablesInventory Wielding { get; }
 
-		public Player() {
+		public Player(Race race) : base(race) {
 			Inventory = new ItemInventory(this);
 			Wearing = new WearablesInventory(this);
 			Wielding = new WieldablesInventory(this, 2);
