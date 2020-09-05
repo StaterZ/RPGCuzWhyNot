@@ -29,13 +29,8 @@ namespace RPGCuzWhyNot {
 
 		private static int charBeepCounter = 0;
 
-		public static void PushState(Save save = Save.ForegroundColor) => stateStack.Push(GetState(save));
+		public static void PushState(Save save) => stateStack.Push(GetState(save));
 		public static void PopState() => SetState(stateStack.Pop());
-
-		public static void PushForegroundColor(ConsoleColor fg) {
-			PushState(Save.ForegroundColor);
-			ForegroundColor = fg;
-		}
 
 		public static void WriteLine(string text, int frequency, int charsPerSecond = -1) => Write(text + "\n", frequency, charsPerSecond);
 		public static void Write(string text, int frequency, int charsPerSecond = -1) {
@@ -227,48 +222,6 @@ namespace RPGCuzWhyNot {
 			if (Test(state.save, Save.BeepFrequency)) BeepFrequency = state.beepFrequency;
 			if (Test(state.save, Save.CharsPerBeep)) CharsPerBeep = state.charsPerBeep;
 			if (Test(state.save, Save.BeepDuration)) BeepDuration = state.beepDuration;
-		}
-
-		public static string Encode(State state) {
-			StringBuilder sb = new StringBuilder();
-			if (Test(state.save, Save.ForegroundColor)) sb.Append(EncodeForegroundColor(state.foregroundColor));
-			if (Test(state.save, Save.BackgroundColor)) sb.Append(EncodeBackgroundColor(state.backgroundColor));
-			if (Test(state.save, Save.CursorPosition)) sb.Append(EncodeCursorPosition(state.cursorPosition));
-			if (Test(state.save, Save.MillisPerChar)) sb.Append(EncodeMillisPerCharacter(state.millisPerChar));
-			if (Test(state.save, Save.BeepFrequency)) sb.Append(EncodeBeepFrequency(state.beepFrequency));
-			if (Test(state.save, Save.CharsPerBeep)) sb.Append(EncodeCharsPerBeep(state.charsPerBeep));
-			if (Test(state.save, Save.BeepDuration)) sb.Append(EncodeBeepDuration(state.beepDuration));
-			return sb.ToString();
-		}
-
-		public static string EncodePushForegroundColor(ConsoleColor fg) => EncodePush(Save.ForegroundColor) + EncodeForegroundColor(fg);
-
-		public static string EncodeForegroundColor(ConsoleColor newFg) => $"{{fg:{newFg}}}";
-		public static string EncodeBackgroundColor(ConsoleColor newBg) => $"{{bg:{newBg}}}";
-		public static string EncodeCursorPosition(Position newCur) => $"{{cursor:{newCur.x},{newCur.y}}}";
-		public static string EncodeMillisPerCharacter(int millis) => $"{{ms/ch:{millis}}}";
-		public static string EncodeBeepFrequency(int frequency) => $"{{bHz:{frequency}}}";
-		public static string EncodeCharsPerBeep(int chars) => $"{{ch/b:{chars}}}";
-		public static string EncodeBeepDuration(int millis) => $"{{bMs:{millis}}}";
-
-		private const string EncodedPop = "{pop}";
-		public static string EncodePop() => EncodedPop;
-		public static string EncodePush(Save save) {
-			StringBuilder sb = new StringBuilder();
-			sb.Append("{push:");
-			if (Test(save, Save.ForegroundColor)) sb.Append('f');
-			if (Test(save, Save.BackgroundColor)) sb.Append('b');
-			if (Test(save, Save.CursorPosition)) sb.Append('p');
-			if (Test(save, Save.MillisPerChar)) sb.Append('m');
-			if (Test(save, Save.BeepFrequency)) sb.Append('h');
-			if (Test(save, Save.CharsPerBeep)) sb.Append('c');
-			if (Test(save, Save.BeepDuration)) sb.Append('d');
-			sb.Append('}');
-			return sb.ToString();
-		}
-
-		public static string Escape(string text) {
-			return text.Replace("{", "{{");
 		}
 
 		private static bool Test(Save save, Save flag) => (save & flag) != 0;
