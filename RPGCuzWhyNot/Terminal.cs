@@ -11,8 +11,8 @@ namespace RPGCuzWhyNot {
 		public static ConsoleColor ForegroundColor { get => Console.ForegroundColor; set => Console.ForegroundColor = value; }
 		public static ConsoleColor BackgroundColor { get => Console.BackgroundColor; set => Console.BackgroundColor = value; }
 
-		public static Position CursorPosition {
-			get => new Position(Console.CursorLeft, Console.CursorTop);
+		public static Vec2 CursorPosition {
+			get => new Vec2(Console.CursorLeft, Console.CursorTop);
 			set {
 				Console.CursorLeft = value.x;
 				Console.CursorTop = value.y;
@@ -290,20 +290,11 @@ namespace RPGCuzWhyNot {
 			public Save save;
 			public ConsoleColor foregroundColor;
 			public ConsoleColor backgroundColor;
-			public Position cursorPosition;
+			public Vec2 cursorPosition;
 			public int charsPerBeep;
 			public int millisPerChar;
 			public int beepFrequency;
 			public int beepDuration;
-		}
-
-		public struct Position {
-			public int x, y;
-
-			public Position(int x, int y) {
-				this.x = x;
-				this.y = y;
-			}
 		}
 
 		public delegate void AliasEffect();
