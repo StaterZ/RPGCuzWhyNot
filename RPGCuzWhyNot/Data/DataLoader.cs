@@ -128,7 +128,7 @@ namespace RPGCuzWhyNot.Data {
 						CheckRequiredProperty(itemPrototype, itemPrototype.DescriptionInInventory, "inventoryDescription");
 						CheckRequiredProperty(itemPrototype, itemPrototype.DescriptionOnGround, "groundDescription");
 
-						if (itemPrototype.Wearable) {
+						if (itemPrototype.IsWearable) {
 							if (itemPrototype.CoveredParts == 0) ThrowMissingProperty(itemPrototype, "coveredParts");
 							if (itemPrototype.CoveredLayers == 0) ThrowMissingProperty(itemPrototype, "coveredLayers");
 						}
