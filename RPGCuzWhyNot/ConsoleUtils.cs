@@ -42,32 +42,23 @@ namespace RPGCuzWhyNot {
 
 		private static readonly char[] wheelLookup = { '/', '-', '\\', '|' };
 		public static void FakeLoad(int millis) {
-			using (new CursorVisibilityScope(false)) {
-				int startX = Console.CursorLeft;
-				int startY = Console.CursorTop;
+			Vec2 startPos = Terminal.CursorPosition;
 
-				using (new FGColorScope(ConsoleColor.Yellow)) {
-					Console.Write("Fetching... ");
+			Terminal.PushState(Terminal.Save.ForegroundColor);
+			Terminal.ForegroundColor = ConsoleColor.Yellow;
+			Terminal.Write("Fetching... ");
 
-					int x = Console.CursorLeft;
-					int y = Console.CursorTop;
-
-					for (int i = 0; i < millis / 100; i++)
-					{
-						Terminal.Write(wheelLookup[i % wheelLookup.Length]);
-						Console.CursorLeft = x;
-						Console.CursorTop = y;
-						Thread.Sleep(100);
-					}
-				}
-
-				Console.CursorLeft = startX;
-				Console.CursorTop = startY;
-				using (new FGColorScope(ConsoleColor.Green)) {
-					Console.WriteLine("Loading... Done!");
-				}
-				Console.Beep(1000, 100);
+			Vec2 loadPos = Terminal.CursorPosition;
+			for (int i = 0; i < millis / 100; i++) {
+				Terminal.Write(wheelLookup[i % wheelLookup.Length]);
+				Terminal.CursorPosition = loadPos;
+				Thread.Sleep(100);
 			}
+			Terminal.PopState();
+
+			Terminal.CursorPosition = startPos;
+			Terminal.WriteLine("{fg:Green}(Loading... Done!)");
+			Terminal.Beep(1000, 100);
 		}
 
 		public static void Sleep(int millis) {
