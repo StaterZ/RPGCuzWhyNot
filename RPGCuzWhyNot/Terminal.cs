@@ -210,13 +210,15 @@ namespace RPGCuzWhyNot {
 		public static State GetState(Save save) {
 			State state = default;
 			state.save = save;
-			if (Test(save, Save.ForegroundColor)) state.foregroundColor = ForegroundColor;
-			if (Test(save, Save.BackgroundColor)) state.backgroundColor = BackgroundColor;
-			if (Test(save, Save.CursorPosition)) state.cursorPosition = CursorPosition;
-			if (Test(save, Save.MillisPerChar)) state.millisPerChar = MillisPerChar;
-			if (Test(save, Save.BeepFrequency)) state.beepFrequency = BeepFrequency;
-			if (Test(save, Save.CharsPerBeep)) state.charsPerBeep = CharsPerBeep;
-			if (Test(save, Save.BeepDuration)) state.beepDuration = BeepDuration;
+
+			state.foregroundColor = ForegroundColor;
+			state.backgroundColor = BackgroundColor;
+			state.cursorPosition = CursorPosition;
+			state.millisPerChar = MillisPerChar;
+			state.beepFrequency = BeepFrequency;
+			state.charsPerBeep = CharsPerBeep;
+			state.beepDuration = BeepDuration;
+
 			return state;
 		}
 
