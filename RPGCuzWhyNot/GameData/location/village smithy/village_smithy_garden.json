@@ -3,10 +3,10 @@
   "name": "Ancient Garden",
   "description": "An medium sized old garden stands before you.",
   "paths": {
-    "smithy": "The door back into the smithy stands behind you."
+    "village_smithy": "The door back into the smithy stands behind you."
   },
   "items": [
-    "flower",
-    "bucket"
+    "rusty_flower",
+    "rusty_bucket"
   ]
 }
