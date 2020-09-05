@@ -166,7 +166,7 @@ namespace RPGCuzWhyNot {
 					CursorPosition = new Position(int.Parse(left), int.Parse(right));
 					break;
 				case "push":
-					Save save = 0;
+					Save save = Save.Nothing;
 					foreach (char c in arg) {
 						save |= c switch
 						{
@@ -275,6 +275,7 @@ namespace RPGCuzWhyNot {
 
 		[Flags]
 		public enum Save {
+			Nothing = 0,
 			ForegroundColor = 1 << 0,
 			BackgroundColor = 1 << 1,
 			CursorPosition = 1 << 2,
