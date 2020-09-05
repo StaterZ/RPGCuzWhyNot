@@ -70,7 +70,7 @@ namespace RPGCuzWhyNot.Data {
 			return location;
 		}
 
-		private static Dictionary<string, TProto> LoadPrototypesFromPath<TProto>(string path) where TProto : Prototype {
+		private static Dictionary<string, TProto> LoadPrototypesFromPath<TProto>(string path) {
 			string[] dataFiles = Directory.GetFiles(path, "*.json", SearchOption.AllDirectories);
 			var prototypes = new Dictionary<string, TProto>(dataFiles.Length);
 

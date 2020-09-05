@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace RPGCuzWhyNot.Data {
 	[Serializable]
-	public class LocationPrototype : Prototype {
+	public class LocationPrototype {
 		[JsonPropertyName("callName")]
 		public string CallName { get; set; }
 
