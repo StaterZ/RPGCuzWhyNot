@@ -81,11 +81,12 @@ namespace RPGCuzWhyNot.Data {
 					prototype = JsonSerializer.Deserialize<TProto>(fileContent, serializerOptions);
 				}
 				catch (JsonException e) {
-					throw new Exception($"Failed to deserialize data file: {filePath}", e);
+					throw new DataLoaderException($"Failed to deserialize data file: {filePath}.", e);
 				}
 
 				string id = Path.GetFileNameWithoutExtension(filePath);
-				prototypes.Add(id, prototype);
+				if (!prototypes.TryAdd(id, prototype))
+					throw new DataLoaderException($"Duplicate prototype definition of '{id}': {filePath}.");
 			}
 
 			return prototypes;
@@ -98,7 +99,7 @@ namespace RPGCuzWhyNot.Data {
 				// Add all the paths to the location.
 				foreach ((string pathName, string pathDescription) in locationPrototype.Paths) {
 					if (!locations.TryGetValue(pathName, out Location destination))
-						throw new Exception($"Referenced location '{pathName}' not found");
+						throw new DataLoaderException($"Location '{pathName}' not found. Referenced by '{id}'.");
 
 					location.AddPathTo(destination, pathDescription);
 				}
@@ -106,7 +107,7 @@ namespace RPGCuzWhyNot.Data {
 				// Create the items in the location.
 				foreach (string itemName in locationPrototype.Items) {
 					if (!itemPrototypes.TryGetValue(itemName, out ItemPrototype item))
-						throw new Exception($"Referenced item '{itemName}' not found");
+						throw new DataLoaderException($"Item '{itemName}' not found. Referenced by '{id}'.");
 
 					location.items.MoveItem(item.Create());
 				}
