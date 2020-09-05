@@ -345,12 +345,51 @@ namespace RPGCuzWhyNot {
 		private void ListInventory() {
 			if (Inventory.Count <= 0) {
 				Terminal.WriteLine("Your inventory is empty.");
-				return;
+			} else {
+				Terminal.WriteLine("Your inventory contains:");
+				foreach (IItem item in Inventory) {
+					Terminal.WriteLine($"  {NumericCallNames.NumberHeading}{item.FormattedCallName}");
+					NumericCallNames.Add(item);
+				}
+
+				foreach (IItem item in Inventory) {
+					if (item is IItemWithInventory inv) {
+						ListItemWithInventory("", " in inventory", inv);
+					}
+				}
 			}
-			Terminal.WriteLine("Your inventory contains:");
-			foreach (IItem item in Inventory) {
-				Terminal.WriteLine($"  {NumericCallNames.NumberHeading}{item.FormattedCallName}");
+
+			foreach (IItem item in Wielding) {
+				if (item is IItemWithInventory inv) {
+					ListItemWithInventory("Wielded ", "", inv);
+				}
+			}
+
+			foreach (IItem item in Wearing) {
+				if (item is IItemWithInventory inv) {
+					ListItemWithInventory("Worn ", "", inv);
+				}
+			}
+		}
+
+		private void ListItemWithInventory(string prefix, string suffix, IItemWithInventory inv) {
+			Terminal.WriteLine();
+			Terminal.Write($"{NumericCallNames.NumberHeading}{prefix}{inv.ListingName}{suffix}");
+			NumericCallNames.Add(inv);
+			if (inv.Inventory.Count <= 0) {
+				Terminal.WriteLine(" is empty.");
+				return;
+			} else {
+				Terminal.WriteLine(" contains:");
+			}
+			foreach (IItem item in inv) {
+				Terminal.WriteLine($"  {NumericCallNames.NumberHeading}{item.ListingName}");
 				NumericCallNames.Add(item);
+			}
+			foreach (IItem item in inv) {
+				if (item is IItemWithInventory nested) {
+					ListItemWithInventory("", $" inside {prefix}{item.Name}{suffix}", nested);
+				}
 			}
 		}
 
@@ -388,6 +427,12 @@ namespace RPGCuzWhyNot {
 			foreach (IItem item in Location.items) {
 				Terminal.WriteLine($"  {NumericCallNames.NumberHeading}{item.FormattedCallName}");
 				NumericCallNames.Add(item);
+			}
+
+			foreach (IItem item in Location.items) {
+				if (item is IItemWithInventory inv) {
+					ListItemWithInventory("", " on the ground", inv);
+				}
 			}
 		}
 
