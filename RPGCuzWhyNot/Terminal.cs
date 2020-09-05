@@ -102,8 +102,8 @@ namespace RPGCuzWhyNot {
 
 		private static int Decode(string text, int offset) {
 			int braceEnd = text.IndexOf('}', offset);
-			if (braceEnd < 0)
-				throw new ArgumentException();
+			if (braceEnd == -1) throw new ArgumentException();
+
 			bool doPop = false;
 			int parenStart = braceEnd + 1;
 			if (parenStart < text.Length && text[parenStart] == '(') {
@@ -114,8 +114,9 @@ namespace RPGCuzWhyNot {
 			int cmdStart = 0;
 			while (cmdStart < cmds.Length) {
 				int cmdEnd = cmds.IndexOf(';', cmdStart);
-				if (cmdEnd < 0)
+				if (cmdEnd < 0) {
 					cmdEnd = cmds.Length;
+				}
 				int argSep = cmds.IndexOf(':', cmdStart, cmdEnd - cmdStart);
 				if (argSep < 0) {
 					string cmd = cmds[cmdStart..cmdEnd];
@@ -140,8 +141,7 @@ namespace RPGCuzWhyNot {
 						break;
 					}
 				}
-				if (parenEnd == text.Length)
-					throw new ArgumentException();
+				if (parenEnd >= text.Length) throw new ArgumentException();
 				string message = text[(parenStart + 1)..parenEnd];
 				Write(message);
 				PopState();

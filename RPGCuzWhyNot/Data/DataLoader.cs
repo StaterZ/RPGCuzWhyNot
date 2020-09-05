@@ -79,8 +79,7 @@ namespace RPGCuzWhyNot.Data {
 				TProto prototype;
 				try {
 					prototype = JsonSerializer.Deserialize<TProto>(fileContent, serializerOptions);
-				}
-				catch (JsonException e) {
+				} catch (JsonException e) {
 					throw new DataLoaderException($"Failed to deserialize data file: {filePath}.", e);
 				}
 
