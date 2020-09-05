@@ -55,14 +55,14 @@ namespace RPGCuzWhyNot {
 
 		public static void Write(char c) => WriteChar(c);
 		public static void Write(string text) {
-			for (int i = 0; i < text.Length; i++) {
-				char c = text[i];
+			for (int i = 0; i < text.Length;) {
+				char c = text[i++];
 				if (c == '{') {
-					if (i + 1 < text.Length && text[i + 1] == '{') {
+					if (i < text.Length && text[i] == '{') {
 						WriteChar(c);
-						i++;
+						++i;
 					} else {
-						i = Decode(text, i + 1);
+						i = Decode(text, i);
 					}
 				} else {
 					WriteChar(c);
