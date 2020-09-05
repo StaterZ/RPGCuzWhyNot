@@ -10,7 +10,7 @@ namespace RPGCuzWhyNot {
 	public class Location : IThing, IHasItemInventory {
 		public string Name { get; }
 		public string CallName { get; }
-		public string FormattedCallName => $"{{fg:Green}}([{CallName}])";
+		public string FormattedCallName => $"{{fg:Yellow}}([{CallName}])";
 		public readonly string description;
 		public readonly string pathDescription;
 		public readonly ReadOnlyCollection<Path> Paths;

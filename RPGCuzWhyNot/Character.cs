@@ -10,6 +10,7 @@ namespace RPGCuzWhyNot {
 		public Location location;
 		public Health health;
 		public Alignment Alignment { get; set; }
+		public virtual string ListingName => ThingExt.DefaultListingName(this);
 
 		public virtual void Attack(Character target) {
 		}

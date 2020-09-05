@@ -6,6 +6,7 @@
 		public string DescriptionInInventory { get; }
 		public string DescriptionOnGround { get; }
 		public IInventory ContainedInventory { get; set; }
+		public virtual string ListingName => ThingExt.DefaultListingName(this);
 
 		public SimpleItem(string name, string callName, string descriptionInInventory, string descriptionOnGround = default) {
 			Name = name;
