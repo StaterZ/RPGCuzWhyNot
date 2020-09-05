@@ -12,8 +12,20 @@ namespace RPGCuzWhyNot.Inventory {
 
 		protected abstract bool CheckMove(ItemT item, bool silent);
 
+		private bool CheckRecursion(ItemT item, bool silent) {
+			for (IItemWithInventory i = item as IItemWithInventory; i != null; i = i.ContainedInventory.Owner as IItemWithInventory) {
+				if (i.Equals(Owner)) {
+					if (!silent) {
+						Terminal.WriteLine($"{item.Name} can't be contained inside {Owner.Name}, as it would end up inside itself.");
+					}
+					return false;
+				}
+			}
+			return true;
+		}
+
 		public bool MoveItem(ItemT item, bool silent = false) {
-			if (CheckMove(item, silent)) {
+			if (item.ContainedInventory == null || (CheckRecursion(item, silent) && CheckMove(item, silent))) {
 				IInventory inv = item.ContainedInventory;
 				if (inv != null && !inv.Remove(item))
 					return false;
