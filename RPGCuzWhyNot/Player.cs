@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using RPGCuzWhyNot.Inventory;
 using RPGCuzWhyNot.Inventory.Item;
 using RPGCuzWhyNot.Races;
@@ -47,7 +46,7 @@ namespace RPGCuzWhyNot {
 				if (planOfAction.actions.Count > 0) {
 					Terminal.WriteLine("{fg:Cyan}(Plan of action:)");
 					foreach (ItemAction action in planOfAction.actions) {
-						Terminal.WriteLine($" - {action.name}");
+						Terminal.WriteLine($" - {action.Name}");
 					}
 				} else {
 					Terminal.WriteLine("You've got no plan!");
@@ -74,9 +73,9 @@ namespace RPGCuzWhyNot {
 
 						if (args.FirstArgument != "" && args.FirstArgument != "help") {
 							foreach (ItemAction itemAction in wieldable.ItemActions) {
-								if (itemAction.callNames.Contains(args.FirstArgument)) {
+								if (itemAction.CallNames.Contains(args.FirstArgument)) {
 									planOfAction.actions.Add(itemAction);
-									Terminal.WriteLine($"Added action [{itemAction.name}] to plan.");
+									Terminal.WriteLine($"Added action [{itemAction.Name}] to plan.");
 									return;
 								}
 							}
@@ -86,7 +85,7 @@ namespace RPGCuzWhyNot {
 
 						Terminal.WriteLine("Actions:");
 						if (wieldable.ItemActions.Any()) {
-							ConsoleUtils.DisplayHelp(wieldable.ItemActions.Select(itemAction => new Command(itemAction.callNames, itemAction.description, null)).ToArray());
+							ConsoleUtils.DisplayHelp(wieldable.ItemActions.Select(itemAction => new Command(itemAction.CallNames, itemAction.Description, null)).ToArray());
 						} else {
 							Terminal.WriteLine("There's no actions for this item.");
 						}

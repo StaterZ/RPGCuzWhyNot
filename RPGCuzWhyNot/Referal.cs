@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RPGCuzWhyNot {
+﻿namespace RPGCuzWhyNot {
 	public class Referal {
 		/// <summary>
 		/// as in "did you know <subject> stole a knife?"

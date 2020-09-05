@@ -1,6 +1,4 @@
-﻿using RPGCuzWhyNot.NPCs;
-
-namespace RPGCuzWhyNot {
+﻿namespace RPGCuzWhyNot {
 	public class CharacterLocationData {
 		public readonly Character character;
 		public string glanceDescription;

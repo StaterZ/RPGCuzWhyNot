@@ -1,15 +1,17 @@
 ﻿namespace RPGCuzWhyNot.Inventory.Item {
 	public class Stats {
-		public int speed;
-		public int strength;
-		public int accuracy;
-		public int fortitude;
+		public int Speed { get; set; }
+		public int Strength { get; set; }
+		public int Accuracy { get; set; }
+		public int Fortitude { get; set; }
+
+		public Stats() { }
 
 		public Stats(int speed, int strength, int accuracy, int fortitude) {
-			this.speed = speed;
-			this.strength = strength;
-			this.accuracy = accuracy;
-			this.fortitude = fortitude;
+			Speed = speed;
+			Strength = strength;
+			Accuracy = accuracy;
+			Fortitude = fortitude;
 		}
 	}
 }

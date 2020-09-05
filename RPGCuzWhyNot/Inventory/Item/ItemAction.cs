@@ -1,17 +1,19 @@
 ﻿namespace RPGCuzWhyNot.Inventory.Item {
 	public class ItemAction {
-		public readonly string[] callNames;
-		public readonly string name;
-		public readonly string description;
-		public readonly Requirements requirements;
-		public readonly Effects effects;
+		public string[] CallNames { get; }
+		public string Name { get; }
+		public string Description { get; }
+		public Requirements Requirements { get; }
+		public Effects Effects { get; }
+
+		public ItemAction() { }
 
 		public ItemAction(string[] callNames, string name, string description, Requirements requirements, Effects effects) {
-			this.callNames = callNames;
-			this.name = name;
-			this.description = description;
-			this.requirements = requirements;
-			this.effects = effects;
+			CallNames = callNames;
+			Name = name;
+			Description = description;
+			Requirements = requirements;
+			Effects = effects;
 		}
 
 		public void Execute() {

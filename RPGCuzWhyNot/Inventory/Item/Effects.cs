@@ -1,17 +1,19 @@
 ﻿namespace RPGCuzWhyNot.Inventory.Item {
 	public class Effects {
-		public readonly Stats Stats;
-		public readonly int meleeDamage;
-		public readonly int projectileDamage;
-		public readonly float armorPierceing;
-		public readonly bool consumeItem;
+		public Stats Stats { get; }
+		public int MeleeDamage { get; }
+		public int ProjectileDamage { get; }
+		public float ArmorPierceing { get; }
+		public bool ConsumeItem { get; }
+
+		public Effects() { }
 
 		public Effects(Stats stats, int meleeDamage, int projectileDamage, float armorPierceing, bool consumeItem) {
-			this.Stats = stats;
-			this.meleeDamage = meleeDamage;
-			this.projectileDamage = projectileDamage;
-			this.armorPierceing = armorPierceing;
-			this.consumeItem = consumeItem;
+			Stats = stats;
+			MeleeDamage = meleeDamage;
+			ProjectileDamage = projectileDamage;
+			ArmorPierceing = armorPierceing;
+			ConsumeItem = consumeItem;
 		}
 	}
 }
