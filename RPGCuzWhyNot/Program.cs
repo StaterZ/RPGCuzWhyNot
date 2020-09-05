@@ -7,8 +7,7 @@ using RPGCuzWhyNot.NPCs;
 namespace RPGCuzWhyNot {
 	public static class Program {
 		public static Player player;
-
-		private static readonly char[] commandArgumentSeparators = { ' ' };
+		public static PlayerCommands commands;
 
 		private static void Main() {
 			DataLoader.LoadGameData();
@@ -26,6 +25,9 @@ namespace RPGCuzWhyNot {
 				}
 			};
 
+			commands = new PlayerCommands(player);
+			commands.LoadCommands();
+
 			player.Inventory.MoveItem(DataLoader.CreateItem("blue_potion"));
 
 			//some basic event loop
@@ -33,9 +35,8 @@ namespace RPGCuzWhyNot {
 			while (true) {
 				Console.WriteLine();
 				string commandText = ConsoleUtils.Ask("|> ").ToLower();
-				string[] segments = commandText.Split(commandArgumentSeparators, StringSplitOptions.RemoveEmptyEntries);
 				Console.WriteLine();
-				player.ReactToCommand(segments);
+				commands.Handle(commandText);
 			}
 		}
 	}

@@ -6,7 +6,7 @@
 		public WieldableItem(string name, string callName, string descInv, string descGrnd = null)
 			: base(name, callName, descInv, descGrnd) { }
 
-		public virtual string ListingWithStats() => WieldableExt.ListingWithStats(this);
+		public virtual string ListingWithStats => WieldableExt.DefaultListingWithStats(this);
 	}
 }
 

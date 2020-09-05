@@ -13,9 +13,7 @@
 			DescriptionOnGround = descriptionOnGround ?? descriptionInInventory;
 		}
 
-		public override string ToString() => this.ListingName();
-
-		public virtual string ListingName => ThingExt.ListingName(this);
+		public virtual string ListingName => ThingExt.DefaultListingName(this);
 	}
 }
 

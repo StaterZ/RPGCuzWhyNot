@@ -33,7 +33,7 @@ namespace RPGCuzWhyNot.Data {
 		public int Defense { get; set; }
 
 		[JsonPropertyName("coveredParts"), JsonConverter(typeof(JsonEnumConverter))]
-		public BodyParts CoveredParts { get; set; }
+		public WearableSlots CoveredParts { get; set; }
 
 		[JsonPropertyName("coveredLayers"), JsonConverter(typeof(JsonEnumConverter))]
 		public WearableLayers CoveredLayers { get; set; }

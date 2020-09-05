@@ -5,5 +5,8 @@
   "paths": {
     "village": "A village can be seen a few hundred meters away",
     "dragons_nest": "In the horizon a dragons nest can be seen atop a great mountain."
-  }
+  },
+  "items": [
+    "missile"
+  ]
 }

@@ -17,7 +17,7 @@ namespace RPGCuzWhyNot {
 			Terminal.WriteLine($"{Name}: {message}");
 		}
 
-		public virtual string ListingName => ThingExt.ListingName(this);
+		public virtual string ListingName => ThingExt.DefaultListingName(this);
 	}
 }
 
