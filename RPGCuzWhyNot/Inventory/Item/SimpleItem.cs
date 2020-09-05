@@ -2,6 +2,7 @@
 	public class SimpleItem : IItem {
 		public string Name { get; }
 		public string CallName { get; }
+		public string FormattedCallName => $"{{fg:Magenta}}([{CallName}])";
 		public string DescriptionInInventory { get; }
 		public string DescriptionOnGround { get; }
 		public IInventory ContainedInventory { get; set; }
@@ -12,8 +13,6 @@
 			DescriptionInInventory = descriptionInInventory;
 			DescriptionOnGround = descriptionOnGround ?? descriptionInInventory;
 		}
-
-		public virtual string ListingName => ThingExt.DefaultListingName(this);
 	}
 }
 
