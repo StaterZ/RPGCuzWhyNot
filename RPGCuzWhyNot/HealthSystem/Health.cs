@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace StaterZ.Core.HealthSystem {
 	public class Health {
-        public float maxHealth;
+        public int maxHealth;
         public Alignment alignment;
-        public float CurrentHealth { get; private set; }
+        public int CurrentHealth { get; private set; }
         public float Percent => CurrentHealth / maxHealth;
         public bool IsDamaged => CurrentHealth < maxHealth;
         public bool IsDead => CurrentHealth <= 0;
@@ -22,15 +22,15 @@ namespace StaterZ.Core.HealthSystem {
         public Health(int health) : this(health, health) {
         }
 
-        public Health(float maxHealth, float currentHealth) {
+        public Health(int maxHealth, int currentHealth) {
 	        this.maxHealth = maxHealth;
 	        CurrentHealth = currentHealth;
         }
 
-        public HealthChangeInfo SetHealth(float value, IInflictor inflictor) {
-			float attemptedDelta = value - CurrentHealth;
+        public HealthChangeInfo SetHealth(int value, IInflictor inflictor) {
+	        int attemptedDelta = value - CurrentHealth;
 			value = ExtraMath.Clamp(value, 0, maxHealth);
-			float delta = value - CurrentHealth;
+			int delta = value - CurrentHealth;
 
 			HealthChangeInfo info = new HealthChangeInfo() {
 				health = this,
@@ -62,7 +62,7 @@ namespace StaterZ.Core.HealthSystem {
             SetHealth(maxHealth, inflictor);
         }
 
-        public HealthChangeInfo TakeDamage(float damage, IInflictor inflictor) {
+        public HealthChangeInfo TakeDamage(int damage, IInflictor inflictor) {
             if (damage < 0) throw new ArgumentException("can't deal negative damage");
 
 	        foreach (IArmor a in armor) {
@@ -74,7 +74,7 @@ namespace StaterZ.Core.HealthSystem {
             return info;
         }
 
-        public HealthChangeInfo Heal(float damage, IInflictor inflictor) {
+        public HealthChangeInfo Heal(int damage, IInflictor inflictor) {
             if (damage < 0) throw new ArgumentException("can't heal negative damage");
 
             foreach (IArmor a in armor) {
@@ -86,7 +86,7 @@ namespace StaterZ.Core.HealthSystem {
             return info;
         }
 		
-		protected HealthChangeInfo ChangeHealth(float damage, IInflictor inflictor) {
+		protected HealthChangeInfo ChangeHealth(int damage, IInflictor inflictor) {
             return SetHealth(CurrentHealth + damage, inflictor);
         }
     }
