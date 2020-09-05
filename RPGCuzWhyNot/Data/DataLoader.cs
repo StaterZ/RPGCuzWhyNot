@@ -7,7 +7,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using RPGCuzWhyNot.Inventory.Item;
 
-// TODO: Validate prototypes when loading.
 // TODO: Add character prototypes when they have been implemented in the rest of the game.
 
 namespace RPGCuzWhyNot.Data {
@@ -20,30 +19,30 @@ namespace RPGCuzWhyNot.Data {
 			Converters = {new JsonStringEnumConverter()}
 		};
 
-		private static Dictionary<string, ItemPrototype> itemPrototypes;
-		private static Dictionary<string, LocationPrototype> locationPrototypes;
+		private static Dictionary<string, Prototype> prototypes;
 		private static Dictionary<string, Location> locations;
 
-		public static ReadOnlyDictionary<string, ItemPrototype> ItemPrototypes { get; private set; }
-		public static ReadOnlyDictionary<string, LocationPrototype> LocationPrototypes { get; private set; }
+		public static ReadOnlyDictionary<string, Prototype> Prototypes { get; private set; }
 		public static ReadOnlyDictionary<string, Location> Locations { get; private set; }
 
 		/// <summary>
 		/// Load all the game data files into the registry.
 		/// </summary>
 		public static void LoadGameData() {
-			itemPrototypes = LoadPrototypesFromPath<ItemPrototype>(ItemsPath);
-			locationPrototypes = LoadPrototypesFromPath<LocationPrototype>(LocationsPath);
+			prototypes = new Dictionary<string, Prototype>();
+			Prototypes = new ReadOnlyDictionary<string, Prototype>(prototypes);
+			LoadPrototypesFromPath<ItemPrototype>(ItemsPath);
+			LoadPrototypesFromPath<LocationPrototype>(LocationsPath);
 
-			locations = new Dictionary<string, Location>(locationPrototypes.Count);
-			foreach ((string id, LocationPrototype prototype) in locationPrototypes) {
-				Location location = prototype.Create();
-				locations.Add(id, location);
-			}
+			ValidatePrototypes();
 
-			ItemPrototypes = new ReadOnlyDictionary<string, ItemPrototype>(itemPrototypes);
-			LocationPrototypes = new ReadOnlyDictionary<string, LocationPrototype>(locationPrototypes);
+			locations = new Dictionary<string, Location>();
 			Locations = new ReadOnlyDictionary<string, Location>(locations);
+			// Create the locations.
+			foreach (LocationPrototype prototype in prototypes.Values.OfType<LocationPrototype>()) {
+				Location location = prototype.Create();
+				locations.Add(prototype.Id, location);
+			}
 
 			SetupLocations();
 		}
@@ -53,10 +52,10 @@ namespace RPGCuzWhyNot.Data {
 		/// </summary>
 		/// <param name="id">The id of the item</param>
 		public static IItem CreateItem(string id) {
-			if (!itemPrototypes.TryGetValue(id, out ItemPrototype itemPrototype))
-				throw new Exception($"An item prototype with the id '{id}' was not found.");
+			if (prototypes.TryGetValue(id, out Prototype prototype) && prototype is ItemPrototype itemPrototype)
+				return itemPrototype.Create();
 
-			return itemPrototype.Create();
+			throw new Exception($"An item prototype with the id '{id}' was not found.");
 		}
 
 		/// <summary>
@@ -70,9 +69,8 @@ namespace RPGCuzWhyNot.Data {
 			return location;
 		}
 
-		private static Dictionary<string, TProto> LoadPrototypesFromPath<TProto>(string path) {
+		private static void LoadPrototypesFromPath<TProto>(string path) where TProto : Prototype {
 			string[] dataFiles = Directory.GetFiles(path, "*.json", SearchOption.AllDirectories);
-			var prototypes = new Dictionary<string, TProto>(dataFiles.Length);
 
 			foreach (string filePath in dataFiles) {
 				string fileContent = File.ReadAllText(filePath);
@@ -83,17 +81,17 @@ namespace RPGCuzWhyNot.Data {
 					throw new DataLoaderException($"Failed to deserialize data file: {filePath}.", e);
 				}
 
+				// The data file name is used as the item id.
 				string id = Path.GetFileNameWithoutExtension(filePath);
+				prototype.Id = id;
 				if (!prototypes.TryAdd(id, prototype))
 					throw new DataLoaderException($"Duplicate prototype definition of '{id}': {filePath}.");
 			}
-
-			return prototypes;
 		}
 
 		private static void SetupLocations() {
 			foreach ((string id, Location location) in locations) {
-				LocationPrototype locationPrototype = locationPrototypes[id];
+				LocationPrototype locationPrototype = location.Prototype;
 
 				// Add all the paths to the location.
 				foreach ((string pathName, string pathDescription) in locationPrototype.Paths) {
@@ -105,12 +103,49 @@ namespace RPGCuzWhyNot.Data {
 
 				// Create the items in the location.
 				foreach (string itemName in locationPrototype.Items) {
-					if (!itemPrototypes.TryGetValue(itemName, out ItemPrototype item))
+					if (!prototypes.TryGetValue(itemName, out Prototype proto) || !(proto is ItemPrototype item))
 						throw new DataLoaderException($"Item '{itemName}' not found. Referenced by '{id}'.");
 
 					location.items.MoveItem(item.Create());
 				}
 			}
+		}
+
+		private static void ValidatePrototypes() {
+			foreach (Prototype prototype in prototypes.Values) {
+				CheckRequiredProperty(prototype, prototype.CallName, "callName");
+				CheckRequiredProperty(prototype, prototype.Name, "name");
+
+				switch (prototype) {
+					case LocationPrototype locationPrototype: {
+						CheckRequiredProperty(locationPrototype, locationPrototype.Description, "description");
+
+						if (locationPrototype.Paths.ContainsKey(locationPrototype.Id))
+							throw new DataLoaderException($"Prototype '{locationPrototype.Id}' contains a path to itself.");
+						break;
+					}
+					case ItemPrototype itemPrototype: {
+						CheckRequiredProperty(itemPrototype, itemPrototype.DescriptionInInventory, "inventoryDescription");
+						CheckRequiredProperty(itemPrototype, itemPrototype.DescriptionOnGround, "groundDescription");
+
+						if (itemPrototype.IsWearable) {
+							if (itemPrototype.CoveredParts == 0) ThrowMissingProperty(itemPrototype, "coveredParts");
+							if (itemPrototype.CoveredLayers == 0) ThrowMissingProperty(itemPrototype, "coveredLayers");
+						}
+
+						break;
+					}
+				}
+			}
+		}
+
+		private static void CheckRequiredProperty(Prototype prototype, string value, string propertyName) {
+			if (string.IsNullOrWhiteSpace(value))
+				ThrowMissingProperty(prototype, propertyName);
+		}
+
+		private static void ThrowMissingProperty(Prototype prototype, string propertyName) {
+			throw new DataLoaderException($"Missing property '{propertyName}' in prototype '{prototype.Id}'.");
 		}
 	}
 }

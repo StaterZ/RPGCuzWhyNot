@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using RPGCuzWhyNot.Data;
 using RPGCuzWhyNot.Inventory;
 using RPGCuzWhyNot.Inventory.Item;
 using RPGCuzWhyNot.NPCs;
@@ -10,6 +11,7 @@ namespace RPGCuzWhyNot {
 	public class Location : IThing, IHasItemInventory {
 		public string Name { get; }
 		public string CallName { get; }
+		public string FormattedCallName => $"{{fg:Yellow}}([{CallName}])";
 		public readonly string description;
 		public readonly string pathDescription;
 		public readonly ReadOnlyCollection<Path> Paths;
@@ -17,6 +19,7 @@ namespace RPGCuzWhyNot {
 		public readonly ItemInventory items;
 		ItemInventory IHasItemInventory.Inventory => items;
 		public string ListingName => ThingExt.DefaultListingName(this);
+		public LocationPrototype Prototype { get; set; }
 
 		private readonly List<Path> paths = new List<Path>();
 		private readonly List<CharacterLocationData> characters = new List<CharacterLocationData>();
@@ -100,17 +103,17 @@ namespace RPGCuzWhyNot {
 		public void PrintInformation() {
 			Terminal.WriteLine(description);
 			foreach (Path path in paths) {
-				Terminal.WriteLine($"{NumericCallNames.NumberHeading}{path.description} {{magenta}}([{path.location.CallName}])");
+				Terminal.WriteLine($"{NumericCallNames.NumberHeading}{path.description} {path.location.FormattedCallName}");
 				NumericCallNames.Add(path.location);
 			}
 
 			foreach (IItem item in items) {
-				Terminal.WriteLine($"{NumericCallNames.NumberHeading}{item.DescriptionOnGround} {{magenta}}([{item.CallName}])");
+				Terminal.WriteLine($"{NumericCallNames.NumberHeading}{item.DescriptionOnGround} {item.FormattedCallName}");
 				NumericCallNames.Add(item);
 			}
 
 			foreach (CharacterLocationData characterLocationData in characters) {
-				Terminal.WriteLine($"{NumericCallNames.NumberHeading}{characterLocationData.glanceDescription} {{magenta}}([{characterLocationData.character.CallName}])");
+				Terminal.WriteLine($"{NumericCallNames.NumberHeading}{characterLocationData.glanceDescription} {characterLocationData.character.FormattedCallName}");
 				NumericCallNames.Add(characterLocationData.character);
 			}
 		}

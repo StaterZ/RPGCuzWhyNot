@@ -4,13 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace RPGCuzWhyNot.Data {
 	[Serializable]
-	public class LocationPrototype {
-		[JsonPropertyName("callName")]
-		public string CallName { get; set; }
-
-		[JsonPropertyName("name")]
-		public string Name { get; set; }
-
+	public class LocationPrototype : Prototype {
 		[JsonPropertyName("description")]
 		public string Description { get; set; }
 
@@ -20,8 +14,13 @@ namespace RPGCuzWhyNot.Data {
 		[JsonPropertyName("paths")]
 		public Dictionary<string, string> Paths { get; set; } = new Dictionary<string, string>();
 
+		/// <summary>
+		/// Create an instance of the prototype.
+		/// </summary>
 		public Location Create() {
-			return new Location(CallName, Name, Description);
+			return new Location(CallName, Name, Description) {
+				Prototype = this
+			};
 		}
 	}
 }
