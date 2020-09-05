@@ -1,4 +1,5 @@
-﻿using RPGCuzWhyNot.Races;
+﻿using RPGCuzWhyNot.Inventory.Item;
+using RPGCuzWhyNot.Races;
 using StaterZ.Core.HealthSystem;
 
 namespace RPGCuzWhyNot {
@@ -9,14 +10,10 @@ namespace RPGCuzWhyNot {
 		public Location location;
 		public Health health;
 		public Alignment Alignment { get; set; }
+		public Stats stats;
 
-		//stats
-		public int speed;
-		public int strength;
-		public int accuracy;
-		public int fortitude;
-
-		public virtual void Attack(Character target) {
+		protected Character(Race race) {
+			this.race = race;
 		}
 
 		public void Say(string message) {
@@ -24,6 +21,8 @@ namespace RPGCuzWhyNot {
 		}
 
 		public virtual string ListingName => ThingExt.DefaultListingName(this);
+
+		public abstract PlanOfAction PlanTurn(params Character[] opponents);
 	}
 }
 
