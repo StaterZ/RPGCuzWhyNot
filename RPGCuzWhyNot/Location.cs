@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using RPGCuzWhyNot.Data;
 using RPGCuzWhyNot.Inventory;
 using RPGCuzWhyNot.Inventory.Item;
 using RPGCuzWhyNot.NPCs;
@@ -17,6 +18,7 @@ namespace RPGCuzWhyNot {
 		public readonly ItemInventory items;
 		ItemInventory IHasItemInventory.Inventory => items;
 		public string ListingName => ThingExt.DefaultListingName(this);
+		public LocationPrototype Prototype { get; set; }
 
 		private readonly List<Path> paths = new List<Path>();
 		private readonly List<CharacterLocationData> characters = new List<CharacterLocationData>();

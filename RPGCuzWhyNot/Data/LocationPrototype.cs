@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -20,8 +20,13 @@ namespace RPGCuzWhyNot.Data {
 		[JsonPropertyName("paths")]
 		public Dictionary<string, string> Paths { get; set; } = new Dictionary<string, string>();
 
+		/// <summary>
+		/// Create an instance of the prototype.
+		/// </summary>
 		public Location Create() {
-			return new Location(CallName, Name, Description);
+			return new Location(CallName, Name, Description) {
+				Prototype = this
+			};
 		}
 	}
 }
