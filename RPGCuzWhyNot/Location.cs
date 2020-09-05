@@ -88,13 +88,9 @@ namespace RPGCuzWhyNot {
 			string title = $"----- [ {Name} ] -----";
 			NumericCallNames.Clear();
 
-			using (new FGColorScope(ConsoleColor.Yellow)) {
-				Terminal.WriteLine(title);
-			}
+			Terminal.WriteLine($"{{fg:Yellow}}({title})");
 			PrintInformation();
-			using (new FGColorScope(ConsoleColor.Yellow)) {
-				Terminal.WriteLine(new string('-', title.Length));
-			}
+			Terminal.WriteLine($"{{fg:Yellow}}({new string('-', title.Length)})");
 		}
 
 		public void AddNPC(NPC npc, string glanceDescription, string approachDescription) {

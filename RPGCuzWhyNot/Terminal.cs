@@ -11,10 +11,26 @@ namespace RPGCuzWhyNot {
 		public static ConsoleColor ForegroundColor { get => Console.ForegroundColor; set => Console.ForegroundColor = value; }
 		public static ConsoleColor BackgroundColor { get => Console.BackgroundColor; set => Console.BackgroundColor = value; }
 
+		public static Vec2 CursorPosition {
+			get => new Vec2(Console.CursorLeft, Console.CursorTop);
+			set {
+				Console.CursorLeft = value.x;
+				Console.CursorTop = value.y;
+			}
+		}
+
 		public static int MillisPerChar { get; set; } = 10;
 		public static int BeepFrequency { get; set; } = 200;
 		public static int CharsPerBeep { get; set; } = 15;
 		public static int BeepDuration { get; set; } = 10;
+
+		public static Vec2 WindowSize {
+			get => new Vec2(Console.WindowWidth, Console.WindowHeight);
+			set {
+				Console.WindowWidth = value.x;
+				Console.WindowHeight = value.y;
+			}
+		}
 
 		// If MillisPerChar is greater than BeepDuration then the time not spend beeping will be used for sleeping.
 		// If MillisPerChar is less than BeepDuration then there will be noticable stutters when beeping.
@@ -24,16 +40,12 @@ namespace RPGCuzWhyNot {
 		public static void PushState() => stateStack.Push(GetState());
 		public static void PopState() => SetState(stateStack.Pop());
 
-		public static void PushForegroundColor(ConsoleColor fg) {
-			PushState();
-			ForegroundColor = fg;
-		}
-
-		public static void WriteLine(string text, int frequency, int charsPerSecond = -1) => Write(text + "\n", frequency, charsPerSecond);
+		public static void WriteLine(string text, int frequency, int charsPerSecond = -1) => Write(text + '\n', frequency, charsPerSecond);
 		public static void Write(string text, int frequency, int charsPerSecond = -1) {
 			PushState();
-			if (charsPerSecond < 0)
+			if (charsPerSecond < 0) {
 				MillisPerChar = 1000 / charsPerSecond;
+			}
 			BeepFrequency = frequency;
 			Write(text);
 			PopState();
@@ -208,15 +220,6 @@ namespace RPGCuzWhyNot {
 			public int beepDuration;
 		}
 
-		public struct Position {
-			public int x, y;
-
-			public Position(int x, int y) {
-				this.x = x;
-				this.y = y;
-			}
-		}
-
 		public delegate void AliasEffect();
 
 		private struct Alias {
@@ -224,6 +227,18 @@ namespace RPGCuzWhyNot {
 			public bool showChar;
 			public AliasEffect preEffect;
 			public AliasEffect postEffect;
+		}
+
+		public static void Beep(int frequency, int duration) {
+			Console.Beep(frequency, duration);
+		}
+
+		public static void Clear() {
+			Console.Clear();
+		}
+
+		public static string ReadLine() {
+			return Console.ReadLine();
 		}
 	}
 }

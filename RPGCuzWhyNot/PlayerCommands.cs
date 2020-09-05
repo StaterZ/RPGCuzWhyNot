@@ -246,7 +246,7 @@ namespace RPGCuzWhyNot {
 				Terminal.PopState();
 			}));
 			commandHandler.AddCommand(new Command(new[] { "clear" }, "Clear the console", args => {
-				Console.Clear();
+				Terminal.Clear();
 			}));
 			commandHandler.AddCommand(new Command(new[] { "speak", "talk", "converse" }, "Begin a conversation with someone", args => {
 				if (args.FirstArgument == "") {
@@ -257,12 +257,9 @@ namespace RPGCuzWhyNot {
 				string callName = args.FirstArgument;
 				if (NumericCallNames.Get(callName, out Character conversationPartner)
 				|| Location.GetCharacterByCallName(callName, out conversationPartner)) {
-					using (new FGColorScope(ConsoleColor.Cyan)) {
-						//ConsoleUtils.PrintDivider('#');
-						Terminal.WriteLine($"A conversation with <{conversationPartner.Name}> has begun:");
+					Terminal.WriteLine($"{{fg:Cyan}}(A conversation with [{conversationPartner.Name}] has begun:)");
 
-						throw new NotImplementedException();
-					}
+					throw new NotImplementedException();
 				} else {
 					Terminal.WriteLine("Who now?");
 				}
