@@ -11,14 +11,6 @@ namespace RPGCuzWhyNot {
 		public static ConsoleColor ForegroundColor { get => Console.ForegroundColor; set => Console.ForegroundColor = value; }
 		public static ConsoleColor BackgroundColor { get => Console.BackgroundColor; set => Console.BackgroundColor = value; }
 
-		public static Position CursorPosition {
-			get => new Position(Console.CursorLeft, Console.CursorTop);
-			set {
-				Console.CursorLeft = value.x;
-				Console.CursorTop = value.y;
-			}
-		}
-
 		public static int MillisPerChar { get; set; } = 10;
 		public static int BeepFrequency { get; set; } = 200;
 		public static int CharsPerBeep { get; set; } = 15;
@@ -29,21 +21,21 @@ namespace RPGCuzWhyNot {
 
 		private static int charBeepCounter = 0;
 
-		public static void PushState(Save save = Save.ForegroundColor) => stateStack.Push(GetState(save));
+		public static void PushState() => stateStack.Push(GetState());
 		public static void PopState() => SetState(stateStack.Pop());
 
 		public static void PushForegroundColor(ConsoleColor fg) {
-			PushState(Save.ForegroundColor);
+			PushState();
 			ForegroundColor = fg;
 		}
 
 		public static void WriteLine(string text, int frequency, int charsPerSecond = -1) => Write(text + "\n", frequency, charsPerSecond);
 		public static void Write(string text, int frequency, int charsPerSecond = -1) {
-			PushState(Save.BeepFrequency | Save.MillisPerChar);
+			PushState();
 			if (charsPerSecond < 0)
 				MillisPerChar = 1000 / charsPerSecond;
 			BeepFrequency = frequency;
-			WriteLine(text);
+			Write(text);
 			PopState();
 		}
 
@@ -75,7 +67,7 @@ namespace RPGCuzWhyNot {
 			if (doAlias) {
 				alias.preEffect?.Invoke();
 				if (!alias.showChar) {
-					return;
+					goto postEffect;
 				}
 			}
 			Console.Write(c);
@@ -94,6 +86,7 @@ namespace RPGCuzWhyNot {
 			} else if (!Console.KeyAvailable) {
 				Thread.Sleep(MillisPerChar);
 			}
+		postEffect:
 			if (doAlias) {
 				alias.postEffect?.Invoke();
 			}
@@ -106,7 +99,7 @@ namespace RPGCuzWhyNot {
 			bool doPop = false;
 			int parenStart = braceEnd + 1;
 			if (parenStart < text.Length && text[parenStart] == '(') {
-				PushState(Save.Everything & ~Save.CursorPosition);
+				PushState();
 				doPop = true;
 			}
 			string cmds = text[offset..braceEnd];
@@ -157,31 +150,6 @@ namespace RPGCuzWhyNot {
 				case "ms/ch": MillisPerChar = int.Parse(arg); break;
 				case "bHz": BeepFrequency = int.Parse(arg); break;
 				case "bMs": BeepDuration = int.Parse(arg); break;
-				case "cursor":
-					int sep = arg.IndexOf(',');
-					if (sep < 0) throw new ArgumentException();
-					string left, right;
-					left = arg[..sep];
-					right = arg[(sep + 1)..];
-					CursorPosition = new Position(int.Parse(left), int.Parse(right));
-					break;
-				case "push":
-					Save save = 0;
-					foreach (char c in arg) {
-						save |= c switch
-						{
-							'f' => Save.ForegroundColor,
-							'b' => Save.BackgroundColor,
-							'p' => Save.CursorPosition,
-							'm' => Save.MillisPerChar,
-							'h' => Save.BeepFrequency,
-							'c' => Save.CharsPerBeep,
-							'd' => Save.BeepDuration,
-							_ => throw new ArgumentException(),
-						};
-					}
-					PushState(save);
-					break;
 				default: HandleCommandWithoutArg(cmd); break;
 			}
 		}
@@ -192,6 +160,7 @@ namespace RPGCuzWhyNot {
 				return;
 			}
 			switch (cmd) {
+				case "push": PushState(); break;
 				case "pop": PopState(); break;
 				default: throw new ArgumentException();
 			}
@@ -206,91 +175,33 @@ namespace RPGCuzWhyNot {
 			});
 		}
 
-		public static State GetState(Save save) {
-			State state = default;
-			state.save = save;
-			if (Test(save, Save.ForegroundColor)) state.foregroundColor = ForegroundColor;
-			if (Test(save, Save.BackgroundColor)) state.backgroundColor = BackgroundColor;
-			if (Test(save, Save.CursorPosition)) state.cursorPosition = CursorPosition;
-			if (Test(save, Save.MillisPerChar)) state.millisPerChar = MillisPerChar;
-			if (Test(save, Save.BeepFrequency)) state.beepFrequency = BeepFrequency;
-			if (Test(save, Save.CharsPerBeep)) state.charsPerBeep = CharsPerBeep;
-			if (Test(save, Save.BeepDuration)) state.beepDuration = BeepDuration;
-			return state;
+		public static State GetState() {
+			return new State {
+				foregroundColor = ForegroundColor,
+				backgroundColor = BackgroundColor,
+				millisPerChar = MillisPerChar,
+				beepFrequency = BeepFrequency,
+				charsPerBeep = CharsPerBeep,
+				beepDuration = BeepDuration,
+			};
 		}
 
 		public static void SetState(State state) {
-			if (Test(state.save, Save.ForegroundColor)) ForegroundColor = state.foregroundColor;
-			if (Test(state.save, Save.BackgroundColor)) BackgroundColor = state.backgroundColor;
-			if (Test(state.save, Save.CursorPosition)) CursorPosition = state.cursorPosition;
-			if (Test(state.save, Save.MillisPerChar)) MillisPerChar = state.millisPerChar;
-			if (Test(state.save, Save.BeepFrequency)) BeepFrequency = state.beepFrequency;
-			if (Test(state.save, Save.CharsPerBeep)) CharsPerBeep = state.charsPerBeep;
-			if (Test(state.save, Save.BeepDuration)) BeepDuration = state.beepDuration;
-		}
-
-		public static string Encode(State state) {
-			StringBuilder sb = new StringBuilder();
-			if (Test(state.save, Save.ForegroundColor)) sb.Append(EncodeForegroundColor(state.foregroundColor));
-			if (Test(state.save, Save.BackgroundColor)) sb.Append(EncodeBackgroundColor(state.backgroundColor));
-			if (Test(state.save, Save.CursorPosition)) sb.Append(EncodeCursorPosition(state.cursorPosition));
-			if (Test(state.save, Save.MillisPerChar)) sb.Append(EncodeMillisPerCharacter(state.millisPerChar));
-			if (Test(state.save, Save.BeepFrequency)) sb.Append(EncodeBeepFrequency(state.beepFrequency));
-			if (Test(state.save, Save.CharsPerBeep)) sb.Append(EncodeCharsPerBeep(state.charsPerBeep));
-			if (Test(state.save, Save.BeepDuration)) sb.Append(EncodeBeepDuration(state.beepDuration));
-			return sb.ToString();
-		}
-
-		public static string EncodePushForegroundColor(ConsoleColor fg) => EncodePush(Save.ForegroundColor) + EncodeForegroundColor(fg);
-
-		public static string EncodeForegroundColor(ConsoleColor newFg) => $"{{fg:{newFg}}}";
-		public static string EncodeBackgroundColor(ConsoleColor newBg) => $"{{bg:{newBg}}}";
-		public static string EncodeCursorPosition(Position newCur) => $"{{cursor:{newCur.x},{newCur.y}}}";
-		public static string EncodeMillisPerCharacter(int millis) => $"{{ms/ch:{millis}}}";
-		public static string EncodeBeepFrequency(int frequency) => $"{{bHz:{frequency}}}";
-		public static string EncodeCharsPerBeep(int chars) => $"{{ch/b:{chars}}}";
-		public static string EncodeBeepDuration(int millis) => $"{{bMs:{millis}}}";
-
-		private const string EncodedPop = "{pop}";
-		public static string EncodePop() => EncodedPop;
-		public static string EncodePush(Save save) {
-			StringBuilder sb = new StringBuilder();
-			sb.Append("{push:");
-			if (Test(save, Save.ForegroundColor)) sb.Append('f');
-			if (Test(save, Save.BackgroundColor)) sb.Append('b');
-			if (Test(save, Save.CursorPosition)) sb.Append('p');
-			if (Test(save, Save.MillisPerChar)) sb.Append('m');
-			if (Test(save, Save.BeepFrequency)) sb.Append('h');
-			if (Test(save, Save.CharsPerBeep)) sb.Append('c');
-			if (Test(save, Save.BeepDuration)) sb.Append('d');
-			sb.Append('}');
-			return sb.ToString();
+			ForegroundColor = state.foregroundColor;
+			BackgroundColor = state.backgroundColor;
+			MillisPerChar = state.millisPerChar;
+			BeepFrequency = state.beepFrequency;
+			CharsPerBeep = state.charsPerBeep;
+			BeepDuration = state.beepDuration;
 		}
 
 		public static string Escape(string text) {
 			return text.Replace("{", "{{");
 		}
 
-		private static bool Test(Save save, Save flag) => (save & flag) != 0;
-
-		[Flags]
-		public enum Save {
-			ForegroundColor = 1 << 0,
-			BackgroundColor = 1 << 1,
-			CursorPosition = 1 << 2,
-			CharsPerBeep = 1 << 3,
-			MillisPerChar = 1 << 4,
-			BeepFrequency = 1 << 5,
-			BeepDuration = 1 << 6,
-
-			Everything = ForegroundColor | BackgroundColor | CursorPosition | CharsPerBeep | MillisPerChar | BeepFrequency | BeepDuration,
-		}
-
 		public struct State {
-			public Save save;
 			public ConsoleColor foregroundColor;
 			public ConsoleColor backgroundColor;
-			public Position cursorPosition;
 			public int charsPerBeep;
 			public int millisPerChar;
 			public int beepFrequency;
