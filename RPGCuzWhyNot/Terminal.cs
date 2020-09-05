@@ -79,10 +79,6 @@ namespace RPGCuzWhyNot {
 				}
 			}
 			Console.Write(c);
-			if (doAlias) {
-				alias.postEffect?.Invoke();
-			}
-
 			++charBeepCounter;
 			if (charBeepCounter >= CharsPerBeep) {
 				charBeepCounter = 0;
@@ -97,6 +93,9 @@ namespace RPGCuzWhyNot {
 				}
 			} else if (!Console.KeyAvailable) {
 				Thread.Sleep(MillisPerChar);
+			}
+			if (doAlias) {
+				alias.postEffect?.Invoke();
 			}
 		}
 
