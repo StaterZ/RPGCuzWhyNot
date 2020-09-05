@@ -4,13 +4,7 @@ using RPGCuzWhyNot.Inventory.Item;
 
 namespace RPGCuzWhyNot.Data {
 	[Serializable]
-	public sealed class ItemPrototype {
-		[JsonPropertyName("callName")]
-		public string CallName { get; set; }
-
-		[JsonPropertyName("name")]
-		public string Name { get; set; }
-
+	public sealed class ItemPrototype : Prototype {
 		[JsonPropertyName("inventoryDescription")]
 		public string DescriptionInInventory { get; set; }
 
@@ -38,6 +32,9 @@ namespace RPGCuzWhyNot.Data {
 		[JsonPropertyName("coveredLayers"), JsonConverter(typeof(JsonEnumConverter))]
 		public WearableLayers CoveredLayers { get; set; }
 
+		/// <summary>
+		/// Create an instance of the prototype.
+		/// </summary>
 		public IItem Create() {
 			IItem item;
 			if (IsWearable && IsWieldable)
@@ -62,6 +59,7 @@ namespace RPGCuzWhyNot.Data {
 				wieldable.MeleeDamage = MeleeDamage;
 			}
 
+			item.Prototype = this;
 			return item;
 		}
 	}
