@@ -54,7 +54,7 @@ namespace RPGCuzWhyNot {
 				if (NumericCallNames.Get(callName, out IItem item)
 				|| Inventory.ContainsCallName(callName, out item)
 				|| Location.items.ContainsCallName(callName, out item)
-				|| ((IInventory)Wielding).ContainsCallName(callName, out item)) {
+				|| Wielding.ContainsCallName(callName, out item)) {
 					Wear(item);
 				} else {
 					Terminal.WriteLine("Item not found, does it exist?");
@@ -90,7 +90,7 @@ namespace RPGCuzWhyNot {
 				if (NumericCallNames.Get(callName, out IItem item)
 				|| Inventory.ContainsCallName(callName, out item)
 				|| Location.items.ContainsCallName(callName, out item)
-				|| ((IInventory)Wearing).ContainsCallName(callName, out item)) {
+				|| Wearing.ContainsCallName(callName, out item)) {
 					Wield(item);
 				} else {
 					Terminal.WriteLine("Item not found, does it exist?");
@@ -151,8 +151,8 @@ namespace RPGCuzWhyNot {
 
 				string callName = args.FirstArgument;
 				if ((NumericCallNames.Get(callName, out IItem item) && (item.ContainedInventory == Wearing || item.ContainedInventory == Wielding))
-				|| ((IInventory)Wielding).ContainsCallName(callName, out item)
-				|| ((IInventory)Wearing).ContainsCallName(callName, out item)) {
+				|| Wielding.ContainsCallName(callName, out item)
+				|| Wearing.ContainsCallName(callName, out item)) {
 					string action = item.ContainedInventory == Wielding ? "unwield" : "remove";
 					if (Inventory.MoveItem(item)) {
 						Terminal.WriteLine($"You {action} {item.Name} and put it in your inventory.");
@@ -203,8 +203,8 @@ namespace RPGCuzWhyNot {
 					|| item.ContainedInventory == Wielding
 					|| item.ContainedInventory == Wearing))
 				|| Inventory.ContainsCallName(callName, out item)
-				|| ((IInventory)Wielding).ContainsCallName(callName, out item)
-				|| ((IInventory)Wearing).ContainsCallName(callName, out item)) {
+				|| Wielding.ContainsCallName(callName, out item)
+				|| Wearing.ContainsCallName(callName, out item)) {
 					if (Location.items.MoveItem(item)) {
 						Terminal.WriteLine($"You dropped {item.Name}.");
 					} else {
