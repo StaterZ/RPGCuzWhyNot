@@ -118,10 +118,6 @@ namespace RPGCuzWhyNot {
 				NumericCallNames.Add(characterLocationData.character);
 			}
 		}
-
-		public override string ToString() {
-			return ListingName;
-		}
 	}
 }
 

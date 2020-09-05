@@ -33,7 +33,7 @@ namespace RPGCuzWhyNot {
 				}
 			}));
 			commandHandler.AddCommand(new Command(new[] { "where", "location" }, "Show information about the current location", args => {
-				Terminal.WriteLine($"You are in: {Location}");
+				Terminal.WriteLine($"You are in: {Location.Name}");
 				NumericCallNames.Clear();
 				Location.PrintInformation();
 			}));
