@@ -9,6 +9,6 @@
   "hasInventory": true,
   "weightFractionNumerator": 3,
   "weightFractionDenominator": 4,
-  "handRequired": 1,
+  "handsRequired": 1,
   "meleeDamage": 0
 }
