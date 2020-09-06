@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
+using RPGCuzWhyNot.Data;
 
 namespace RPGCuzWhyNot {
 	public static class Terminal {
@@ -162,6 +162,20 @@ namespace RPGCuzWhyNot {
 				case "ms/ch": MillisPerChar = int.Parse(arg); break;
 				case "bHz": BeepFrequency = int.Parse(arg); break;
 				case "bMs": BeepDuration = int.Parse(arg); break;
+				case "name":
+					if (DataLoader.Prototypes.TryGetValue(arg, out Prototype proto)) {
+						Write(proto.Name);
+					} else {
+#if DEBUG
+						PushState();
+						ForegroundColor = ConsoleColor.DarkRed;
+						Console.Write($"[no prototype with id '{arg}']");
+						PopState();
+#else
+						Console.Write(arg);
+#endif
+					}
+					break;
 				default: HandleCommandWithoutArg(cmd); break;
 			}
 		}
