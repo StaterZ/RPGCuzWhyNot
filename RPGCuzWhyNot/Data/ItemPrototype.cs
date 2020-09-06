@@ -29,11 +29,8 @@ namespace RPGCuzWhyNot.Data {
 		[JsonPropertyName("hasInventory")]
 		public bool HasInventory { get; set; }
 
-		[JsonPropertyName("weightFractionNumerator")]
-		public int WeightFractionNumerator { get; set; }
-
-		[JsonPropertyName("weightFractionDenominator")]
-		public int WeightFractionDenominator { get; set; }
+		[JsonPropertyName("weightFraction"), JsonConverter(typeof(JsonFractionConverter))]
+		public Fraction WeightFraction { get; set; }
 
 		[JsonPropertyName("coveredParts"), JsonConverter(typeof(JsonEnumConverter))]
 		public WearableSlots CoveredParts { get; set; }
@@ -74,7 +71,7 @@ namespace RPGCuzWhyNot.Data {
 
 			if (HasInventory) {
 				IItemWithInventory inventory = (IItemWithInventory)item;
-				inventory.WeightFraction = new Fraction(WeightFractionNumerator, WeightFractionDenominator);
+				inventory.WeightFraction = WeightFraction;
 			}
 
 			item.Prototype = this;

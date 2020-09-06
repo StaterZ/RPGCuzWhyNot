@@ -7,8 +7,7 @@
   "coveredParts": "back",
   "coveredLayers": "outer",
   "hasInventory": true,
-  "weightFractionNumerator": 3,
-  "weightFractionDenominator": 4,
+  "weightFraction": "3/4",
   "handsRequired": 1,
   "meleeDamage": 0
 }
