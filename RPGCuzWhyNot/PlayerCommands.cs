@@ -41,7 +41,7 @@ namespace RPGCuzWhyNot {
 				Terminal.WriteLine("Locations:");
 				foreach (Location.Path path in Location.Paths) {
 					Terminal.Write("  ");
-					Terminal.WriteLine(path.location.FormattedCallName);
+					Terminal.WriteLine(path.location.ListingName);
 				}
 			}));
 			commandHandler.AddCommand(new Command(new[] { "wear" }, "Wear something", args => {
@@ -349,7 +349,7 @@ namespace RPGCuzWhyNot {
 			}
 			Terminal.WriteLine("Your inventory contains:");
 			foreach (IItem item in Inventory) {
-				Terminal.WriteLine($"  {NumericCallNames.NumberHeading}{item.FormattedCallName}");
+				Terminal.WriteLine($"  {NumericCallNames.NumberHeading}{item.ListingName}");
 				NumericCallNames.Add(item);
 			}
 		}
@@ -386,7 +386,7 @@ namespace RPGCuzWhyNot {
 
 			Terminal.WriteLine("You look around and see:");
 			foreach (IItem item in Location.items) {
-				Terminal.WriteLine($"  {NumericCallNames.NumberHeading}{item.FormattedCallName}");
+				Terminal.WriteLine($"  {NumericCallNames.NumberHeading}{item.ListingName}");
 				NumericCallNames.Add(item);
 			}
 		}
@@ -399,7 +399,7 @@ namespace RPGCuzWhyNot {
 
 			Terminal.WriteLine("Accessible Locations:");
 			foreach (Location.Path p in Location.Paths) {
-				Terminal.WriteLine($"  {NumericCallNames.NumberHeading}{p.location.FormattedCallName}");
+				Terminal.WriteLine($"  {NumericCallNames.NumberHeading}{p.location.ListingName}");
 				NumericCallNames.Add(p.location);
 			}
 		}
