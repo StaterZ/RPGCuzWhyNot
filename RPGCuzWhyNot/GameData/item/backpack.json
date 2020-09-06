@@ -1,8 +1,8 @@
 ﻿{
   "callName": "backpack",
   "name": "Backpack",
-  "descriptionInInventory": "A backpack, for carrying things more efficiently.",
-  "descriptionOnGround": "A backpack is sitting on the ground.",
+  "inventoryDescription": "A backpack, for carrying things more efficiently.",
+  "groundDescription": "A backpack is sitting on the ground.",
   "wearable": true,
   "coveredParts": "back",
   "coveredLayers": "outer",

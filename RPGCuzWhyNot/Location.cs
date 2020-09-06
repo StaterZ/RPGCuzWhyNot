@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using RPGCuzWhyNot.Data;
 using RPGCuzWhyNot.Inventory;
 using RPGCuzWhyNot.Inventory.Item;
 using RPGCuzWhyNot.NPCs;
@@ -19,6 +20,7 @@ namespace RPGCuzWhyNot {
 		public readonly ItemInventory items;
 		ItemInventory IHasItemInventory.Inventory => items;
 		public string ListingName => ThingExt.DefaultListingName(this);
+		public LocationPrototype Prototype { get; set; }
 
 		private readonly List<Path> paths = new List<Path>();
 		private readonly List<CharacterLocationData> characters = new List<CharacterLocationData>();
@@ -102,18 +104,16 @@ namespace RPGCuzWhyNot {
 		public void PrintInformation() {
 			Terminal.WriteLine(description);
 			foreach (Path path in paths) {
-				Terminal.WriteLine($"{NumericCallNames.NumberHeading}{path.description} {path.location.FormattedCallName}");
-				NumericCallNames.Add(path.location);
+				Terminal.WriteLine($"{NumericCallNames.HeadingOfAdd(path.location)}{path.description} {path.location.FormattedCallName}");
 			}
 
 			foreach (IItem item in items) {
-				Terminal.WriteLine($"{NumericCallNames.NumberHeading}{item.DescriptionOnGround} {item.FormattedCallName}");
-				NumericCallNames.Add(item);
+				Terminal.WriteLine($"{NumericCallNames.HeadingOfAdd(item)}{item.DescriptionOnGround} {item.FormattedCallName}");
 			}
 
 			foreach (CharacterLocationData characterLocationData in characters) {
-				Terminal.WriteLine($"{NumericCallNames.NumberHeading}{characterLocationData.glanceDescription} {characterLocationData.character.FormattedCallName}");
-				NumericCallNames.Add(characterLocationData.character);
+				string heading = NumericCallNames.HeadingOfAdd(characterLocationData.character);
+				Terminal.WriteLine($"{heading}{characterLocationData.glanceDescription} {characterLocationData.character.FormattedCallName}");
 			}
 		}
 

@@ -4,8 +4,6 @@ namespace RPGCuzWhyNot {
 	public static class NumericCallNames {
 		private static readonly List<IThing> things = new List<IThing>();
 
-		public static string NumberHeading => $"{things.Count + 1}. ";
-
 		public static bool Get<T>(string index, out T thing) where T : IThing {
 			thing = default;
 			return int.TryParse(index, out int i) && Get(i, out thing);
@@ -31,12 +29,19 @@ namespace RPGCuzWhyNot {
 			return success;
 		}
 
+		public static string HeadingOfAdd(IThing thing) => HeadingOf(IndexOfAdd(thing));
+
+		public static string HeadingOf(int index) => $"{index}. ";
+
 		public static void Clear() => things.Clear();
 
-		public static int Add(IThing thing) {
-			int index = things.Count;
-			things.Add(thing);
-			return index;
+		public static int IndexOfAdd(IThing thing) {
+			int index = things.IndexOf(thing);
+			if (index == -1) {
+				index = things.Count;
+				things.Add(thing);
+			}
+			return index + 1;
 		}
 	}
 }
