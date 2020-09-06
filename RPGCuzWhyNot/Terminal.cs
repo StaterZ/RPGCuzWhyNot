@@ -166,14 +166,14 @@ namespace RPGCuzWhyNot {
 					if (DataLoader.Prototypes.TryGetValue(arg, out Prototype proto)) {
 						Write(proto.Name);
 					} else {
-#if DEBUG
+					#if DEBUG
 						PushState();
 						ForegroundColor = ConsoleColor.DarkRed;
 						Console.Write($"[no prototype with id '{arg}']");
 						PopState();
-#else
+					#else
 						Console.Write(arg);
-#endif
+					#endif
 					}
 					break;
 				default: HandleCommandWithoutArg(cmd); break;
