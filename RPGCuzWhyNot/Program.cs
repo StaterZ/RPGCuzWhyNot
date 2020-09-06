@@ -1,8 +1,12 @@
 ﻿using System;
-using RPGCuzWhyNot.Data;
-using RPGCuzWhyNot.Inventory.Item;
-using RPGCuzWhyNot.Races.Humanoids;
-using RPGCuzWhyNot.NPCs;
+using RPGCuzWhyNot.Systems;
+using RPGCuzWhyNot.Systems.Commands;
+using RPGCuzWhyNot.Systems.Data;
+using RPGCuzWhyNot.Things;
+using RPGCuzWhyNot.Things.Characters;
+using RPGCuzWhyNot.Things.Characters.NPCs;
+using RPGCuzWhyNot.Things.Characters.Races.Humanoids;
+using RPGCuzWhyNot.Utilities;
 
 namespace RPGCuzWhyNot {
 	public static class Program {
