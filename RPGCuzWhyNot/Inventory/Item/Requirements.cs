@@ -1,8 +1,15 @@
-﻿namespace RPGCuzWhyNot.Inventory.Item {
-	public class Requirements {
-		public Stats Stats { get; }
+﻿using System;
+using System.Text.Json.Serialization;
 
-		public Requirements() { }
+namespace RPGCuzWhyNot.Inventory.Item {
+	[Serializable]
+	public class Requirements {
+		[JsonPropertyName("stats")]
+		public Stats Stats { get; set; }
+
+		public Requirements() {
+			Stats = new Stats();
+		}
 
 		public Requirements(Stats stats) {
 			Stats = stats;

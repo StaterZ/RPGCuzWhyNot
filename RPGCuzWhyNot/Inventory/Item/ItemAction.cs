@@ -1,12 +1,28 @@
-﻿namespace RPGCuzWhyNot.Inventory.Item {
-	public class ItemAction {
-		public string[] CallNames { get; }
-		public string Name { get; }
-		public string Description { get; }
-		public Requirements Requirements { get; }
-		public Effects Effects { get; }
+﻿using System;
+using System.Text.Json.Serialization;
 
-		public ItemAction() { }
+namespace RPGCuzWhyNot.Inventory.Item {
+	[Serializable]
+	public class ItemAction {
+		[JsonPropertyName("callNames")]
+		public string[] CallNames { get; set; }
+
+		[JsonPropertyName("name")]
+		public string Name { get; set; }
+
+		[JsonPropertyName("description")]
+		public string Description { get; set; }
+
+		[JsonPropertyName("requirements")]
+		public Requirements Requirements { get; set; }
+
+		[JsonPropertyName("effects")]
+		public Effects Effects { get; set; }
+
+		public ItemAction() {
+			Requirements = new Requirements();
+			Effects = new Effects();
+		}
 
 		public ItemAction(string[] callNames, string name, string description, Requirements requirements, Effects effects) {
 			CallNames = callNames;

@@ -1,18 +1,33 @@
-﻿namespace RPGCuzWhyNot.Inventory.Item {
+﻿using System;
+using System.Text.Json.Serialization;
+
+namespace RPGCuzWhyNot.Inventory.Item {
+	[Serializable]
 	public class Effects {
-		public Stats Stats { get; }
-		public int MeleeDamage { get; }
-		public int ProjectileDamage { get; }
-		public float ArmorPierceing { get; }
-		public bool ConsumeItem { get; }
+		[JsonPropertyName("stats")]
+		public Stats Stats { get; set; }
 
-		public Effects() { }
+		[JsonPropertyName("meleeDamage")]
+		public int MeleeDamage { get; set; }
 
-		public Effects(Stats stats, int meleeDamage, int projectileDamage, float armorPierceing, bool consumeItem) {
+		[JsonPropertyName("projectileDamage")]
+		public int ProjectileDamage { get; set; }
+
+		[JsonPropertyName("armorPiercing")]
+		public float ArmorPiercing { get; set; }
+
+		[JsonPropertyName("consumeItem")]
+		public bool ConsumeItem { get; set; }
+
+		public Effects() {
+			Stats = new Stats();
+		}
+
+		public Effects(Stats stats, int meleeDamage, int projectileDamage, float armorPiercing, bool consumeItem) {
 			Stats = stats;
 			MeleeDamage = meleeDamage;
 			ProjectileDamage = projectileDamage;
-			ArmorPierceing = armorPierceing;
+			ArmorPiercing = armorPiercing;
 			ConsumeItem = consumeItem;
 		}
 	}

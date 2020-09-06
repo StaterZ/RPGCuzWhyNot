@@ -1,13 +1,15 @@
 ﻿{
   "callName": "sword",
   "name": "Greatsword",
-  "inventoryDescription": "A shineing sword of the finest metal",
+  "inventoryDescription": "A shining sword of the finest metal",
   "groundDescription": "There's a sword on the ground; shining brilliantly in the sunlight",
   "wieldable": true,
   "handsRequired": 2,
   "defense": 0,
-  "usageRequirements": {
-    "strength": 3
+  "requirements": {
+    "stats": {
+      "strength": 3
+    }
   },
   "actions": [
     {
@@ -15,7 +17,9 @@
       "name": "Light Attack",
       "description": "Swing the sword about and hope to hit something...",
       "requirements": {
-        "strength": 2
+        "stats": {
+          "strength": 2
+        }
       },
       "effects": {
         "meleeDamage": 10
@@ -26,24 +30,28 @@
       "name": "Heavy Attack",
       "description": "Swing the greatsword with all your might",
       "requirements": {
-        "strength": 5
+        "stats": {
+          "strength": 5
+        }
       },
       "effects": {
         "meleeDamage": 20,
-        "armorPierceing": 0.2
+        "armorPiercing": 0.2
       }
     },
     {
       "callNames": [ "throw" ],
       "name": "Throw Sword",
-      "description": "Throw the sword at an enemy with great sword",
+      "description": "Throw the sword at an enemy with great force",
       "requirements": {
-        "strength": 10,
-        "accuracy": 5
+        "stats": {
+          "strength": 10,
+          "accuracy": 5
+        }
       },
       "effects": {
         "projectileDamage": 50,
-        "armorPierceing": 1,
+        "armorPiercing": 1,
         "consumeItem": true
       }
     }

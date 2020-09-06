@@ -20,9 +20,6 @@ namespace RPGCuzWhyNot.Data {
 		[JsonPropertyName("handsRequired")]
 		public int HandsRequired { get; set; }
 
-		[JsonPropertyName("itemActions")]
-		public ItemAction[] ItemActions { get; set;  }
-
 		[JsonPropertyName("defense")]
 		public int Defense { get; set; }
 
@@ -31,6 +28,12 @@ namespace RPGCuzWhyNot.Data {
 
 		[JsonPropertyName("coveredLayers"), JsonConverter(typeof(JsonEnumConverter))]
 		public WearableLayers CoveredLayers { get; set; }
+
+		[JsonPropertyName("requirements")]
+		public Requirements UsageRequirements { get; set; }
+
+		[JsonPropertyName("actions")]
+		public ItemAction[] ItemActions { get; set; }
 
 		/// <summary>
 		/// Create an instance of the prototype.
@@ -57,6 +60,8 @@ namespace RPGCuzWhyNot.Data {
 				IWieldable wieldable = (IWieldable)item;
 				wieldable.HandsRequired = HandsRequired;
 				wieldable.ItemActions = ItemActions;
+				wieldable.UsageRequirements = UsageRequirements ?? new Requirements();
+				wieldable.ItemActions = ItemActions ?? Array.Empty<ItemAction>();
 			}
 
 			item.Prototype = this;
