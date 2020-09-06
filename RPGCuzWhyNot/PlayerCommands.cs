@@ -173,6 +173,78 @@ namespace RPGCuzWhyNot {
 				Terminal.WriteLine();
 				ListWearing();
 			}));
+			commandHandler.AddCommand(new Command(new[] { "move" }, "move items between inventories", args => {
+				if (args.FirstArgument == "") {
+					Terminal.WriteLine("What are you trying to move?");
+					return;
+				}
+
+				string movedCallName = args.FirstArgument;
+				IItem itemToMove;
+				string source = "";
+
+				if (args.Get("from", out string fromCallName)) {
+					if (fromCallName == "") {
+						Terminal.WriteLine("What are you trying to move from?");
+						return;
+					}
+					if ((NumericCallNames.Get(fromCallName, out IItemWithInventory fromItem)
+						&& (fromItem.ContainedInventory == Wearing
+						|| fromItem.ContainedInventory == Wielding))
+					|| Wielding.ContainsCallName(fromCallName, out fromItem)
+					|| Wearing.ContainsCallName(fromCallName, out fromItem)) {
+						source = $" from {fromItem.Name}";
+					} else {
+						Terminal.WriteLine("I don't understand what you're trying to move from.");
+						return;
+					}
+					if (!fromItem.ContainsCallName(movedCallName, out itemToMove)) {
+						Terminal.WriteLine("I don't understand what you're trying to move.");
+						return;
+					}
+				} else {
+					if (!(NumericCallNames.Get(movedCallName, out itemToMove)
+						&& (!itemToMove.IsInsideItemWithInventory(out IItemWithInventory parent)
+						|| parent.ContainedInventory == Wearing
+						|| parent.ContainedInventory == Wielding))
+					&& !Wielding.ContainsCallName(movedCallName, out itemToMove)
+					&& !Wearing.ContainsCallName(movedCallName, out itemToMove)
+					&& !Location.items.ContainsCallName(movedCallName, out itemToMove)
+					&& !Inventory.ContainsCallName(movedCallName, out itemToMove)) {
+						Terminal.WriteLine("I don't understand what you're trying to move.");
+						return;
+					}
+				}
+
+				string destination = "";
+				bool success;
+
+				if (args.Get("to", out string toCallName)) {
+					if ((NumericCallNames.Get(toCallName, out IItemWithInventory toItem)
+						&& (toItem.ContainedInventory == Wearing
+						|| toItem.ContainedInventory == Wielding))
+					|| Wielding.ContainsCallName(toCallName, out toItem)
+					|| Wearing.ContainsCallName(toCallName, out toItem)) {
+						destination = $" to {toItem.Name}";
+						success = toItem.MoveItem(itemToMove);
+					} else {
+						Terminal.WriteLine("I don't get where you're trying to move to.");
+						return;
+					}
+				} else {
+					if (itemToMove.ContainedInventory == Inventory || !itemToMove.IsInsideItemWithInventory()) {
+						Terminal.WriteLine("Try specifying where you're trying to move to.");
+						return;
+					} else {
+						success = Inventory.MoveItem(itemToMove);
+						destination = " to your inventory";
+					}
+				}
+
+				if (success) {
+					Terminal.WriteLine($"Moved {itemToMove.Name}{source}{destination}.");
+				}
+			}, new string[] { "from", "to" }));
 			commandHandler.AddCommand(new Command(new[] { "take", "pickup", "grab" }, "Take an item from the current location", args => {
 				if (args.FirstArgument == "") {
 					Terminal.WriteLine("Take what?");
