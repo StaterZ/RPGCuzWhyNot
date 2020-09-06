@@ -245,7 +245,7 @@ namespace RPGCuzWhyNot {
 					Terminal.WriteLine($"Moved {itemToMove.Name}{source}{destination}.");
 				}
 			}, new string[] { "from", "to" }));
-			commandHandler.AddCommand(new Command(new[] { "take", "pickup", "grab" }, "Take an item from the current location", args => {
+			commandHandler.AddCommand(new Command(new[] { "take", "pickup", "grab", "yoink" }, "Take an item from the current location", args => {
 				if (args.FirstArgument == "") {
 					Terminal.WriteLine("Take what?");
 					return;
@@ -348,7 +348,7 @@ namespace RPGCuzWhyNot {
 				Terminal.WriteLine();
 				ListLocations();
 			}));
-			commandHandler.AddCommand(new Command(new string[] { "throw" }, "Throw {darkgray}(something) at {darkgray}(something else)", args => {
+			commandHandler.AddCommand(new Command(new string[] { "throw", "yeet" }, "Throw {darkgray}(something) at {darkgray}(something else)", args => {
 				string throwableCallName = args.FirstArgument;
 				if (throwableCallName == "") {
 					Terminal.WriteLine("You need something to throw.");
