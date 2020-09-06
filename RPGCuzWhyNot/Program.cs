@@ -29,6 +29,7 @@ namespace RPGCuzWhyNot {
 			commands.LoadCommands();
 
 			player.Inventory.MoveItem(DataLoader.CreateItem("blue_potion"));
+			player.Inventory.MoveItem(DataLoader.CreateItem("backpack"));
 
 			//some basic event loop
 			player.location.PrintEnterInformation();

@@ -1,4 +1,7 @@
-﻿using RPGCuzWhyNot.Inventory;
+﻿using System.Collections;
+using System.Collections.Generic;
+using RPGCuzWhyNot.Inventory;
+using RPGCuzWhyNot.Inventory.Item;
 using StaterZ.Core.HealthSystem;
 
 namespace RPGCuzWhyNot {
@@ -21,6 +24,12 @@ namespace RPGCuzWhyNot {
 				Terminal.WriteLine($"{ctx.inflictor} killed you!");
 			};
 		}
+
+		bool IHasInventory.ContainsCallName(string callName, out IItem item) => Inventory.ContainsCallName(callName, out item);
+		bool IHasInventory.MoveItem(IItem item, bool silent) => Inventory.MoveItem(item, silent);
+
+		IEnumerator<IItem> IEnumerable<IItem>.GetEnumerator() => Inventory.GetEnumerator();
+		IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)Inventory).GetEnumerator();
 	}
 }
 

@@ -26,6 +26,15 @@ namespace RPGCuzWhyNot.Data {
 		[JsonPropertyName("defense")]
 		public int Defense { get; set; }
 
+		[JsonPropertyName("hasInventory")]
+		public bool HasInventory { get; set; }
+
+		[JsonPropertyName("weightFractionNumerator")]
+		public int WeightFractionNumerator { get; set; }
+
+		[JsonPropertyName("weightFractionDenominator")]
+		public int WeightFractionDenominator { get; set; }
+
 		[JsonPropertyName("coveredParts"), JsonConverter(typeof(JsonEnumConverter))]
 		public WearableSlots CoveredParts { get; set; }
 
@@ -37,7 +46,11 @@ namespace RPGCuzWhyNot.Data {
 		/// </summary>
 		public IItem Create() {
 			IItem item;
-			if (IsWearable && IsWieldable)
+			if (HasInventory && IsWearable)
+				item = new WearableItemWithInventory(Name, CallName, DescriptionInInventory, DescriptionOnGround);
+			else if (HasInventory)
+				item = new ItemWithInventory(Name, CallName, DescriptionInInventory, DescriptionOnGround);
+			else if (IsWearable && IsWieldable)
 				item = new WieldableWearableItem(Name, CallName, DescriptionInInventory, DescriptionOnGround);
 			else if (IsWearable)
 				item = new WearableItem(Name, CallName, DescriptionInInventory, DescriptionOnGround);
@@ -53,10 +66,15 @@ namespace RPGCuzWhyNot.Data {
 				wearable.CoveredLayers = CoveredLayers;
 			}
 
-			if (IsWieldable) {
+			if (IsWieldable || HasInventory) {
 				IWieldable wieldable = (IWieldable)item;
 				wieldable.HandsRequired = HandsRequired;
 				wieldable.MeleeDamage = MeleeDamage;
+			}
+
+			if (HasInventory) {
+				IItemWithInventory inventory = (IItemWithInventory)item;
+				inventory.WeightFraction = new Fraction(WeightFractionNumerator, WeightFractionDenominator);
 			}
 
 			item.Prototype = this;

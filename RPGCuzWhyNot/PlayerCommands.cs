@@ -54,7 +54,7 @@ namespace RPGCuzWhyNot {
 				if (NumericCallNames.Get(callName, out IItem item)
 				|| Inventory.ContainsCallName(callName, out item)
 				|| Location.items.ContainsCallName(callName, out item)
-				|| ((IInventory)Wielding).ContainsCallName(callName, out item)) {
+				|| Wielding.ContainsCallName(callName, out item)) {
 					Wear(item);
 				} else {
 					Terminal.WriteLine("Item not found, does it exist?");
@@ -90,7 +90,7 @@ namespace RPGCuzWhyNot {
 				if (NumericCallNames.Get(callName, out IItem item)
 				|| Inventory.ContainsCallName(callName, out item)
 				|| Location.items.ContainsCallName(callName, out item)
-				|| ((IInventory)Wearing).ContainsCallName(callName, out item)) {
+				|| Wearing.ContainsCallName(callName, out item)) {
 					Wield(item);
 				} else {
 					Terminal.WriteLine("Item not found, does it exist?");
@@ -151,8 +151,8 @@ namespace RPGCuzWhyNot {
 
 				string callName = args.FirstArgument;
 				if ((NumericCallNames.Get(callName, out IItem item) && (item.ContainedInventory == Wearing || item.ContainedInventory == Wielding))
-				|| ((IInventory)Wielding).ContainsCallName(callName, out item)
-				|| ((IInventory)Wearing).ContainsCallName(callName, out item)) {
+				|| Wielding.ContainsCallName(callName, out item)
+				|| Wearing.ContainsCallName(callName, out item)) {
 					string action = item.ContainedInventory == Wielding ? "unwield" : "remove";
 					if (Inventory.MoveItem(item)) {
 						Terminal.WriteLine($"You {action} {item.Name} and put it in your inventory.");
@@ -173,6 +173,78 @@ namespace RPGCuzWhyNot {
 				Terminal.WriteLine();
 				ListWearing();
 			}));
+			commandHandler.AddCommand(new Command(new[] { "move" }, "move items between inventories", args => {
+				if (args.FirstArgument == "") {
+					Terminal.WriteLine("What are you trying to move?");
+					return;
+				}
+
+				string movedCallName = args.FirstArgument;
+				IItem itemToMove;
+				string source = "";
+
+				if (args.Get("from", out string fromCallName)) {
+					if (fromCallName == "") {
+						Terminal.WriteLine("What are you trying to move from?");
+						return;
+					}
+					if ((NumericCallNames.Get(fromCallName, out IItemWithInventory fromItem)
+						&& (fromItem.ContainedInventory == Wearing
+						|| fromItem.ContainedInventory == Wielding))
+					|| Wielding.ContainsCallName(fromCallName, out fromItem)
+					|| Wearing.ContainsCallName(fromCallName, out fromItem)) {
+						source = $" from {fromItem.Name}";
+					} else {
+						Terminal.WriteLine("I don't understand what you're trying to move from.");
+						return;
+					}
+					if (!fromItem.ContainsCallName(movedCallName, out itemToMove)) {
+						Terminal.WriteLine("I don't understand what you're trying to move.");
+						return;
+					}
+				} else {
+					if (!(NumericCallNames.Get(movedCallName, out itemToMove)
+						&& (!itemToMove.IsInsideItemWithInventory(out IItemWithInventory parent)
+						|| parent.ContainedInventory == Wearing
+						|| parent.ContainedInventory == Wielding))
+					&& !Wielding.ContainsCallName(movedCallName, out itemToMove)
+					&& !Wearing.ContainsCallName(movedCallName, out itemToMove)
+					&& !Location.items.ContainsCallName(movedCallName, out itemToMove)
+					&& !Inventory.ContainsCallName(movedCallName, out itemToMove)) {
+						Terminal.WriteLine("I don't understand what you're trying to move.");
+						return;
+					}
+				}
+
+				string destination = "";
+				bool success;
+
+				if (args.Get("to", out string toCallName)) {
+					if ((NumericCallNames.Get(toCallName, out IItemWithInventory toItem)
+						&& (toItem.ContainedInventory == Wearing
+						|| toItem.ContainedInventory == Wielding))
+					|| Wielding.ContainsCallName(toCallName, out toItem)
+					|| Wearing.ContainsCallName(toCallName, out toItem)) {
+						destination = $" to {toItem.Name}";
+						success = toItem.MoveItem(itemToMove);
+					} else {
+						Terminal.WriteLine("I don't get where you're trying to move to.");
+						return;
+					}
+				} else {
+					if (itemToMove.ContainedInventory == Inventory || !itemToMove.IsInsideItemWithInventory()) {
+						Terminal.WriteLine("Try specifying where you're trying to move to.");
+						return;
+					} else {
+						success = Inventory.MoveItem(itemToMove);
+						destination = " to your inventory";
+					}
+				}
+
+				if (success) {
+					Terminal.WriteLine($"Moved {itemToMove.Name}{source}{destination}.");
+				}
+			}, new string[] { "from", "to" }));
 			commandHandler.AddCommand(new Command(new[] { "take", "pickup", "grab" }, "Take an item from the current location", args => {
 				if (args.FirstArgument == "") {
 					Terminal.WriteLine("Take what?");
@@ -203,8 +275,8 @@ namespace RPGCuzWhyNot {
 					|| item.ContainedInventory == Wielding
 					|| item.ContainedInventory == Wearing))
 				|| Inventory.ContainsCallName(callName, out item)
-				|| ((IInventory)Wielding).ContainsCallName(callName, out item)
-				|| ((IInventory)Wearing).ContainsCallName(callName, out item)) {
+				|| Wielding.ContainsCallName(callName, out item)
+				|| Wearing.ContainsCallName(callName, out item)) {
 					if (Location.items.MoveItem(item)) {
 						Terminal.WriteLine($"You dropped {item.Name}.");
 					} else {
@@ -345,11 +417,48 @@ namespace RPGCuzWhyNot {
 		private void ListInventory() {
 			if (Inventory.Count <= 0) {
 				Terminal.WriteLine("Your inventory is empty.");
-				return;
+			} else {
+				Terminal.WriteLine("Your inventory contains:");
+				foreach (IItem item in Inventory) {
+					Terminal.WriteLine($"  {NumericCallNames.HeadingOfAdd(item)}{item.ListingName}");
+				}
+
+				foreach (IItem item in Inventory) {
+					if (item is IItemWithInventory inv) {
+						ListItemWithInventory("", " in inventory", inv);
+					}
+				}
 			}
-			Terminal.WriteLine("Your inventory contains:");
-			foreach (IItem item in Inventory) {
+
+			foreach (IItem item in Wielding) {
+				if (item is IItemWithInventory inv) {
+					ListItemWithInventory("Wielded ", "", inv);
+				}
+			}
+
+			foreach (IItem item in Wearing) {
+				if (item is IItemWithInventory inv) {
+					ListItemWithInventory("Worn ", "", inv);
+				}
+			}
+		}
+
+		private void ListItemWithInventory(string prefix, string suffix, IItemWithInventory inv) {
+			Terminal.WriteLine();
+			Terminal.Write($"{NumericCallNames.HeadingOfAdd(inv)}{prefix}{inv.ListingName}{suffix}");
+			if (inv.Inventory.Count <= 0) {
+				Terminal.WriteLine(" is empty.");
+				return;
+			} else {
+				Terminal.WriteLine(" contains:");
+			}
+			foreach (IItem item in inv) {
 				Terminal.WriteLine($"  {NumericCallNames.HeadingOfAdd(item)}{item.ListingName}");
+			}
+			foreach (IItem item in inv) {
+				if (item is IItemWithInventory nested) {
+					ListItemWithInventory("", $" inside {prefix}{item.Name}{suffix}", nested);
+				}
 			}
 		}
 
@@ -384,6 +493,12 @@ namespace RPGCuzWhyNot {
 			Terminal.WriteLine("You look around and see:");
 			foreach (IItem item in Location.items) {
 				Terminal.WriteLine($"  {NumericCallNames.HeadingOfAdd(item)}{item.ListingName}");
+			}
+
+			foreach (IItem item in Location.items) {
+				if (item is IItemWithInventory inv) {
+					ListItemWithInventory("", " on the ground", inv);
+				}
 			}
 		}
 
