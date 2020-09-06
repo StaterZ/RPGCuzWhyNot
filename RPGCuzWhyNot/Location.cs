@@ -103,18 +103,16 @@ namespace RPGCuzWhyNot {
 		public void PrintInformation() {
 			Terminal.WriteLine(description);
 			foreach (Path path in paths) {
-				Terminal.WriteLine($"{NumericCallNames.NumberHeading}{path.description} {path.location.FormattedCallName}");
-				NumericCallNames.Add(path.location);
+				Terminal.WriteLine($"{NumericCallNames.HeadingOfAdd(path.location)}{path.description} {path.location.FormattedCallName}");
 			}
 
 			foreach (IItem item in items) {
-				Terminal.WriteLine($"{NumericCallNames.NumberHeading}{item.DescriptionOnGround} {item.FormattedCallName}");
-				NumericCallNames.Add(item);
+				Terminal.WriteLine($"{NumericCallNames.HeadingOfAdd(item)}{item.DescriptionOnGround} {item.FormattedCallName}");
 			}
 
 			foreach (CharacterLocationData characterLocationData in characters) {
-				Terminal.WriteLine($"{NumericCallNames.NumberHeading}{characterLocationData.glanceDescription} {characterLocationData.character.FormattedCallName}");
-				NumericCallNames.Add(characterLocationData.character);
+				string heading = NumericCallNames.HeadingOfAdd(characterLocationData.character);
+				Terminal.WriteLine($"{heading}{characterLocationData.glanceDescription} {characterLocationData.character.FormattedCallName}");
 			}
 		}
 	}

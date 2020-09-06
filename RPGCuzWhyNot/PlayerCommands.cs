@@ -349,8 +349,7 @@ namespace RPGCuzWhyNot {
 			}
 			Terminal.WriteLine("Your inventory contains:");
 			foreach (IItem item in Inventory) {
-				Terminal.WriteLine($"  {NumericCallNames.NumberHeading}{item.ListingName}");
-				NumericCallNames.Add(item);
+				Terminal.WriteLine($"  {NumericCallNames.HeadingOfAdd(item)}{item.ListingName}");
 			}
 		}
 
@@ -361,8 +360,7 @@ namespace RPGCuzWhyNot {
 			}
 			Terminal.WriteLine("You are currently wearing:");
 			foreach (IWearable wearable in Wearing) {
-				Terminal.WriteLine($"  {NumericCallNames.NumberHeading}{wearable.ListingWithStats}");
-				NumericCallNames.Add(wearable);
+				Terminal.WriteLine($"  {NumericCallNames.HeadingOfAdd(wearable)}{wearable.ListingWithStats}");
 			}
 		}
 
@@ -373,8 +371,7 @@ namespace RPGCuzWhyNot {
 			}
 			Terminal.WriteLine("You are currently wielding:");
 			foreach (IWieldable wieldable in Wielding) {
-				Terminal.WriteLine($"  {NumericCallNames.NumberHeading}{wieldable.ListingWithStats}");
-				NumericCallNames.Add(wieldable);
+				Terminal.WriteLine($"  {NumericCallNames.HeadingOfAdd(wieldable)}{wieldable.ListingWithStats}");
 			}
 		}
 
@@ -386,8 +383,7 @@ namespace RPGCuzWhyNot {
 
 			Terminal.WriteLine("You look around and see:");
 			foreach (IItem item in Location.items) {
-				Terminal.WriteLine($"  {NumericCallNames.NumberHeading}{item.ListingName}");
-				NumericCallNames.Add(item);
+				Terminal.WriteLine($"  {NumericCallNames.HeadingOfAdd(item)}{item.ListingName}");
 			}
 		}
 
@@ -399,8 +395,7 @@ namespace RPGCuzWhyNot {
 
 			Terminal.WriteLine("Accessible Locations:");
 			foreach (Location.Path p in Location.Paths) {
-				Terminal.WriteLine($"  {NumericCallNames.NumberHeading}{p.location.ListingName}");
-				NumericCallNames.Add(p.location);
+				Terminal.WriteLine($"  {NumericCallNames.HeadingOfAdd(p.location)}{p.location.ListingName}");
 			}
 		}
 	}
