@@ -36,7 +36,7 @@ namespace RPGCuzWhyNot.Inventory {
 			return false;
 		}
 
-		public bool ContainsCallName<T>(string callName, out T item) where T : IItem {
+		public bool ContainsCallName<T>(string callName, out T item) {
 			foreach (ItemT i in items) {
 				if (i.CallName == callName && i is T ti) {
 					item = ti;

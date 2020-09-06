@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using RPGCuzWhyNot.Inventory;
 using RPGCuzWhyNot.Inventory.Item;
 
@@ -293,6 +294,43 @@ namespace RPGCuzWhyNot {
 			commandHandler.AddCommand(new Command(new[] { "items" }, "List the items nearby", args => {
 				NumericCallNames.Clear();
 				ListLocationItems();
+			}));
+			commandHandler.AddCommand(new Command(new[] { "inspect", "what" }, "Inspect an item in your inventory", args => {
+				if (args.FirstArgument == "") {
+					Terminal.WriteLine("Inspect what?");
+					return;
+				}
+
+				string callName = args.FirstArgument;
+				Character locationCharacter = null;
+				Location connectedLocation = null;
+				if (NumericCallNames.Get(callName, out IThing thing)
+				|| Inventory.ContainsCallName(callName, out thing)
+				|| Wearing.ContainsCallName(callName, out thing)
+				|| Wielding.ContainsCallName(callName, out thing)
+				|| Location.items.ContainsCallName(callName, out thing)
+				|| Location.GetCharacterByCallName(callName, out locationCharacter)
+				|| Location.GetConnectedLocationByCallName(callName, out connectedLocation)) {
+					Terminal.WriteLine((connectedLocation ?? locationCharacter ?? thing) switch
+					{
+						IItem item when item.ContainedInventory == Location.items => item.DescriptionOnGround,
+						IItem item => item.DescriptionInInventory,
+						Location location when player.location == location => location.description,
+						Location location =>
+							player.location.Paths.Where(a => a.location == location)
+							.FirstOrDefault()?.description ?? "I don't know where that is.",
+						Character character =>
+							character.location.Characters.Where(a => a.character == character)
+							.FirstOrDefault()?.glanceDescription ?? "I don't know who that is.",
+						_ => "I'm not sure what to say..."
+					});
+					if (thing is IItemWithInventory itemWithInventory) {
+						NumericCallNames.Clear();
+						ListItemWithInventory("", "", itemWithInventory);
+					}
+				} else {
+					Terminal.WriteLine("I don't know what that is.");
+				}
 			}));
 			commandHandler.AddCommand(new Command(new[] { "help", "commands" }, "Show this list", args => {
 				Terminal.WriteLine("Commands:");
