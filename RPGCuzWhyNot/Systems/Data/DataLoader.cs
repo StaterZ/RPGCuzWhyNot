@@ -26,10 +26,14 @@ namespace RPGCuzWhyNot.Systems.Data {
 		public static ReadOnlyDictionary<string, Prototype> Prototypes { get; private set; }
 		public static ReadOnlyDictionary<string, Location> Locations { get; private set; }
 
+		private static bool loadError;
+
 		/// <summary>
 		/// Load all the game data files into the registry.
 		/// </summary>
-		public static void LoadGameData() {
+		public static bool LoadGameData() {
+			loadError = false;
+
 			prototypes = new Dictionary<string, Prototype>();
 			Prototypes = new ReadOnlyDictionary<string, Prototype>(prototypes);
 			LoadPrototypesFromPath<ItemPrototype>(ItemsPath);
@@ -39,6 +43,7 @@ namespace RPGCuzWhyNot.Systems.Data {
 
 			locations = new Dictionary<string, Location>();
 			Locations = new ReadOnlyDictionary<string, Location>(locations);
+
 			// Create the locations.
 			foreach (LocationPrototype prototype in prototypes.Values.OfType<LocationPrototype>()) {
 				Location location = prototype.Create();
@@ -46,6 +51,8 @@ namespace RPGCuzWhyNot.Systems.Data {
 			}
 
 			SetupLocations();
+
+			return !loadError;
 		}
 
 		/// <summary>
@@ -74,19 +81,28 @@ namespace RPGCuzWhyNot.Systems.Data {
 			string[] dataFiles = Directory.GetFiles(path, "*.json", SearchOption.AllDirectories);
 
 			foreach (string filePath in dataFiles) {
-				string fileContent = File.ReadAllText(filePath);
+				// Deserialize the prototype.
 				TProto prototype;
 				try {
+					string fileContent = File.ReadAllText(filePath);
 					prototype = JsonSerializer.Deserialize<TProto>(fileContent, serializerOptions);
-				} catch (JsonException e) {
-					throw new DataLoaderException($"Failed to deserialize data file: {filePath}.", e);
 				}
+				catch (IOException e) {
+					Error($"Failed to read file \"{filePath}\":\n{e.Message}");
+					continue;
+				}
+				catch (JsonException e) {
+					Error($"Failed to deserialize file \"{filePath}\":\n{e.Message}");
+					continue;
+				}
+
+				((IOnDeserialized)prototype).OnDeserialized();
 
 				// The data file name is used as the item id.
 				string id = Path.GetFileNameWithoutExtension(filePath);
 				prototype.Id = id;
 				if (!prototypes.TryAdd(id, prototype))
-					throw new DataLoaderException($"Duplicate prototype definition of '{id}': {filePath}.");
+					Error($"Duplicate prototype definition of '{id}': \"{filePath}\".");
 			}
 		}
 
@@ -96,16 +112,20 @@ namespace RPGCuzWhyNot.Systems.Data {
 
 				// Add all the paths to the location.
 				foreach ((string pathName, string pathDescription) in locationPrototype.Paths) {
-					if (!locations.TryGetValue(pathName, out Location destination))
-						throw new DataLoaderException($"Location '{pathName}' not found. Referenced by '{id}'.");
+					if (!locations.TryGetValue(pathName, out Location destination)) {
+						Error($"Location '{pathName}' not found. Referenced by location '{id}'.");
+						continue;
+					}
 
 					location.AddPathTo(destination, pathDescription);
 				}
 
 				// Create the items in the location.
 				foreach (string itemName in locationPrototype.Items) {
-					if (!prototypes.TryGetValue(itemName, out Prototype proto) || !(proto is ItemPrototype item))
-						throw new DataLoaderException($"Item '{itemName}' not found. Referenced by '{id}'.");
+					if (!prototypes.TryGetValue(itemName, out Prototype proto) || !(proto is ItemPrototype item)) {
+						Error($"Item '{itemName}' not found. Referenced by location '{id}'.");
+						continue;
+					}
 
 					location.items.MoveItem(item.Create());
 				}
@@ -113,40 +133,71 @@ namespace RPGCuzWhyNot.Systems.Data {
 		}
 
 		private static void ValidatePrototypes() {
-			foreach (Prototype prototype in prototypes.Values) {
-				CheckRequiredProperty(prototype, prototype.CallName, "callName");
-				CheckRequiredProperty(prototype, prototype.Name, "name");
+			foreach (Prototype proto in prototypes.Values) {
+				if (proto.CallName == null) MissingPropertyError(proto, "callName");
+				if (proto.Name == null) MissingPropertyError(proto, "name");
 
-				switch (prototype) {
-					case LocationPrototype locationPrototype: {
-						CheckRequiredProperty(locationPrototype, locationPrototype.Description, "description");
-
-						if (locationPrototype.Paths.ContainsKey(locationPrototype.Id))
-							throw new DataLoaderException($"Prototype '{locationPrototype.Id}' contains a path to itself.");
+				switch (proto) {
+					case LocationPrototype locationPrototype:
+						ValidateLocationPrototype(locationPrototype);
 						break;
-					}
-					case ItemPrototype itemPrototype: {
-						CheckRequiredProperty(itemPrototype, itemPrototype.DescriptionInInventory, "inventoryDescription");
-						CheckRequiredProperty(itemPrototype, itemPrototype.DescriptionOnGround, "groundDescription");
 
-						if (itemPrototype.IsWearable) {
-							if (itemPrototype.CoveredParts == 0) ThrowMissingProperty(itemPrototype, "coveredParts");
-							if (itemPrototype.CoveredLayers == 0) ThrowMissingProperty(itemPrototype, "coveredLayers");
-						}
-
+					case ItemPrototype itemPrototype:
+						ValidateItemPrototype(itemPrototype);
 						break;
-					}
 				}
 			}
 		}
 
-		private static void CheckRequiredProperty(Prototype prototype, string value, string propertyName) {
-			if (string.IsNullOrWhiteSpace(value))
-				ThrowMissingProperty(prototype, propertyName);
+		private static void ValidateLocationPrototype(LocationPrototype proto) {
+			if (proto.Description == null) MissingPropertyError(proto, "description");
+
+			if (proto.Paths.Count == 0)
+				LogWarning($"Location '{proto.Id}' has no paths.");
+
+			if (proto.Paths.ContainsKey(proto.Id))
+				Error($"Location '{proto.Id}' contains a path to itself.");
 		}
 
-		private static void ThrowMissingProperty(Prototype prototype, string propertyName) {
-			throw new DataLoaderException($"Missing property '{propertyName}' in prototype '{prototype.Id}'.");
+		private static void ValidateItemPrototype(ItemPrototype proto) {
+			if (proto.DescriptionInInventory == null) MissingPropertyError(proto, "inventoryDescription");
+			if (proto.DescriptionOnGround == null) MissingPropertyError(proto, "groundDescription");
+
+			if (proto.IsWieldable) {
+				if (proto.HandsRequired == null) MissingPropertyError(proto, "handsRequired");
+				if (proto.MeleeDamage == null) MissingPropertyError(proto, "meleeDamage");
+			}
+
+			if (proto.IsWearable) {
+				if (proto.Defense == null) MissingPropertyError(proto, "defense");
+				if (proto.CoveredParts == 0) MissingPropertyError(proto, "coveredParts");
+				if (proto.CoveredLayers == 0) MissingPropertyError(proto, "coveredLayers");
+			}
+
+			if (proto.HasInventory) {
+				if (proto.WeightFraction.numerator == 0 && proto.WeightFraction.denominator == 0)
+					MissingPropertyError(proto, "weightFraction");
+			}
+		}
+
+
+		private static void MissingPropertyError(Prototype prototype, string propertyName) {
+			Error($"Missing property '{propertyName}' in prototype '{prototype.Id}'.");
+		}
+
+		private static void Error(string message) {
+			loadError = true;
+			LogError(message);
+		}
+
+		private static void LogError(string message) {
+			Terminal.WriteDirect("{red}([ERROR/Data]) ");
+			Terminal.WriteLineDirect(message);
+		}
+
+		private static void LogWarning(string message) {
+			Terminal.WriteDirect("{yellow}([WARN/Data]) ");
+			Terminal.WriteLineDirect(message);
 		}
 	}
 }

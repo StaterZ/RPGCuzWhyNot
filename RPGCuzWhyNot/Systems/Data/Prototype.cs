@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 
 namespace RPGCuzWhyNot.Systems.Data {
-	public abstract class Prototype {
+	public abstract class Prototype : IOnDeserialized {
 		[JsonIgnore]
 		public string Id { get; set; }
 
@@ -10,5 +10,11 @@ namespace RPGCuzWhyNot.Systems.Data {
 
 		[JsonPropertyName("name")]
 		public string Name { get; set; }
+
+		void IOnDeserialized.OnDeserialized() {
+			OnDeserialized();
+		}
+
+		protected virtual void OnDeserialized() { }
 	}
 }

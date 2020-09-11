@@ -15,6 +15,11 @@ namespace RPGCuzWhyNot.Systems.Data {
 		[JsonPropertyName("paths")]
 		public Dictionary<string, string> Paths { get; set; } = new Dictionary<string, string>();
 
+		protected override void OnDeserialized() {
+			Items ??= new List<string>();
+			Paths ??= new Dictionary<string, string>();
+		}
+
 		/// <summary>
 		/// Create an instance of the prototype.
 		/// </summary>

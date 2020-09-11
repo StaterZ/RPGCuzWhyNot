@@ -12,20 +12,32 @@ namespace RPGCuzWhyNot.Systems.Data {
 		[JsonPropertyName("groundDescription")]
 		public string DescriptionOnGround { get; set; }
 
+		// Wieldable
+
 		[JsonPropertyName("wieldable")]
 		public bool IsWieldable { get; set; }
+
+		[JsonPropertyName("handsRequired")]
+		public int? HandsRequired { get; set; }
+
+		[JsonPropertyName("meleeDamage")]
+		public int? MeleeDamage { get; set; }
+
+		// Wearable
 
 		[JsonPropertyName("wearable")]
 		public bool IsWearable { get; set; }
 
-		[JsonPropertyName("handsRequired")]
-		public int HandsRequired { get; set; }
-
-		[JsonPropertyName("meleeDamage")]
-		public int MeleeDamage { get; set;  }
-
 		[JsonPropertyName("defense")]
-		public int Defense { get; set; }
+		public int? Defense { get; set; }
+
+		[JsonPropertyName("coveredParts"), JsonConverter(typeof(JsonEnumConverter))]
+		public WearableSlots CoveredParts { get; set; }
+
+		[JsonPropertyName("coveredLayers"), JsonConverter(typeof(JsonEnumConverter))]
+		public WearableLayers CoveredLayers { get; set; }
+
+		// Inventory
 
 		[JsonPropertyName("hasInventory")]
 		public bool HasInventory { get; set; }
@@ -33,11 +45,6 @@ namespace RPGCuzWhyNot.Systems.Data {
 		[JsonPropertyName("weightFraction"), JsonConverter(typeof(JsonFractionConverter))]
 		public Fraction WeightFraction { get; set; }
 
-		[JsonPropertyName("coveredParts"), JsonConverter(typeof(JsonEnumConverter))]
-		public WearableSlots CoveredParts { get; set; }
-
-		[JsonPropertyName("coveredLayers"), JsonConverter(typeof(JsonEnumConverter))]
-		public WearableLayers CoveredLayers { get; set; }
 
 		/// <summary>
 		/// Create an instance of the prototype.
@@ -59,15 +66,15 @@ namespace RPGCuzWhyNot.Systems.Data {
 
 			if (IsWearable) {
 				IWearable wearable = (IWearable)item;
-				wearable.Defense = Defense;
+				wearable.Defense = Defense ?? 0;
 				wearable.CoveredParts = CoveredParts;
 				wearable.CoveredLayers = CoveredLayers;
 			}
 
 			if (IsWieldable || HasInventory) {
 				IWieldable wieldable = (IWieldable)item;
-				wieldable.HandsRequired = HandsRequired;
-				wieldable.MeleeDamage = MeleeDamage;
+				wieldable.HandsRequired = HandsRequired ?? 0;
+				wieldable.MeleeDamage = MeleeDamage ?? 0;
 			}
 
 			if (HasInventory) {
