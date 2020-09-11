@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -81,6 +81,8 @@ namespace RPGCuzWhyNot.Systems.Data {
 				} catch (JsonException e) {
 					throw new DataLoaderException($"Failed to deserialize data file: {filePath}.", e);
 				}
+
+				((IOnDeserialized)prototype).OnDeserialized();
 
 				// The data file name is used as the item id.
 				string id = Path.GetFileNameWithoutExtension(filePath);
