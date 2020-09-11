@@ -14,7 +14,9 @@ namespace RPGCuzWhyNot {
 		public static PlayerCommands commands;
 
 		private static void Main() {
-			DataLoader.LoadGameData();
+			if (!DataLoader.LoadGameData()) {
+				Environment.Exit(1);
+			}
 
 			Location smithy = DataLoader.GetLocation("village_smithy");
 			smithy.AddNPC(new Orchibald(), "A smith can be seen by a large forge", "You walk up to the smith. He turns around to look at you.");
