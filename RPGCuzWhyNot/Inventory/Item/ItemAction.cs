@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Text.Json.Serialization;
 
 namespace RPGCuzWhyNot.Inventory.Item {
 	[Serializable]
-	public class ItemAction {
+	public class ItemAction : IPlannableAction {
 		[JsonPropertyName("callNames")]
 		public string[] CallNames { get; set; }
 
@@ -12,6 +12,9 @@ namespace RPGCuzWhyNot.Inventory.Item {
 
 		[JsonPropertyName("description")]
 		public string Description { get; set; }
+
+		[JsonPropertyName("executeDescription")]
+		public string ExecuteDescription { get; set; }
 
 		[JsonPropertyName("requirements")]
 		public Requirements Requirements { get; set; }
@@ -24,16 +27,17 @@ namespace RPGCuzWhyNot.Inventory.Item {
 			Effects = new Effects();
 		}
 
-		public ItemAction(string[] callNames, string name, string description, Requirements requirements, Effects effects) {
+		public ItemAction(string[] callNames, string name, string description, string executeDescription, Requirements requirements, Effects effects) {
 			CallNames = callNames;
 			Name = name;
 			Description = description;
+			ExecuteDescription = executeDescription;
 			Requirements = requirements;
 			Effects = effects;
 		}
 
 		public void Execute() {
-			Terminal.WriteLine("me did le execute");
+			Terminal.WriteLine(ExecuteDescription);
 		}
 	}
 }

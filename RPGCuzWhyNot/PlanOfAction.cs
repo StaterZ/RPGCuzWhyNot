@@ -4,8 +4,8 @@ using RPGCuzWhyNot.Inventory.Item;
 
 namespace RPGCuzWhyNot {
 	public class PlanOfAction {
-		public readonly List<ItemAction> actions = new List<ItemAction>();
 		public readonly Stats budget;
+		public readonly List<IPlannableAction> plannedActions = new List<IPlannableAction>();
 
 		public PlanOfAction(Stats budget) {
 			this.budget = budget;

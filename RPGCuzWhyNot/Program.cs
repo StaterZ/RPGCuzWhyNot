@@ -47,7 +47,7 @@ namespace RPGCuzWhyNot {
 				//Players Turn
 				Terminal.WriteLine($"{player.Name}s Turn (You)");
 				PlanOfAction playersPlanOfAction = player.PlanTurn(opponents);
-				foreach (ItemAction action in playersPlanOfAction.actions) {
+				foreach (IPlannableAction action in playersPlanOfAction.plannedActions) {
 					action.Execute();
 				}
 
@@ -55,7 +55,7 @@ namespace RPGCuzWhyNot {
 				foreach (Character opponent in opponents) {
 					Terminal.WriteLine($"{opponent.Name}s Turn");
 					PlanOfAction opponentsPlanOfAction = opponent.PlanTurn(player);
-					foreach (ItemAction action in opponentsPlanOfAction.actions) {
+					foreach (IPlannableAction action in opponentsPlanOfAction.plannedActions) {
 						action.Execute();
 					}
 				}

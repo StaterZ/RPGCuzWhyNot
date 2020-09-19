@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using RPGCuzWhyNot.Inventory;
 using RPGCuzWhyNot.Inventory.Item;
 using RPGCuzWhyNot.Races;
@@ -34,18 +35,18 @@ namespace RPGCuzWhyNot {
 				isDonePlanningTurn = true;
 			});
 			Command undo = new Command(new[] { "undo", "revert" }, "Remove the last move you planned to do from the plan of action.", args => {
-				if (planOfAction.actions.Count > 0) {
-					ItemAction last = planOfAction.actions.Last();
-					planOfAction.actions.Remove(last);
-					Terminal.WriteLine($"Removed action [{last}] from stack.");
+				if (planOfAction.plannedActions.Count > 0) {
+					IPlannableAction last = planOfAction.plannedActions.Last();
+					planOfAction.plannedActions.Remove(last);
+					Terminal.WriteLine($"Removed action [{last.Name}] from plan.");
 				} else {
 					Terminal.WriteLine("You've got no plan of action. There's nothing to regret...");
 				}
 			});
 			Command plan = new Command(new[] { "ls", "list", "plan" }, "Remove the last move you planned to do from the plan of action.", args => {
-				if (planOfAction.actions.Count > 0) {
+				if (planOfAction.plannedActions.Count > 0) {
 					Terminal.WriteLine("{fg:Cyan}(Plan of action:)");
-					foreach (ItemAction action in planOfAction.actions) {
+					foreach (IPlannableAction action in planOfAction.plannedActions) {
 						Terminal.WriteLine($" - {action.Name}");
 					}
 				} else {
@@ -74,7 +75,7 @@ namespace RPGCuzWhyNot {
 						if (args.FirstArgument != "" && args.FirstArgument != "help") {
 							foreach (ItemAction itemAction in wieldable.ItemActions) {
 								if (itemAction.CallNames.Contains(args.FirstArgument)) {
-									planOfAction.actions.Add(itemAction);
+									planOfAction.plannedActions.Add(itemAction);
 									Terminal.WriteLine($"Added action [{itemAction.Name}] to plan.");
 									return;
 								}
