@@ -1,5 +1,5 @@
 ﻿{
-  "callName": "sword",
+  "callName": "greatsword",
   "name": "Greatsword",
   "inventoryDescription": "A shining sword of the finest metal",
   "groundDescription": "There's a sword on the ground; shining brilliantly in the sunlight",
@@ -16,6 +16,7 @@
       "callNames": [ "light attack", "light" ],
       "name": "Light Attack",
       "description": "Swing the sword about and hope to hit something...",
+      "executeDescription": "You lash the sword about while eating a burrito. You manage to drop the burrito in the eyes if your enemy. They take damage",
       "requirements": {
         "stats": {
           "strength": 2
@@ -29,6 +30,7 @@
       "callNames": [ "heavy attack", "heavy" ],
       "name": "Heavy Attack",
       "description": "Swing the greatsword with all your might",
+      "executeDescription": "You bring the greatsword down on the enemy with all your force!",
       "requirements": {
         "stats": {
           "strength": 5
@@ -43,6 +45,7 @@
       "callNames": [ "throw" ],
       "name": "Throw Sword",
       "description": "Throw the sword at an enemy with great force",
+      "executeDescription": "You grip the sword tightly and lunge it at the enemy with all your might!",
       "requirements": {
         "stats": {
           "strength": 10,
