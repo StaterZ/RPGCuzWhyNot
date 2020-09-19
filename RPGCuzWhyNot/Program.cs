@@ -23,6 +23,7 @@ namespace RPGCuzWhyNot {
 			ConsoleUtils.Sleep(100);
 			Terminal.Clear();
 
+			//add npcs to smithy
 			Location smithy = DataLoader.GetLocation("village_smithy");
 			smithy.AddNPC(new Orchibald(), "A smith can be seen by a large forge", "You walk up to the smith. He turns around to look at you.");
 			smithy.AddNPC(new SmithyCustomer(), "A customer casually stands leaning against a pillar.", "You walk up to the customer. She glares angrily as you approach...");
@@ -39,6 +40,7 @@ namespace RPGCuzWhyNot {
 			commands = new PlayerCommands(player);
 			commands.LoadCommands();
 
+			//add start items to player
 			player.Inventory.MoveItem(DataLoader.CreateItem("blue_potion"));
 			player.Inventory.MoveItem(DataLoader.CreateItem("backpack"));
 
