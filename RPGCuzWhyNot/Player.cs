@@ -67,7 +67,7 @@ namespace RPGCuzWhyNot {
 				handler.AddCommand(run);
 				handler.AddCommand(new Command(new[] { "help", "commands" }, "Show this list", args => {
 					Terminal.WriteLine("Commands:");
-					ConsoleUtils.DisplayHelp(handler.commands);
+					handler.DisplayHelp();
 				}));
 
 				foreach (IWieldable wieldable in Wielding) {

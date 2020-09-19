@@ -224,7 +224,7 @@ namespace RPGCuzWhyNot {
 			}));
 			commandHandler.AddCommand(new Command(new[] { "help", "commands" }, "Show this list", args => {
 				Terminal.WriteLine("Commands:");
-				ConsoleUtils.DisplayHelp(commandHandler.commands);
+				commandHandler.DisplayHelp();
 			}));
 			commandHandler.AddCommand(new Command(new[] { "clear" }, "Clear the console", args => {
 				Terminal.Clear();

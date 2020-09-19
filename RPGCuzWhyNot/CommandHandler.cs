@@ -39,6 +39,34 @@ namespace RPGCuzWhyNot {
 
 			return false;
 		}
+
+
+		public void DisplayHelp() {
+			string[] formattedCommandCallNames = new string[commands.Count];
+			int longestFormattedCommandCallName = 0;
+			for (int i = 0; i < commands.Count; i++) {
+				string formattedCommandCallName = Stringification.StringifyArray("[", ", ", "]", commands[i].callNames);
+				formattedCommandCallNames[i] = formattedCommandCallName;
+
+				if (formattedCommandCallName.Length > longestFormattedCommandCallName) {
+					longestFormattedCommandCallName = formattedCommandCallName.Length;
+				}
+			}
+			Terminal.PushState();
+			Terminal.MillisPerChar = 1000 / 300;
+			for (int i = 0; i < commands.Count; i++) {
+				Terminal.ForegroundColor = ConsoleColor.Magenta;
+				Terminal.Write(formattedCommandCallNames[i].PadRight(longestFormattedCommandCallName));
+				Terminal.ForegroundColor = ConsoleColor.White;
+				Terminal.Write(" - ");
+				Terminal.WriteLine(commands[i].helpText);
+			}
+			Terminal.PopState();
+		}
+
+		internal bool TryHandle(object trailingCommand) {
+			throw new NotImplementedException();
+		}
 	}
 }
 
