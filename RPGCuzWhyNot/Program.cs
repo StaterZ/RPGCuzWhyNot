@@ -34,7 +34,9 @@ namespace RPGCuzWhyNot {
 			commands = new PlayerCommands(player);
 			commands.LoadCommands();
 
-			player.Inventory.MoveItem(DataLoader.CreateItem("blue_potion"));
+			//combat testing shortcut
+			player.Wielding.MoveItem((IWieldable)DataLoader.CreateItem("greatsword"));
+			EnterCombat(new TheMother());
 
 			//some basic event loop
 			player.location.PrintEnterInformation();
