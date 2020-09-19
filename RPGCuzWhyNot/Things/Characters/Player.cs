@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using RPGCuzWhyNot.Systems;
+using RPGCuzWhyNot.Systems.Commands;
 using RPGCuzWhyNot.Systems.HealthSystem;
 using RPGCuzWhyNot.Systems.Inventory;
 using RPGCuzWhyNot.Things.Item;
@@ -10,6 +12,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 		public ItemInventory Inventory { get; }
 		public WearablesInventory Wearing { get; }
 		public WieldablesInventory Wielding { get; }
+		private readonly PlayerCommands commands;
 
 		public Player() {
 			Inventory = new ItemInventory(this);
@@ -24,6 +27,9 @@ namespace RPGCuzWhyNot.Things.Characters {
 			health.OnDeath += ctx => {
 				Terminal.WriteLine($"{ctx.inflictor} killed you!");
 			};
+
+			commands = new PlayerCommands(this);
+			commands.LoadCommands();
 		}
 
 		bool IHasInventory.ContainsCallName(string callName, out IItem item) => Inventory.ContainsCallName(callName, out item);
@@ -31,6 +37,10 @@ namespace RPGCuzWhyNot.Things.Characters {
 
 		IEnumerator<IItem> IEnumerable<IItem>.GetEnumerator() => Inventory.GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)Inventory).GetEnumerator();
+
+		public void Handle(string message) {
+			commands.Handle(message);
+		}
 	}
 }
 

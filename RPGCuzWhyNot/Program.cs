@@ -11,7 +11,6 @@ using RPGCuzWhyNot.Utilities;
 namespace RPGCuzWhyNot {
 	public static class Program {
 		public static Player player;
-		public static PlayerCommands commands;
 
 		private static void Main() {
 			//Load content
@@ -37,9 +36,6 @@ namespace RPGCuzWhyNot {
 				}
 			};
 
-			commands = new PlayerCommands(player);
-			commands.LoadCommands();
-
 			//add start items to player
 			player.Inventory.MoveItem(DataLoader.CreateItem("blue_potion"));
 			player.Inventory.MoveItem(DataLoader.CreateItem("backpack"));
@@ -50,7 +46,7 @@ namespace RPGCuzWhyNot {
 				Terminal.WriteLine();
 				string commandText = ConsoleUtils.Ask("|> ").ToLower();
 				Terminal.WriteLine();
-				commands.Handle(commandText);
+				player.Handle(commandText);
 			}
 		}
 	}
