@@ -10,7 +10,13 @@ namespace RPGCuzWhyNot {
 		public static PlayerCommands commands;
 
 		private static void Main() {
+			//Load content
+			Terminal.WriteLine("{fg:Yellow}(Loading Content...)");
 			DataLoader.LoadGameData();
+			Terminal.WriteLine("{fg:Green}(Done!)");
+			ConsoleUtils.Sleep(200);
+			Terminal.Clear();
+
 
 			Location smithy = DataLoader.GetLocation("village_smithy");
 			smithy.AddNPC(new Orchibald(), "A smith can be seen by a large forge", "You walk up to the smith. He turns around to look at you.");

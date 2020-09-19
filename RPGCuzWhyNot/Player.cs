@@ -74,25 +74,28 @@ namespace RPGCuzWhyNot {
 					handler.AddCommand(new Command(new []{ wieldable.CallName }, "Do something with this item.", args => {
 						if (args.FirstArgument == "") {
 							Terminal.WriteLine("Do what with it?");
-							Terminal.WriteLine();
+							return;
 						}
 
-						if (args.FirstArgument != "" && args.FirstArgument != "help") {
-							foreach (ItemAction itemAction in wieldable.ItemActions) {
-								if (itemAction.CallNames.Contains(args.FirstArgument)) {
-									planOfAction.plannedActions.Add(itemAction);
-									Terminal.WriteLine($"Added action [{itemAction.Name}] to plan.");
-									return;
-								}
+						foreach (ItemAction itemAction in wieldable.ItemActions) {
+							if (itemAction.CallNames.Contains(args.FirstArgument)) {
+								planOfAction.plannedActions.Add(itemAction);
+								Terminal.WriteLine($"Added action [{itemAction.Name}] to plan.");
+								return;
 							}
-
-							Terminal.WriteLine("No such action exists for this item.");
 						}
 
+						Terminal.WriteLine("No such action exists for this item.");
+					}));
+
+					handler.AddCommand(new Command(new[] { $"help {wieldable.CallName}" }, "Get help for this item.", args => {
 						Terminal.WriteLine("Actions:");
-						if (wieldable.ItemActions.Any()) {
+						if (wieldable.ItemActions.Any())
+						{
 							ConsoleUtils.DisplayHelp(wieldable.ItemActions.Select(itemAction => new Command(itemAction.CallNames, itemAction.Description, null)).ToArray());
-						} else {
+						}
+						else
+						{
 							Terminal.WriteLine("There's no actions for this item.");
 						}
 					}));
