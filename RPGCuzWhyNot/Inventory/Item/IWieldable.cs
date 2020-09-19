@@ -5,7 +5,7 @@ namespace RPGCuzWhyNot.Inventory.Item {
 		int HandsRequired { get; set; }
 		string ListingWithStats { get; }
 		Requirements UsageRequirements { get; set; }
-		IEnumerable<ItemAction> ItemActions { get; set; }
+		ItemAction[] ItemActions { get; set; }
 	}
 }
 
