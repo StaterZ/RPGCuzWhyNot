@@ -274,5 +274,9 @@ namespace RPGCuzWhyNot.Systems {
 		public static string ReadLine() {
 			return Console.ReadLine();
 		}
+
+		public static int PrintLength(this string text) {
+			throw new NotImplementedException("this is to you salland, make it do \"text.Length\" but without the formatting stuff going towards the length");
+		}
 	}
 }

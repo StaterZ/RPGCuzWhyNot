@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using RPGCuzWhyNot.Inventory.Item;
 using RPGCuzWhyNot.NPCs;
 using RPGCuzWhyNot.Systems;
@@ -40,10 +41,12 @@ namespace RPGCuzWhyNot {
 
 			player.Inventory.MoveItem(DataLoader.CreateItem("blue_potion"));
 			player.Inventory.MoveItem(DataLoader.CreateItem("backpack"));
-			
-			//combat testing shortcut
-			player.Wielding.MoveItem((IWieldable)DataLoader.CreateItem("greatsword"));
-			EnterCombat(new TheMother());
+
+
+
+			TestMenu();
+
+
 
 			//some basic event loop
 			player.location.PrintEnterInformation();
@@ -52,6 +55,75 @@ namespace RPGCuzWhyNot {
 				string commandText = ConsoleUtils.Ask("|> ").ToLower();
 				Terminal.WriteLine();
 				commands.Handle(commandText);
+			}
+		}
+
+		private static void TestMenu() {
+			Stack<MenuState> menuStack = new Stack<MenuState>();
+			void PushMenu(Menu menu) {
+				menuStack.Push(new MenuState(menu, null));
+			}
+
+			Menu greatswordMenu = new Menu(
+				new MenuItem("Light Attack", null),
+				new MenuItem("Heavy Attack", null),
+				new MenuItem("Throw Sword", null)
+			);
+			Menu staffMenu = new Menu(
+				new MenuItem("Channel", null),
+				new MenuItem("Fireball", null),
+				new MenuItem("Fine-Point Void", null)
+			);
+			Menu attackMenu = new Menu(
+				new MenuItem("Greatsword", () => PushMenu(greatswordMenu)),
+				new MenuItem("Staff", () => PushMenu(staffMenu))
+			);
+			Menu rootMenu = new Menu(
+				new MenuItem("{fg:Red}(Attack)", () => PushMenu(attackMenu)),
+				new MenuItem("{fg:Green}(Items)", null),
+				new MenuItem("{fg:Blue}(Potions)", null),
+				new MenuItem("{fg:Yellow}(Armor)", null)
+			);
+
+			PushMenu(rootMenu);
+
+			while (true) {
+				MenuState menuState = menuStack.Peek();
+				menuState.Draw();
+
+				//get input
+				ConsoleKeyInfo keyPress = Console.ReadKey(true);
+
+				//move cursor
+				switch (keyPress.Key) {
+					case ConsoleKey.UpArrow:
+						if (menuState.index.HasValue) {
+							menuState.index--;
+							menuState.index = ExtraMath.Mod(menuState.index.Value, menuState.menu.items.Count);
+						} else {
+							menuState.index = 1;
+						}
+						break;
+
+					case ConsoleKey.DownArrow:
+						if (menuState.index.HasValue) {
+							menuState.index++;
+							menuState.index = ExtraMath.Mod(menuState.index.Value, menuState.menu.items.Count);
+						} else {
+							menuState.index = 1;
+						}
+						break;
+
+					case ConsoleKey.LeftArrow:
+						menuStack.Pop();
+						break;
+
+					case ConsoleKey.RightArrow:
+					case ConsoleKey.Enter:
+						menuState.index ??= 0;
+						menuState.menu.items[menuState.index.Value].onSelect();
+						break;
+				}
 			}
 		}
 
