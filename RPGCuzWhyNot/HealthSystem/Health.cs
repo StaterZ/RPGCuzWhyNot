@@ -6,7 +6,7 @@ namespace StaterZ.Core.HealthSystem {
         public int maxHealth;
         public IAlignment alignment;
         public int CurrentHealth { get; private set; }
-        public float Percent => CurrentHealth / maxHealth;
+        public float Percent => (float)CurrentHealth / maxHealth;
         public bool IsDamaged => CurrentHealth < maxHealth;
         public bool IsDead => CurrentHealth <= 0;
         public bool IsAtMaxHealth => CurrentHealth >= maxHealth;
