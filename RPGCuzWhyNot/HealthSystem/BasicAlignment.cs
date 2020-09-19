@@ -1,11 +1,16 @@
 using System.Collections.Generic;
 
 namespace StaterZ.Core.HealthSystem {
-	public class BasicAlignment : Alignment {
-		public List<BasicAlignment> enemies;
+	public class BasicAlignment : IAlignment {
+		public readonly List<IAlignment> alliances = new List<IAlignment>();
+		public bool allowInfighting;
 
-        public override bool CanHarm(Alignment other) {
-			return other is BasicAlignment otherAlignment && enemies.Contains(otherAlignment);
+		public bool CanHarm(IAlignment other) {
+			if (Equals(other)) {
+				return allowInfighting;
+			} else {
+				return !alliances.Contains(other);
+			}
 		}
 	}
 }
