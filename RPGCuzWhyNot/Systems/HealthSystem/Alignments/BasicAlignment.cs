@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace RPGCuzWhyNot.Systems.HealthSystem {
+namespace RPGCuzWhyNot.Systems.HealthSystem.Alignments {
 	public class BasicAlignment : IAlignment {
 		public readonly List<IAlignment> alliances = new List<IAlignment>();
 		public bool allowInfighting;

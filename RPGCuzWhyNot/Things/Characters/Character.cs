@@ -2,6 +2,7 @@
 using RPGCuzWhyNot.Inventory.Item;
 using RPGCuzWhyNot.Systems;
 using RPGCuzWhyNot.Systems.HealthSystem;
+using RPGCuzWhyNot.Systems.HealthSystem.Alignments;
 using RPGCuzWhyNot.Things.Characters.Races;
 
 namespace RPGCuzWhyNot.Things.Characters {
