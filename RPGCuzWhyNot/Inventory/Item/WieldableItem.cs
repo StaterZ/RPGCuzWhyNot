@@ -9,8 +9,7 @@ namespace RPGCuzWhyNot.Inventory.Item {
 		public WieldableItem(string name, string callName, string descInv, string descGrnd = null)
 			: base(name, callName, descInv, descGrnd) { }
 
-		//public virtual string ListingWithStats => WieldableExt.DefaultListingWithStats(this);
-		public virtual string ListingWithStats => "broken atm..."; //todo fix this
+		public virtual string ListingWithStats => WieldableExt.DefaultListingWithStats(this);
 
 	}
 }

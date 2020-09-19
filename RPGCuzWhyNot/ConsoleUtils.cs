@@ -65,5 +65,15 @@ namespace RPGCuzWhyNot {
 			}
 			Terminal.PopState();
 		}
+
+		public static string FormatInt(int value) {
+			if (value > 0) {
+				return $"{{fg:Green}}(+{value})";
+			} else if (value < 0) {
+				return $"{{fg:Red}}({value})";
+			} else {
+				return $"{{fg:Yellow}}({value})";
+			}
+		}
 	}
 }

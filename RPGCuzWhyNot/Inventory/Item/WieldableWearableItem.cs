@@ -10,9 +10,8 @@ namespace RPGCuzWhyNot.Inventory.Item {
 			: base(name, callName, descInv, descGround) { }
 
 
-		//public override string ListingWithStats
-		//	=> ContainedInventory is WieldablesInventory ? WieldableExt.DefaultListingWithStats(this) : WearableExt.DefaultListingWithStats(this);
-		public override string ListingWithStats => "broken atm..."; //todo fix this
+		public override string ListingWithStats
+			=> ContainedInventory is WieldablesInventory ? WieldableExt.DefaultListingWithStats(this) : WearableExt.DefaultListingWithStats(this);
 	}
 }
 

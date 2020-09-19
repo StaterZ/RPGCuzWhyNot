@@ -6,8 +6,7 @@
 
 		public static string DefaultListingWithStats(IWearable self) {
 			string name = self.ListingName;
-			string plus = self.Defense > 0 ? "+" : "";
-			return self.Defense != 0 ? $"{name}  {plus}{self.Defense} Defense" : name;
+			return self.Defense != 0 ? $"{name}  {ConsoleUtils.FormatInt(self.Defense)} Defense" : name;
 		}
 	}
 }
