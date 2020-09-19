@@ -40,10 +40,10 @@ namespace RPGCuzWhyNot {
 			}
 		}
 
-
-
+		private static bool isInCombat;
 		public static void EnterCombat(params Character[] opponents) {
-			while (true) {
+			isInCombat = true;
+			while (isInCombat) {
 				//Players Turn
 				Terminal.WriteLine($"{player.Name}s Turn (You)");
 				PlanOfAction playersPlanOfAction = player.PlanTurn(opponents);
@@ -60,6 +60,10 @@ namespace RPGCuzWhyNot {
 					}
 				}
 			}
+		}
+
+		public static void ExitCombat() {
+			isInCombat = false;
 		}
 	}
 }

@@ -43,6 +43,10 @@ namespace RPGCuzWhyNot {
 					Terminal.WriteLine("You've got no plan of action. There's nothing to regret...");
 				}
 			});
+			Command run = new Command(new[] { "run", "run away" }, "Run away from the fight.", args => {
+				Terminal.WriteLine("You run away from the enemy!");
+				Program.ExitCombat();
+			});
 			Command plan = new Command(new[] { "ls", "list", "plan" }, "Remove the last move you planned to do from the plan of action.", args => {
 				if (planOfAction.plannedActions.Count > 0) {
 					Terminal.WriteLine("{fg:Cyan}(Plan of action:)");
@@ -60,6 +64,7 @@ namespace RPGCuzWhyNot {
 				handler.AddCommand(confirm);
 				handler.AddCommand(undo);
 				handler.AddCommand(plan);
+				handler.AddCommand(run);
 				handler.AddCommand(new Command(new[] { "help", "commands" }, "Show this list", args => {
 					Terminal.WriteLine("Commands:");
 					ConsoleUtils.DisplayHelp(handler.commands);
