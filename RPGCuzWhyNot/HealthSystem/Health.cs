@@ -17,7 +17,7 @@ namespace StaterZ.Core.HealthSystem {
         public event Action<HealthChangeInfo> OnHeal; //if we explicity heal damage
         public event Action<HealthChangeInfo> OnFullRecovery; //when we reach max health
 
-        public List<IArmor> armor = new List<IArmor>(); //damage modifiers
+        public List<IHealthChangeModifier> armor = new List<IHealthChangeModifier>(); //damage modifiers
 
         public Health(int health) : this(health, health) {
         }
@@ -65,7 +65,7 @@ namespace StaterZ.Core.HealthSystem {
         public HealthChangeInfo TakeDamage(int damage, IInflictor inflictor) {
             if (damage < 0) throw new ArgumentException("can't deal negative damage");
 
-	        foreach (IArmor a in armor) {
+	        foreach (IHealthChangeModifier a in armor) {
 		        damage = a.OnDamageModify(damage);
 	        }
 
@@ -77,7 +77,7 @@ namespace StaterZ.Core.HealthSystem {
         public HealthChangeInfo Heal(int damage, IInflictor inflictor) {
             if (damage < 0) throw new ArgumentException("can't heal negative damage");
 
-            foreach (IArmor a in armor) {
+            foreach (IHealthChangeModifier a in armor) {
 	            damage = a.OnHealModify(damage);
             }
 

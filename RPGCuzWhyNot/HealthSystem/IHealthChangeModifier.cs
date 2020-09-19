@@ -1,5 +1,5 @@
 namespace StaterZ.Core.HealthSystem {
-	public interface IArmor {
+	public interface IHealthChangeModifier {
 		int OnDamageModify(int amount);
 		int OnHealModify(int amount);
 	}
