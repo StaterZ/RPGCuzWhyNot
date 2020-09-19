@@ -90,12 +90,9 @@ namespace RPGCuzWhyNot {
 
 					handler.AddCommand(new Command(new[] { $"help {wieldable.CallName}" }, "Get help for this item.", args => {
 						Terminal.WriteLine("Actions:");
-						if (wieldable.ItemActions.Any())
-						{
+						if (wieldable.ItemActions.Any()) {
 							ConsoleUtils.DisplayHelp(wieldable.ItemActions.Select(itemAction => new Command(itemAction.CallNames, itemAction.Description, null)).ToArray());
-						}
-						else
-						{
+						} else {
 							Terminal.WriteLine("There's no actions for this item.");
 						}
 					}));
