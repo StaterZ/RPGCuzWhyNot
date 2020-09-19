@@ -1,4 +1,5 @@
 ﻿using RPGCuzWhyNot.Data;
+using RPGCuzWhyNot.Enemies;
 using RPGCuzWhyNot.Inventory.Item;
 using RPGCuzWhyNot.NPCs;
 using RPGCuzWhyNot.Races.Humanoids;
@@ -20,7 +21,8 @@ namespace RPGCuzWhyNot {
 			//construct player
 			player = new Player(new Human(Humanoid.Gender.Male)) {
 				Name = "Bengt",
-				location = DataLoader.GetLocation("village")
+				location = DataLoader.GetLocation("village"),
+				stats = new Stats(10, 10, 10, 10)
 			};
 
 			commands = new PlayerCommands(player);

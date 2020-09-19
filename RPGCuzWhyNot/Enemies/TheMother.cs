@@ -16,7 +16,7 @@ namespace RPGCuzWhyNot.Enemies {
 		}
 
 		public override PlanOfAction PlanTurn(params Character[] opponents) {
-			PlanOfAction planOfAction = new PlanOfAction();
+			PlanOfAction planOfAction = new PlanOfAction(stats);
 
 			foreach (Character opponent in opponents) {
 				AttackWithDuster(opponent);
