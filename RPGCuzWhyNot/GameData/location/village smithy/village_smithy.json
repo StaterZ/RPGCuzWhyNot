@@ -5,5 +5,8 @@
   "paths": {
     "village": "A door out of the smithy can be seen behind you.",
     "village_smithy_garden": "An old garden can be seen out the back door."
-  }
+  },
+  "items": [
+    "greatsword"
+  ] 
 }
