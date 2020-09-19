@@ -100,6 +100,7 @@ namespace RPGCuzWhyNot {
 
 				//get next command
 				Terminal.WriteLine();
+				Terminal.WriteLine($"Points Left: {planOfAction.BudgetLeft}");
 				string commandText = ConsoleUtils.Ask("|> ").ToLower();
 				Terminal.WriteLine();
 				if (!handler.TryHandle(commandText)) {
