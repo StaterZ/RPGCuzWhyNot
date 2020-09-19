@@ -77,23 +77,26 @@ namespace RPGCuzWhyNot {
 							return;
 						}
 
+						CommandHandler itemHandler = new CommandHandler();
+
 						foreach (ItemAction itemAction in wieldable.ItemActions) {
-							if (itemAction.CallNames.Contains(args.FirstArgument)) {
+							itemHandler.AddCommand(new Command(itemAction.CallNames, itemAction.Description, itemArgs => {
 								planOfAction.plannedActions.Add(itemAction);
 								Terminal.WriteLine($"Added action [{itemAction.Name}] to plan.");
-								return;
-							}
+							}));
 						}
 
-						Terminal.WriteLine("No such action exists for this item.");
-					}));
+						itemHandler.AddCommand(new Command(new[] { "help" }, "Get help for this item.", args => {
+							Terminal.WriteLine("Actions:");
+							if (wieldable.ItemActions.Any()) {
+								itemHandler.DisplayHelp();
+							} else {
+								Terminal.WriteLine("There's no actions for this item.");
+							}
+						}));
 
-					handler.AddCommand(new Command(new[] { $"help {wieldable.CallName}" }, "Get help for this item.", args => {
-						Terminal.WriteLine("Actions:");
-						if (wieldable.ItemActions.Any()) {
-							ConsoleUtils.DisplayHelp(wieldable.ItemActions.Select(itemAction => new Command(itemAction.CallNames, itemAction.Description, null)).ToArray());
-						} else {
-							Terminal.WriteLine("There's no actions for this item.");
+						if (!itemHandler.TryHandle(args.TrailingCommand)) {
+							Terminal.WriteLine("No such action exists for this item.");
 						}
 					}));
 				}
