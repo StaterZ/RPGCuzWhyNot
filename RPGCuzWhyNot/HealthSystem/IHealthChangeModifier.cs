@@ -1,6 +1,0 @@
-namespace StaterZ.Core.HealthSystem {
-	public interface IHealthChangeModifier {
-		int OnDamageModify(int amount);
-		int OnHealModify(int amount);
-	}
-}

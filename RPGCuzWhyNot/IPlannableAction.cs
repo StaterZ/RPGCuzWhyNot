@@ -6,7 +6,6 @@ namespace RPGCuzWhyNot {
 		string ExecuteDescription { get; }
 		Requirements Requirements { get; set; }
 
-
 		void Execute();
 	}
 }

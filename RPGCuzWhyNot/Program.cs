@@ -1,8 +1,16 @@
-﻿using RPGCuzWhyNot.Data;
-using RPGCuzWhyNot.Enemies;
+﻿using System;
 using RPGCuzWhyNot.Inventory.Item;
 using RPGCuzWhyNot.NPCs;
-using RPGCuzWhyNot.Races.Humanoids;
+using RPGCuzWhyNot.Systems;
+using RPGCuzWhyNot.Systems.Commands;
+using RPGCuzWhyNot.Systems.Data;
+using RPGCuzWhyNot.Things;
+using RPGCuzWhyNot.Things.Characters;
+using RPGCuzWhyNot.Things.Characters.Enemies;
+using RPGCuzWhyNot.Things.Characters.NPCs;
+using RPGCuzWhyNot.Things.Characters.Races.Humanoids;
+using RPGCuzWhyNot.Things.Item;
+using RPGCuzWhyNot.Utilities;
 
 namespace RPGCuzWhyNot {
 	public static class Program {
@@ -10,13 +18,9 @@ namespace RPGCuzWhyNot {
 		public static PlayerCommands commands;
 
 		private static void Main() {
-			//Load content
-			Terminal.WriteLine("{fg:Yellow;ms/ch:0;bMs:0}(Loading Content...)");
-			DataLoader.LoadGameData();
-			Terminal.WriteLine("{fg:Green;ms/ch:0;bMs:0}(Done!)");
-			ConsoleUtils.Sleep(100);
-			Terminal.Clear();
-
+			if (!DataLoader.LoadGameData()) {
+				Environment.Exit(1);
+			}
 
 			Location smithy = DataLoader.GetLocation("village_smithy");
 			smithy.AddNPC(new Orchibald(), "A smith can be seen by a large forge", "You walk up to the smith. He turns around to look at you.");
@@ -34,6 +38,9 @@ namespace RPGCuzWhyNot {
 			commands = new PlayerCommands(player);
 			commands.LoadCommands();
 
+			player.Inventory.MoveItem(DataLoader.CreateItem("blue_potion"));
+			player.Inventory.MoveItem(DataLoader.CreateItem("backpack"));
+			
 			//combat testing shortcut
 			player.Wielding.MoveItem((IWieldable)DataLoader.CreateItem("greatsword"));
 			EnterCombat(new TheMother());
