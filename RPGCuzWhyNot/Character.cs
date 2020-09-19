@@ -10,7 +10,7 @@ namespace RPGCuzWhyNot {
 		public Race race;
 		public Location location;
 		public Health health;
-		public Alignment Alignment { get; set; }
+		public IAlignment Alignment { get; set; }
 		public Stats stats;
 
 		protected Character(Race race) {

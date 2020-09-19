@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace StaterZ.Core.HealthSystem {
 	public class Health {
         public int maxHealth;
-        public Alignment alignment;
+        public IAlignment alignment;
         public int CurrentHealth { get; private set; }
         public float Percent => CurrentHealth / maxHealth;
         public bool IsDamaged => CurrentHealth < maxHealth;
