@@ -1,4 +1,4 @@
-﻿namespace RPGCuzWhyNot.Things {
+namespace RPGCuzWhyNot.Things {
 	public interface IThing {
 		string Name { get; }
 		string CallName { get; }

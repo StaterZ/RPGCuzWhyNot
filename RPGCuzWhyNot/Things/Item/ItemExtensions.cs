@@ -1,4 +1,4 @@
-﻿namespace RPGCuzWhyNot.Things.Item {
+namespace RPGCuzWhyNot.Things.Item {
 	public static class ItemExtensions {
 		public static bool IsInsideItemWithInventory(this IItem item) => IsInsideItemWithInventory(item, out _);
 

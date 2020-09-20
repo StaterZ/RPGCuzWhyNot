@@ -1,6 +1,8 @@
-﻿using System.Collections;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using RPGCuzWhyNot.AttackSystem;
 using RPGCuzWhyNot.Inventory.Item;
 using RPGCuzWhyNot.Systems;
 using RPGCuzWhyNot.Systems.Commands;
@@ -15,6 +17,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 		public ItemInventory Inventory { get; }
 		public WearablesInventory Wearing { get; }
 		public WieldablesInventory Wielding { get; }
+		private readonly PlayerCommands commands;
 
 		public Player(Race race) : base(race) {
 			Inventory = new ItemInventory(this);
@@ -29,6 +32,9 @@ namespace RPGCuzWhyNot.Things.Characters {
 			health.OnDeath += ctx => {
 				Terminal.WriteLine($"{ctx.inflictor} killed you!");
 			};
+
+			commands = new PlayerCommands(this);
+			commands.LoadCommands();
 		}
 
 		bool IHasInventory.ContainsCallName(string callName, out IItem item) => Inventory.ContainsCallName(callName, out item);
@@ -124,6 +130,10 @@ namespace RPGCuzWhyNot.Things.Characters {
 			Terminal.WriteLine("Now Executeing actions...");
 
 			return planOfAction;
+		}
+
+		public void Handle(string message) {
+			commands.Handle(message);
 		}
 	}
 }

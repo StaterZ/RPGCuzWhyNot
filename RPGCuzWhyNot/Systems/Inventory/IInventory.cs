@@ -1,4 +1,4 @@
-﻿using RPGCuzWhyNot.Things.Item;
+using RPGCuzWhyNot.Things.Item;
 
 namespace RPGCuzWhyNot.Systems.Inventory {
 	public interface IInventory {

@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using RPGCuzWhyNot.Inventory.Item;
 
-namespace RPGCuzWhyNot {
+namespace RPGCuzWhyNot.AttackSystem {
 	public class PlanOfAction {
 		public readonly Stats budget;
 		public readonly List<IPlannableAction> plannedActions = new List<IPlannableAction>();

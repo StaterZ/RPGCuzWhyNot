@@ -1,4 +1,4 @@
-﻿using RPGCuzWhyNot.Things;
+using RPGCuzWhyNot.Things;
 using RPGCuzWhyNot.Things.Item;
 using RPGCuzWhyNot.Utilities;
 

@@ -1,4 +1,4 @@
-﻿using RPGCuzWhyNot.Inventory.Item;
+using RPGCuzWhyNot.Inventory.Item;
 using RPGCuzWhyNot.Systems.Inventory;
 
 namespace RPGCuzWhyNot.Things.Item {
@@ -9,7 +9,6 @@ namespace RPGCuzWhyNot.Things.Item {
 
 		public WieldableWearableItem(string name, string callName, string descInv, string descGround)
 			: base(name, callName, descInv, descGround) { }
-
 
 		public override string ListingWithStats
 			=> ContainedInventory is WieldablesInventory ? WieldableExt.DefaultListingWithStats(this) : WearableExt.DefaultListingWithStats(this);

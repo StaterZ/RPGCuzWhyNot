@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using RPGCuzWhyNot.Systems.HealthSystem.Alignments;
 using RPGCuzWhyNot.Utilities;
 namespace RPGCuzWhyNot.Systems.HealthSystem {
 	public class Health {

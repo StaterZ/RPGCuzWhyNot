@@ -1,4 +1,4 @@
-﻿namespace RPGCuzWhyNot.Primitives {
+namespace RPGCuzWhyNot.Primitives {
 	public struct Vec2 {
 		public int x, y;
 
