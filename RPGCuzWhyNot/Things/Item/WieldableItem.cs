@@ -1,4 +1,4 @@
-﻿using RPGCuzWhyNot.Inventory.Item;
+using RPGCuzWhyNot.Inventory.Item;
 
 namespace RPGCuzWhyNot.Things.Item {
 	public class WieldableItem : SimpleItem, IWieldable {
@@ -10,7 +10,5 @@ namespace RPGCuzWhyNot.Things.Item {
 			: base(name, callName, descInv, descGrnd) { }
 
 		public virtual string ListingWithStats => WieldableExt.DefaultListingWithStats(this);
-
 	}
 }
-

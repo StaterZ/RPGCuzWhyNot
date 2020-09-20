@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using RPGCuzWhyNot.Primitives;
 using RPGCuzWhyNot.Systems.Inventory;

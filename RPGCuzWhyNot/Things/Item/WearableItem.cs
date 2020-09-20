@@ -1,4 +1,4 @@
-﻿namespace RPGCuzWhyNot.Things.Item {
+namespace RPGCuzWhyNot.Things.Item {
 	public class WearableItem : SimpleItem, IWearable {
 		public int Defense { get; set; }
 		public WearableSlots CoveredParts { get; set; }
