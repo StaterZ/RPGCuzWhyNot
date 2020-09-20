@@ -174,6 +174,20 @@ namespace RPGCuzWhyNot.Systems {
 			return braceEnd + 1;
 		}
 
+		private static bool GetNameFromID(string id, out string name) {
+			if (DataLoader.Prototypes.TryGetValue(id, out Prototype proto)) {
+				name = proto.Name;
+				return true;
+			} else {
+			#if DEBUG
+				name = $"[no prototype with id '{id}']";
+			#else
+				name = id;
+			#endif
+				return false;
+			}
+		}
+
 		private static void HandleCommandWithArg(string cmd, string arg) {
 			switch (cmd) {
 				case "fg": ForegroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), arg, true); break;
@@ -183,16 +197,13 @@ namespace RPGCuzWhyNot.Systems {
 				case "bHz": BeepFrequency = int.Parse(arg); break;
 				case "bMs": BeepDuration = int.Parse(arg); break;
 				case "name":
-					if (DataLoader.Prototypes.TryGetValue(arg, out Prototype proto)) {
-						Write(proto.Name);
+					if (GetNameFromID(arg, out string name)) {
+						Write(name);
 					} else {
 					#if DEBUG
-						PushState();
-						ForegroundColor = ConsoleColor.DarkRed;
-						Console.Write($"[no prototype with id '{arg}']");
-						PopState();
+						Write($"{{darkred}}({Escape(name)})");
 					#else
-						Console.Write(arg);
+						Write(Escape(name));
 					#endif
 					}
 					break;
@@ -275,8 +286,75 @@ namespace RPGCuzWhyNot.Systems {
 			return Console.ReadLine();
 		}
 
-		public static int PrintLength(this string text) {
-			throw new NotImplementedException("this is to you salland, make it do \"text.Length\" but without the formatting stuff going towards the length");
+		public static int GetFormattedLength(string formattedText) {
+			int Formatbegin = formattedText.IndexOf('{');
+			if (Formatbegin == -1) {
+				return formattedText.Length;
+			}
+
+			int FormatEnd = formattedText.IndexOf('}', Formatbegin + 1);
+			if (FormatEnd == -1) {
+				throw new TerminalFormatException("Missing closing brace in terminal format string.");
+			}
+
+			int additionalLengthFromCommands = 0;
+			int cmdBegin = Formatbegin + 1;
+			while (cmdBegin < FormatEnd) {
+				int cmdEnd = formattedText.IndexOf(';', cmdBegin, FormatEnd - cmdBegin);
+				if (cmdEnd == -1) {
+					cmdEnd = FormatEnd;
+				}
+				if (cmdBegin == cmdEnd) {
+					break;
+				}
+				int cmdArg = formattedText.IndexOf(':', cmdBegin, cmdEnd - cmdBegin);
+				if (cmdArg == -1) {
+					// formatting command doesn't have an argument.
+					// none of these currently affect the length of the printed string,
+					// so I will ignore them.
+				} else {
+					string cmdName = formattedText[cmdBegin..cmdArg];
+					switch (cmdName) {
+						case "name":
+							string id = formattedText[(cmdArg + 1)..cmdEnd];
+							GetNameFromID(id, out string name);
+							additionalLengthFromCommands += GetFormattedLength(name);
+							break;
+					}
+				}
+				cmdBegin = cmdEnd + 1;
+			}
+
+			if (FormatEnd + 1 < formattedText.Length && formattedText[FormatEnd + 1] == '(') {
+				int depth = 1;
+				int parenBegin = FormatEnd + 2;
+				int remainder = parenBegin;
+
+				for (; depth > 0; ++remainder) {
+					if (remainder >= formattedText.Length) {
+						throw new TerminalFormatException("Unbalanced parentheses in terminal format string.");
+					}
+
+					switch (formattedText[remainder]) {
+						case '(': ++depth; break;
+						case ')': --depth; break;
+					}
+				}
+
+				int parenEnd = remainder - 1;
+
+				return Formatbegin + additionalLengthFromCommands
+					+ GetFormattedLength(formattedText[parenBegin..parenEnd])
+					+ (remainder < formattedText.Length ? GetFormattedLength(formattedText[remainder..]) : 0);
+
+			} else {
+				return Formatbegin + additionalLengthFromCommands
+					+ (FormatEnd + 1 < formattedText.Length ? GetFormattedLength(formattedText[(FormatEnd + 1)..]) : 0);
+			}
 		}
+	}
+
+	public class TerminalFormatException : Exception {
+		public TerminalFormatException(string message) : base(message) { }
 	}
 }

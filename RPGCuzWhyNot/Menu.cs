@@ -25,7 +25,7 @@ namespace RPGCuzWhyNot {
 			const string shortHandPattern = " (X)";
 
 			int longestItemLength = items.Aggregate(0, (acc, item) => {
-				int length = item.name.PrintLength();
+				int length = Terminal.GetFormattedLength(item.name);
 				return length > acc ? length : acc;
 			});
 			int longestBeginLength = Math.Max(unselectedBegin.Length, selectedBegin.Length);
