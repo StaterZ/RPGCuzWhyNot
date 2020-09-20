@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace RPGCuzWhyNot.Things.Item {
 	// the order is deliberate, lower values have higher priorities, used when bit-twiddling

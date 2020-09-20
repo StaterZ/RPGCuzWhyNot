@@ -1,4 +1,4 @@
-﻿using RPGCuzWhyNot.Utilities;
+using RPGCuzWhyNot.Utilities;
 
 namespace RPGCuzWhyNot.Things.Item {
 	public static class WearableExt {

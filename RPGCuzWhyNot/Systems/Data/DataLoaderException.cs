@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace RPGCuzWhyNot.Systems.Data {
 	public class DataLoaderException : Exception {

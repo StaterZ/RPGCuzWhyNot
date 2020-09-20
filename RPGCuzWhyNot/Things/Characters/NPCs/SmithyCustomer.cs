@@ -1,4 +1,4 @@
-﻿using RPGCuzWhyNot.AttackSystem;
+using RPGCuzWhyNot.AttackSystem;
 using RPGCuzWhyNot.Systems;
 using RPGCuzWhyNot.Things.Characters;
 using RPGCuzWhyNot.Things.Characters.NPCs;

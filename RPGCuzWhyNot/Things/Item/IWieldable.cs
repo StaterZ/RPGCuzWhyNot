@@ -1,4 +1,4 @@
-﻿using RPGCuzWhyNot.Inventory.Item;
+using RPGCuzWhyNot.Inventory.Item;
 
 namespace RPGCuzWhyNot.Things.Item {
 	public interface IWieldable : IItem {

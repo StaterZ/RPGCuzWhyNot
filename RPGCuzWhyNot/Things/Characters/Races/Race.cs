@@ -1,4 +1,4 @@
-﻿namespace RPGCuzWhyNot.Things.Characters.Races {
+namespace RPGCuzWhyNot.Things.Characters.Races {
 	public abstract class Race {
 	}
 }

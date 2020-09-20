@@ -1,4 +1,4 @@
-﻿using RPGCuzWhyNot.Utilities;
+using RPGCuzWhyNot.Utilities;
 using System;
 using System.Text.Json.Serialization;
 

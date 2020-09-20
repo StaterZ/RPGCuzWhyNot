@@ -1,4 +1,4 @@
-﻿using RPGCuzWhyNot.AttackSystem;
+using RPGCuzWhyNot.AttackSystem;
 using RPGCuzWhyNot.Inventory.Item;
 using RPGCuzWhyNot.Systems;
 using RPGCuzWhyNot.Systems.HealthSystem;

@@ -1,4 +1,4 @@
-﻿namespace RPGCuzWhyNot.Things.Characters {
+namespace RPGCuzWhyNot.Things.Characters {
 	public class Referal {
 		/// <summary>
 		/// as in "did you know <subject> stole a knife?"
