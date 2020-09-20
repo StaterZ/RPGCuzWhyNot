@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using RPGCuzWhyNot.Systems.HealthSystem;
 
 namespace RPGCuzWhyNot.Things.Characters.Enemies {

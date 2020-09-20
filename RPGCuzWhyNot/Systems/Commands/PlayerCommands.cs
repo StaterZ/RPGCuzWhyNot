@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using RPGCuzWhyNot.Systems.Inventory;
 using RPGCuzWhyNot.Things;

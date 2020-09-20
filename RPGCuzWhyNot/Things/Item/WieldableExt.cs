@@ -1,4 +1,4 @@
-﻿namespace RPGCuzWhyNot.Things.Item {
+namespace RPGCuzWhyNot.Things.Item {
 	public static class WieldableExt {
 		public static string DefaultListingWithStats(IWieldable w) {
 			string plus = w.MeleeDamage > 0 ? "+" : "";

@@ -1,4 +1,4 @@
-﻿namespace RPGCuzWhyNot.Things.Item {
+namespace RPGCuzWhyNot.Things.Item {
 	public interface IWearable : IItem {
 		int Defense { get; set; }
 		// string WornDescription { get; }

@@ -1,4 +1,4 @@
-﻿using RPGCuzWhyNot.Systems;
+using RPGCuzWhyNot.Systems;
 using RPGCuzWhyNot.Systems.HealthSystem;
 using RPGCuzWhyNot.Things.Characters.Races;
 

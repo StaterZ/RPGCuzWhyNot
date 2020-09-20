@@ -1,4 +1,4 @@
-﻿namespace RPGCuzWhyNot.Things.Characters {
+namespace RPGCuzWhyNot.Things.Characters {
 	public class CharacterLocationData {
 		public readonly Character character;
 		public string glanceDescription;

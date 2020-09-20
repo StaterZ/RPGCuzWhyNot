@@ -1,4 +1,4 @@
-﻿using RPGCuzWhyNot.Systems;
+using RPGCuzWhyNot.Systems;
 using RPGCuzWhyNot.Utilities;
 
 namespace RPGCuzWhyNot.Things.Characters.NPCs

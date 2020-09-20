@@ -1,4 +1,4 @@
-﻿namespace RPGCuzWhyNot.Primitives {
+namespace RPGCuzWhyNot.Primitives {
 	public struct Fraction {
 		public readonly int numerator;
 		public readonly int denominator;

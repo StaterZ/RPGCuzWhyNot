@@ -1,4 +1,4 @@
-﻿
+
 
 namespace RPGCuzWhyNot.Things {
 	public static class ThingExt {

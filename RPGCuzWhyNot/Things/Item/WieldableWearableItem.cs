@@ -1,4 +1,4 @@
-﻿using RPGCuzWhyNot.Systems.Inventory;
+using RPGCuzWhyNot.Systems.Inventory;
 
 namespace RPGCuzWhyNot.Things.Item {
 	public class WieldableWearableItem : WearableItem, IWieldable {
