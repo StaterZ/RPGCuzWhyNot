@@ -112,7 +112,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 							}
 						}));
 
-						if (!itemHandler.TryHandle(args.TrailingCommand)) {
+						if (!itemHandler.TryHandle(args.FirstArgument)) {
 							Terminal.WriteLine("No such action exists for this item.");
 						}
 					}));
