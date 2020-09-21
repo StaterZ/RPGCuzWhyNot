@@ -14,6 +14,11 @@ namespace RPGCuzWhyNot {
 		private const string selectedBegin = "> ";
 		private const string selectedEnd = " <";
 		private const string shortHandPattern = "?. ";
+		private const string pathBegin = "{fg:Blue}([)";
+		private const string pathSeparator = "{fg:Blue}(->)";
+		private const string pathEnd = "{fg:Blue}(])";
+
+		public readonly string name;
 		public readonly List<MenuItem> items;
 
 		private int LongestItemLength {
@@ -35,21 +40,16 @@ namespace RPGCuzWhyNot {
 			}
 		}
 
-		public int Height {
-			get {
-				return items.Count + 2; //+2 for the top and bottom borders
-			}
-		}
+		public int Height => items.Count + 2 + 1; //+2 for the top and bottom borders, +1 for the path display
 
-		public Menu() {
-			items = new List<MenuItem>();
-		}
-
-		public Menu(params MenuItem[] items) {
+		public Menu(string name, params MenuItem[] items) {
+			this.name = name;
 			this.items = items.ToList();
 		}
 
-		public void Draw(int? selectedIndex) {
+		public void Draw(int? selectedIndex, Menu[] path) {
+			Terminal.WriteLineDirect(Stringification.StringifyArray(pathBegin, pathSeparator, pathEnd, path.Select(menu => menu.name).ToArray()));
+
 			Terminal.WriteLineDirect(new string('#', Width));
 			for (int i = 0; i < items.Count; i++) {
 				bool isSelected = i == selectedIndex; //if selectedIndex is null isSelected will go false, hiding the arrows
@@ -108,7 +108,7 @@ namespace RPGCuzWhyNot {
 				while (stack.Count > 0 && stack.Peek() == this) {
 					//draw
 					Terminal.CursorPosition = drawPos;
-					Draw(isCursorVisible ? arrowIndex : (int?)null);
+					Draw(isCursorVisible ? arrowIndex : (int?)null, stack.Reverse().ToArray());
 
 					//get input
 					ConsoleKeyInfo keyPress = Console.ReadKey(true);

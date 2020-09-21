@@ -62,7 +62,7 @@ namespace RPGCuzWhyNot {
 		}
 
 		private static void TestMenu() {
-			Menu greatswordMenu = new Menu(
+			Menu greatswordMenu = new Menu("Greatsword",
 				new MenuItem("{fg:DarkYellow}(Light Attack)", ctx => {
 					//do light attack
 
@@ -79,7 +79,7 @@ namespace RPGCuzWhyNot {
 					ctx.ExitEntireMenuStack();
 				})
 			);
-			Menu staffMenu = new Menu(
+			Menu staffMenu = new Menu("Staff",
 				new MenuItem("{fg:Cyan}(Channel)", ctx => {
 					//do channel
 
@@ -101,11 +101,11 @@ namespace RPGCuzWhyNot {
 					ctx.ExitEntireMenuStack();
 				})
 			);
-			Menu attackMenu = new Menu(
+			Menu attackMenu = new Menu("Attack",
 				new MenuItem("{fg:DarkGray}(Greatsword)", ctx => ctx.EnterMenu(greatswordMenu)),
 				new MenuItem("{fg:Yellow}(Staff)", ctx => ctx.EnterMenu(staffMenu))
 			);
-			Menu rootMenu = new Menu(
+			Menu rootMenu = new Menu("Root",
 				new MenuItem("{fg:Red}(Attack)", ctx => ctx.EnterMenu(attackMenu)),
 				new MenuItem("{fg:Green}(Items)", null),
 				new MenuItem("{fg:Blue}(Potions)", null),
