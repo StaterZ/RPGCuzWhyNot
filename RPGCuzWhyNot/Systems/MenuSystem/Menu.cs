@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using RPGCuzWhyNot.Primitives;
-using RPGCuzWhyNot.Systems;
 using RPGCuzWhyNot.Utilities;
 
-namespace RPGCuzWhyNot {
+namespace RPGCuzWhyNot.Systems.MenuSystem {
 	public class Menu {
 		private const string shortHands = "123456789abcdefghijklmopqrstuvwxyz";
 		private const string unselectedBegin = "  ";

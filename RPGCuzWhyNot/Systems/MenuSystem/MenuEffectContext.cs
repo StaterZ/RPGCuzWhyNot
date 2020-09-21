@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using RPGCuzWhyNot.Primitives;
-using RPGCuzWhyNot.Systems;
 
-namespace RPGCuzWhyNot {
+namespace RPGCuzWhyNot.Systems.MenuSystem {
 	public class MenuEffectContext {
 		private readonly Vec2 drawPos;
 		private readonly Stack<Menu> stack;

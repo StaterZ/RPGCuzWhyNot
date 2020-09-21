@@ -1,4 +1,4 @@
-namespace RPGCuzWhyNot {
+namespace RPGCuzWhyNot.Systems.MenuSystem {
 	public class MenuItem {
 		public readonly string name;
 		public readonly string hoverDescription;

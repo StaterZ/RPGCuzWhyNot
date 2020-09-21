@@ -3,6 +3,7 @@ using RPGCuzWhyNot.Inventory.Item;
 using RPGCuzWhyNot.NPCs;
 using RPGCuzWhyNot.Systems;
 using RPGCuzWhyNot.Systems.Data;
+using RPGCuzWhyNot.Systems.MenuSystem;
 using RPGCuzWhyNot.Things;
 using RPGCuzWhyNot.Things.Characters;
 using RPGCuzWhyNot.Things.Characters.NPCs;
