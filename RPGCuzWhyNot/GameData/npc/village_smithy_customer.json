@@ -1,0 +1,8 @@
+﻿{
+  "id": "village_smithy_customer",
+  "callName": "customer",
+  "name": "Unknown Smithy Customer",
+  "location": "village_smithy",
+  "glanceDescription": "A customer casually stands leaning against a pillar.",
+  "approachDescription": "You walk up to the customer. She glares angrily as you approach..."
+}
