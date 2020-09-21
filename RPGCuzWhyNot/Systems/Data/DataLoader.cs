@@ -14,11 +14,13 @@ using RPGCuzWhyNot.Things.Item;
 
 namespace RPGCuzWhyNot.Systems.Data {
 	public static class DataLoader {
-		private const string DataPath = "GameData/";
-		private const string LocationsPath = DataPath + "location";
-		private const string ItemsPath = DataPath + "item";
+		private static readonly string dataPath = "GameData" + Path.DirectorySeparatorChar;
+		private static readonly string locationsPath = dataPath + "location";
+		private static readonly string itemsPath = dataPath + "item";
 
 		private static readonly JsonSerializerOptions serializerOptions = new JsonSerializerOptions {
+			ReadCommentHandling = JsonCommentHandling.Skip,
+			AllowTrailingCommas = true,
 			Converters = {
 				new JsonStringEnumConverter(),
 				new JsonMaybeListConverter()
@@ -41,8 +43,8 @@ namespace RPGCuzWhyNot.Systems.Data {
 
 			prototypes = new Dictionary<string, Prototype>();
 			Prototypes = new ReadOnlyDictionary<string, Prototype>(prototypes);
-			LoadPrototypesFromPath<ItemPrototype>(ItemsPath);
-			LoadPrototypesFromPath<LocationPrototype>(LocationsPath);
+			LoadPrototypesFromPath<ItemPrototype>(itemsPath);
+			LoadPrototypesFromPath<LocationPrototype>(locationsPath);
 
 			ValidatePrototypes();
 
