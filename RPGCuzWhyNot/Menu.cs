@@ -9,11 +9,11 @@ using System.Text;
 namespace RPGCuzWhyNot {
 	public class Menu {
 		private const string shortHands = "123456789abcdefghijklmopqrstuvwxyz";
-		const string unselectedBegin = "  ";
-		const string unselectedEnd = "  ";
-		const string selectedBegin = "> ";
-		const string selectedEnd = " <";
-		const string shortHandPattern = "?. ";
+		private const string unselectedBegin = "  ";
+		private const string unselectedEnd = "  ";
+		private const string selectedBegin = "> ";
+		private const string selectedEnd = " <";
+		private const string shortHandPattern = "?. ";
 		public readonly List<MenuItem> items;
 
 		private int LongestItemLength {
