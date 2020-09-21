@@ -17,9 +17,11 @@ namespace RPGCuzWhyNot {
 		private const string pathBegin = "{fg:Blue}([)";
 		private const string pathSeparator = "{fg:Blue}(->)";
 		private const string pathEnd = "{fg:Blue}(])";
+		private const string emptyMenuMessage = "{fg:DarkGray}(-- Empty --)";
 
 		public readonly string name;
 		public readonly List<MenuItem> items;
+		private int ItemCount => Math.Max(items.Count, 1);
 
 		private int LongestItemLength {
 			get {
@@ -40,7 +42,7 @@ namespace RPGCuzWhyNot {
 			}
 		}
 
-		public int BaseHeight => items.Count + 2 + 1; //+2 for the top and bottom borders, +1 for the path display
+		public int BaseHeight => ItemCount + 2 + 1; //+2 for the top and bottom borders, +1 for the path display
 
 		public Menu(string name, params MenuItem[] items) {
 			this.name = name;
@@ -54,19 +56,23 @@ namespace RPGCuzWhyNot {
 			Terminal.WriteLineDirect(Stringification.StringifyArray(pathBegin, pathSeparator, pathEnd, path.Select(menu => menu.name).ToArray()));
 
 			Terminal.WriteLineDirect(new string('#', Width));
-			for (int i = 0; i < items.Count; i++) {
-				bool isSelected = i == selectedIndex; //if selectedIndex is null isSelected will go false, hiding the arrows
-				char shortHand = i >= 0 && i < shortHands.Length ? shortHands[i] : '!';
+			if (items.Count > 0) {
+				for (int i = 0; i < ItemCount; i++) {
+					bool isSelected = i == selectedIndex; //if selectedIndex is null isSelected will go false, hiding the arrows
+					char shortHand = i >= 0 && i < shortHands.Length ? shortHands[i] : '!';
 
-				Terminal.WriteDirect(isSelected ? selectedBegin : unselectedBegin);
+					Terminal.WriteDirect(isSelected ? selectedBegin : unselectedBegin);
 
-				Terminal.WriteDirect(shortHandPattern.Replace('?', shortHand));
+					Terminal.WriteDirect(shortHandPattern.Replace('?', shortHand));
 
-				Terminal.WriteDirect(items[i].name);
+					Terminal.WriteDirect(items[i].name);
 
-				Terminal.WriteDirect(new string(' ', LongestItemLength - Terminal.GetFormattedLength(items[i].name)));
+					Terminal.WriteDirect(new string(' ', LongestItemLength - Terminal.GetFormattedLength(items[i].name)));
 
-				Terminal.WriteLineDirect(isSelected ? selectedEnd : unselectedEnd);
+					Terminal.WriteLineDirect(isSelected ? selectedEnd : unselectedEnd);
+				}
+			} else {
+				Terminal.WriteLineDirect(emptyMenuMessage);
 			}
 			Terminal.WriteLineDirect(new string('#', Width));
 
@@ -88,7 +94,7 @@ namespace RPGCuzWhyNot {
 				Terminal.CursorPosition += Vec2.Up * BaseHeight;
 			}
 
-			int numOfHoverDescriptionLines = lastDrawnIndex.HasValue ? items[lastDrawnIndex.Value].hoverDescription.Count(c => c == '\n') + 1 : 0;
+			int numOfHoverDescriptionLines = lastDrawnIndex.HasValue && lastDrawnIndex < items.Count ? items[lastDrawnIndex.Value].hoverDescription.Count(c => c == '\n') + 1 : 0;
 
 			for (int i = 0; i < numOfHoverDescriptionLines; i++) {
 				Terminal.ClearLine();
@@ -162,7 +168,9 @@ namespace RPGCuzWhyNot {
 							case ConsoleKey.Enter:
 								Terminal.Beep(200, 50);
 								isCursorVisible = true;
+								if (arrowIndex < items.Count) {
 									items[arrowIndex].effect(ctx);
+								}
 								break;
 						}
 					}
