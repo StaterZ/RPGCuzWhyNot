@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using RPGCuzWhyNot.Systems;
-using RPGCuzWhyNot.Systems.Data;
 using RPGCuzWhyNot.Systems.Data.Prototypes;
 using RPGCuzWhyNot.Systems.Inventory;
 using RPGCuzWhyNot.Things.Characters;
