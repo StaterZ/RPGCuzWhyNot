@@ -70,6 +70,9 @@ namespace RPGCuzWhyNot.Systems {
 		public static void WriteLineDirect(string text) {
 			WriteDirect(text + '\n');
 		}
+		public static void ClearLine() {
+			WriteLineDirect(new string(' ', WindowSize.x));
+		}
 
 		public static void Write(char c) => WriteChar(c);
 		public static void Write(string text) {

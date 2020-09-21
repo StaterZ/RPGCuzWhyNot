@@ -77,10 +77,8 @@ namespace RPGCuzWhyNot {
 		}
 
 		public void ClearDraw() {
-			string clearLineCache = new string(' ', Width);
-
 			for (int i = 0; i < Height; i++) {
-				Terminal.WriteLineDirect(clearLineCache);
+				Terminal.ClearLine();
 			}
 		}
 
