@@ -60,72 +60,57 @@ namespace RPGCuzWhyNot {
 		}
 
 		private static void TestMenu() {
-			Stack<MenuState> menuStack = new Stack<MenuState>();
-			void PushMenu(Menu menu) {
-				menuStack.Push(new MenuState(menu, null));
-			}
-
 			Menu greatswordMenu = new Menu(
-				new MenuItem("Light Attack", null),
-				new MenuItem("Heavy Attack", null),
-				new MenuItem("Throw Sword", null)
+				new MenuItem("{fg:DarkYellow}(Light Attack)", ctx => {
+					//do light attack
+
+					ctx.ExitEntireMenuStack();
+				}),
+				new MenuItem("{fg:Red}(Heavy Attack)", ctx => {
+					//do heavy attack
+
+					ctx.ExitEntireMenuStack();
+				}),
+				new MenuItem("{fg:White;bg:Red}(Throw Sword)", ctx => {
+					//throw sword
+
+					ctx.ExitEntireMenuStack();
+				})
 			);
 			Menu staffMenu = new Menu(
-				new MenuItem("Channel", null),
-				new MenuItem("Fireball", null),
-				new MenuItem("Fine-Point Void", null)
+				new MenuItem("{fg:Cyan}(Channel)", ctx => {
+					//do channel
+
+					ctx.ExitEntireMenuStack();
+				}),
+				new MenuItem("{fg:Green}(Heal Ward)", ctx => {
+					//do heal ward
+
+					ctx.ExitEntireMenuStack();
+				}),
+				new MenuItem("{fg:DarkYellow}(Fireball)", ctx => {
+					//do fireball
+
+					ctx.ExitEntireMenuStack();
+				}),
+				new MenuItem("{fg:Black;bg:DarkGray}(Fine-Point Void)", ctx => {
+					//do void thingy
+
+					ctx.ExitEntireMenuStack();
+				})
 			);
 			Menu attackMenu = new Menu(
-				new MenuItem("Greatsword", () => PushMenu(greatswordMenu)),
-				new MenuItem("Staff", () => PushMenu(staffMenu))
+				new MenuItem("{fg:DarkGray}(Greatsword)", ctx => ctx.EnterMenu(greatswordMenu)),
+				new MenuItem("{fg:Yellow}(Staff)", ctx => ctx.EnterMenu(staffMenu))
 			);
 			Menu rootMenu = new Menu(
-				new MenuItem("{fg:Red}(Attack)", () => PushMenu(attackMenu)),
+				new MenuItem("{fg:Red}(Attack)", ctx => ctx.EnterMenu(attackMenu)),
 				new MenuItem("{fg:Green}(Items)", null),
 				new MenuItem("{fg:Blue}(Potions)", null),
 				new MenuItem("{fg:Yellow}(Armor)", null)
 			);
 
-			PushMenu(rootMenu);
-
-			while (true) {
-				MenuState menuState = menuStack.Peek();
-				menuState.Draw();
-
-				//get input
-				ConsoleKeyInfo keyPress = Console.ReadKey(true);
-
-				//move cursor
-				switch (keyPress.Key) {
-					case ConsoleKey.UpArrow:
-						if (menuState.index.HasValue) {
-							menuState.index--;
-							menuState.index = ExtraMath.Mod(menuState.index.Value, menuState.menu.items.Count);
-						} else {
-							menuState.index = 1;
-						}
-						break;
-
-					case ConsoleKey.DownArrow:
-						if (menuState.index.HasValue) {
-							menuState.index++;
-							menuState.index = ExtraMath.Mod(menuState.index.Value, menuState.menu.items.Count);
-						} else {
-							menuState.index = 1;
-						}
-						break;
-
-					case ConsoleKey.LeftArrow:
-						menuStack.Pop();
-						break;
-
-					case ConsoleKey.RightArrow:
-					case ConsoleKey.Enter:
-						menuState.index ??= 0;
-						menuState.menu.items[menuState.index.Value].onSelect();
-						break;
-				}
-			}
+			rootMenu.Enter();
 		}
 
 		private static bool isInCombat;

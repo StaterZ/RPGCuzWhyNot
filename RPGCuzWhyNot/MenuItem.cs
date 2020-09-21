@@ -3,11 +3,13 @@ using System;
 namespace RPGCuzWhyNot {
 	public class MenuItem {
 		public readonly string name;
-		public readonly Action onSelect;
+		public readonly MenuItemEffect effect;
 
-		public MenuItem(string name, Action onSelect) {
+		public delegate void MenuItemEffect(MenuEffectContext ctx);
+
+		public MenuItem(string name, MenuItemEffect effect) {
 			this.name = name;
-			this.onSelect = onSelect;
+			this.effect = effect;
 		}
 	}
 }
