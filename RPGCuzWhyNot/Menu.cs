@@ -40,14 +40,17 @@ namespace RPGCuzWhyNot {
 			}
 		}
 
-		public int Height => items.Count + 2 + 1; //+2 for the top and bottom borders, +1 for the path display
+		public int BaseHeight => items.Count + 2 + 1; //+2 for the top and bottom borders, +1 for the path display
 
 		public Menu(string name, params MenuItem[] items) {
 			this.name = name;
 			this.items = items.ToList();
 		}
 
+		private int? lastDrawnIndex;
 		public void Draw(int? selectedIndex, Menu[] path) {
+			lastDrawnIndex = selectedIndex;
+
 			Terminal.WriteLineDirect(Stringification.StringifyArray(pathBegin, pathSeparator, pathEnd, path.Select(menu => menu.name).ToArray()));
 
 			Terminal.WriteLineDirect(new string('#', Width));
@@ -66,10 +69,28 @@ namespace RPGCuzWhyNot {
 				Terminal.WriteLineDirect(isSelected ? selectedEnd : unselectedEnd);
 			}
 			Terminal.WriteLineDirect(new string('#', Width));
+
+			if (selectedIndex.HasValue && selectedIndex < items.Count) {
+				Terminal.WriteLine(items[selectedIndex.Value].hoverDescription);
+			}
 		}
 
 		public void ClearDraw() {
-			for (int i = 0; i < Height; i++) {
+			for (int i = 0; i < BaseHeight; i++) {
+				Terminal.ClearLine();
+			}
+
+			ClearHoverDescription(false);
+		}
+
+		public void ClearHoverDescription(bool offsetToLocation = true) {
+			if (offsetToLocation) {
+				Terminal.CursorPosition += Vec2.Up * BaseHeight;
+			}
+
+			int numOfHoverDescriptionLines = lastDrawnIndex.HasValue ? items[lastDrawnIndex.Value].hoverDescription.Count(c => c == '\n') + 1 : 0;
+
+			for (int i = 0; i < numOfHoverDescriptionLines; i++) {
 				Terminal.ClearLine();
 			}
 		}
@@ -87,13 +108,10 @@ namespace RPGCuzWhyNot {
 			int arrowIndex = 0;
 			MenuEffectContext ctx = new MenuEffectContext(drawPos, stack);
 
-			void WrapArrowIndex() {
+			void OnArrowIndexChange() {
 				arrowIndex = ExtraMath.Mod(arrowIndex, items.Count);
-			}
-
-			void ExecuteMenuItem(int index) {
-				Terminal.Beep(200, 50);
-				items[index].effect(ctx);
+				Terminal.CursorPosition = drawPos;
+				ClearHoverDescription();
 			}
 
 			using (new CursorVisibilityScope(false)) {
@@ -108,7 +126,8 @@ namespace RPGCuzWhyNot {
 					//try finding and useing a short hand
 					int shortHandIndex = shortHands.IndexOf(keyPress.KeyChar);
 					if (shortHandIndex >= 0 && shortHandIndex < items.Count) {
-						ExecuteMenuItem(shortHandIndex);
+						Terminal.Beep(200, 50);
+						items[shortHandIndex].effect(ctx);
 					} else {
 						//else, update the arrow key system
 						switch (keyPress.Key) {
@@ -117,7 +136,7 @@ namespace RPGCuzWhyNot {
 								Terminal.Beep(100, 50);
 								isCursorVisible = true;
 								arrowIndex--;
-								WrapArrowIndex();
+								OnArrowIndexChange();
 								break;
 
 							//go down
@@ -125,7 +144,7 @@ namespace RPGCuzWhyNot {
 								Terminal.Beep(100, 50);
 								isCursorVisible = true;
 								arrowIndex++;
-								WrapArrowIndex();
+								OnArrowIndexChange();
 								break;
 
 							//go back
@@ -141,8 +160,9 @@ namespace RPGCuzWhyNot {
 							//execute selected menu item
 							case ConsoleKey.RightArrow:
 							case ConsoleKey.Enter:
+								Terminal.Beep(200, 50);
 								isCursorVisible = true;
-								ExecuteMenuItem(arrowIndex);
+									items[arrowIndex].effect(ctx);
 								break;
 						}
 					}
