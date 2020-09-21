@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using RPGCuzWhyNot.Primitives;
 using RPGCuzWhyNot.Systems.Data;
+using RPGCuzWhyNot.Utilities;
 
 namespace RPGCuzWhyNot.Systems {
 	public static class Terminal {
@@ -12,6 +13,10 @@ namespace RPGCuzWhyNot.Systems {
 		public static ConsoleColor ForegroundColor { get => Console.ForegroundColor; set => Console.ForegroundColor = value; }
 		public static ConsoleColor BackgroundColor { get => Console.BackgroundColor; set => Console.BackgroundColor = value; }
 
+		public static bool IsCursorVisible {
+			get => Console.CursorVisible;
+			set => Console.CursorVisible = value;
+		}
 		public static Vec2 CursorPosition {
 			get => new Vec2(Console.CursorLeft, Console.CursorTop);
 			set {
@@ -67,17 +72,19 @@ namespace RPGCuzWhyNot.Systems {
 
 		public static void Write(char c) => WriteChar(c);
 		public static void Write(string text) {
-			for (int i = 0; i < text.Length;) {
-				char c = text[i++];
-				if (c == '{') {
-					if (i < text.Length && text[i] == '{') {
-						WriteChar(c);
-						++i;
+			using (new CursorVisibilityScope(false)) {
+				for (int i = 0; i < text.Length;) {
+					char c = text[i++];
+					if (c == '{') {
+						if (i < text.Length && text[i] == '{') {
+							WriteChar(c);
+							++i;
+						} else {
+							i = Decode(text, i);
+						}
 					} else {
-						i = Decode(text, i);
+						WriteChar(c);
 					}
-				} else {
-					WriteChar(c);
 				}
 			}
 		}
