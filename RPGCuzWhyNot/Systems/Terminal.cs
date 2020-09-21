@@ -62,8 +62,7 @@ namespace RPGCuzWhyNot.Systems {
 		/// Write a line without delay or beeping.
 		/// </summary>
 		public static void WriteLineDirect(string text) {
-			WriteDirect(text);
-			Write('\n');
+			WriteDirect(text + '\n');
 		}
 
 		public static void Write(char c) => WriteChar(c);
