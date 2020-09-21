@@ -1,0 +1,94 @@
+[
+  // Taalmu
+  {
+    "id": "taalmu",
+    "callName": "taalmu",
+    "name": "Port town Taalmu",
+    "description": "A large trading town lead by merchants, its lively townscape can be seen from just inside the main gate.",
+    "paths": {
+      "village": "A long winding road leads to the village.",
+      "taalmu_port": "Following the main road you can clearly see the large port Taalmu is know for.",
+      "taalmu_tavern": "The Seabound tavern.",
+      "taalmu_market": "A bustling open market full of all kinds of goods.",
+      "taalmu_back_alleys": "The complex network of alleyways winding through Taalmu may lead to many interesting places."
+    },
+    "items": [
+      "worthless_garbage"
+    ]
+  },
+  // Back alleys
+  {
+    "id": "taalmu_back_alleys",
+    "callName": "alley",
+    "name": "Taalmu alleyways",
+    "description": "Navigating through the mazelike alleys of Taalmu can be challenging.\nTry not to get lost or worse.",
+    "paths": {
+      "taalmu": "Getting back on the main street is easy as it.",
+      "taalmu_market": "Sounds of people bartering and talking leads to the market.",
+      "taalmu_port": "The smell of salt leads the way to the port.",
+      "taalmu_black_market": "You can see a shady part of Taalmu further down an alleyway."
+    }
+  },
+  // Black market
+  {
+    "id": "taalmu_black_market",
+    "callName": "black market",
+    "name": "Taalmu black market",
+    "description": "A quiet street with a few vendors trading goods of unknown orgin and questionable legality.",
+    "paths": {
+      "taalmu_back_alleys": "Return to the mazelike alleys."
+    },
+    "items": [
+      "worthless_garbage",
+      "rusty_bucket"
+    ]
+  },
+  // Eastern sea
+  {
+    "id": "taalmu_eastern_sea",
+    "callName": "east sea",
+    "name": "Eastern sea near Taalmu",
+    "description": "It's all water big suprise. Meh nothing here yet.",
+    "paths": {
+      "taalmu_port": "Enter the large port of Taalmu."
+    },
+    "items": [
+      "salt_water"
+    ]
+  },
+  // Market
+  {
+    "id": "taalmu_market",
+    "callName": "market",
+    "name": "Taalmu open market",
+    "description": "The bustling market of Taalmu is filled with all kinds of interesting items and stalls.\nBe on the lookout for pickpockets however.",
+    "paths": {
+      "taalmu": "Return to the main street.",
+      "taalmu_port": "There is a direct road to the port from the market.",
+      "taalmu_back_alleys": "There is a way into the alleyways here."
+    }
+  },
+  // Port
+  {
+    "id": "taalmu_port",
+    "callName": "port",
+    "name": "Taalmu port",
+    "description": "Taalmu's lively ports are full of goods from every corner of the world.",
+    "paths": {
+      "taalmu": "Follow the roads up to the main street.",
+      "taalmu_market": "Using the direct road from the port to the market you can get there quick",
+      "taalmu_back_alleys": "Many people use the alleyways to find there way home after working in the port.",
+      "taalmu_eastern_sea": "Take a boat and sail to the eastern sea."
+    }
+  },
+  // Tavern
+  {
+    "id": "taalmu_tavern",
+    "callName": "tavern",
+    "name": "Seabound Tavern",
+    "description": "The lively atmosphere of the tavern greets you as you enter.",
+    "paths": {
+      "taalmu": "Leave the lively tavern but don't forget to pay."
+    }
+  }
+]
