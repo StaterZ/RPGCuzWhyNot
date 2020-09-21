@@ -1,9 +1,10 @@
 using System;
 using System.Text.Json.Serialization;
 using RPGCuzWhyNot.Primitives;
+using RPGCuzWhyNot.Systems.Data.JsonConverters;
 using RPGCuzWhyNot.Things.Item;
 
-namespace RPGCuzWhyNot.Systems.Data {
+namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 	[Serializable]
 	public sealed class ItemPrototype : Prototype {
 		[JsonPropertyName("inventoryDescription")]

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using RPGCuzWhyNot.Things;
 
-namespace RPGCuzWhyNot.Systems.Data {
+namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 	[Serializable]
 	public class LocationPrototype : Prototype {
 		[JsonPropertyName("description")]

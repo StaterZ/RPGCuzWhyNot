@@ -1,4 +1,5 @@
 using RPGCuzWhyNot.Systems.Data;
+using RPGCuzWhyNot.Systems.Data.Prototypes;
 using RPGCuzWhyNot.Systems.Inventory;
 
 namespace RPGCuzWhyNot.Things.Item {
