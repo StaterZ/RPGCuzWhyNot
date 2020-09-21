@@ -17,7 +17,7 @@ namespace RPGCuzWhyNot.Things.Characters.NPCs {
 			Terminal.Write("Hello", voiceFrequency, 50);
 			Terminal.WriteLine(".....", voiceFrequency, 10);
 			ConsoleUtils.Sleep(1000);
-			Terminal.WriteLine("Anyways, i wasn't being suspicous at all just now...", voiceFrequency);
+			Terminal.WriteLine("Anyways, i wasn't being suspicious at all just now...", voiceFrequency);
 			ConsoleUtils.Sleep(200);
 			Terminal.WriteLine("Just so you know *cough*", voiceFrequency);
 		}

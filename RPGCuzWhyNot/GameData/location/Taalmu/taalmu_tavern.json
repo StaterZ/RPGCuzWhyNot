@@ -1,8 +1,0 @@
-{
-  "callName": "tavern",
-  "name": "Seabound Tavern",
-  "description": "The lively atmosphere of the tavern greets you as you enter.",
-  "paths": {
-    "taalmu": "Leave the lively tavern but don't forget to pay."
-  }
-}
