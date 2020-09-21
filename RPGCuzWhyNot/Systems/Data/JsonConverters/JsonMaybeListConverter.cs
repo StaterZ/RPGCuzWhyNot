@@ -26,10 +26,7 @@ namespace RPGCuzWhyNot.Systems.Data.JsonConverters {
 			public override List<T> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
 				var list = new List<T>();
 
-				if (reader.TokenType == JsonTokenType.StartObject) {
-					list.Add(JsonSerializer.Deserialize<T>(ref reader, options));
-				}
-				else if (reader.TokenType == JsonTokenType.StartArray) {
+				if (reader.TokenType == JsonTokenType.StartArray) {
 					reader.Read();
 					do {
 						list.Add(JsonSerializer.Deserialize<T>(ref reader, options));
@@ -37,7 +34,7 @@ namespace RPGCuzWhyNot.Systems.Data.JsonConverters {
 					} while (reader.TokenType != JsonTokenType.EndArray);
 				}
 				else {
-					throw new JsonException("Expected object or array.");
+					list.Add(JsonSerializer.Deserialize<T>(ref reader, options));
 				}
 
 				return list;
