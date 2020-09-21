@@ -8,7 +8,7 @@
     "paths": {
       "village": "A long winding road leads to the village.",
       "taalmu_port": "Following the main road you can clearly see the large port Taalmu is know for.",
-      "taalmu_tavern": "The Seabound tavern.",
+      "taalmu_tavern": "The Seabound Tavern.",
       "taalmu_market": "A bustling open market full of all kinds of goods.",
       "taalmu_back_alleys": "The complex network of alleyways winding through Taalmu may lead to many interesting places."
     },
@@ -21,7 +21,7 @@
     "id": "taalmu_back_alleys",
     "callName": "alley",
     "name": "Taalmu alleyways",
-    "description": "Navigating through the mazelike alleys of Taalmu can be challenging.\nTry not to get lost or worse.",
+    "description": "Navigating through the maze-like alleys of Taalmu can be challenging.\nTry not to get lost or worse.",
     "paths": {
       "taalmu": "Getting back on the main street is easy as it.",
       "taalmu_market": "Sounds of people bartering and talking leads to the market.",
@@ -36,7 +36,7 @@
     "name": "Taalmu black market",
     "description": "A quiet street with a few vendors trading goods of unknown orgin and questionable legality.",
     "paths": {
-      "taalmu_back_alleys": "Return to the mazelike alleys."
+      "taalmu_back_alleys": "Return to the maze-like alleys."
     },
     "items": [
       "worthless_garbage",
@@ -48,7 +48,7 @@
     "id": "taalmu_eastern_sea",
     "callName": "east sea",
     "name": "Eastern sea near Taalmu",
-    "description": "It's all water big suprise. Meh nothing here yet.",
+    "description": "It's all water big surprise. Meh nothing here yet.",
     "paths": {
       "taalmu_port": "Enter the large port of Taalmu."
     },

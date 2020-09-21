@@ -2,7 +2,7 @@
   {
     "id": "village_smithy",
     "callName": "smithy",
-    "name": "Orhibalds Smithy",
+    "name": "Orchibalds Smithy",
     "description": "You walk in to the smithy. The heat of the great forge and the sweat of the dirty smith purge the air.",
     "paths": {
       "village": "A door out of the smithy can be seen behind you.",
@@ -14,7 +14,7 @@
     "id": "village_smithy_garden",
     "callName": "garden",
     "name": "Ancient Garden",
-    "description": "An medium sized old garden stands before you.",
+    "description": "A medium sized old garden stands before you.",
     "paths": {
       "village_smithy": "The door back into the smithy stands behind you."
     },
