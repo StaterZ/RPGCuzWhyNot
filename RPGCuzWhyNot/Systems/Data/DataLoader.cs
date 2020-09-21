@@ -18,6 +18,8 @@ namespace RPGCuzWhyNot.Systems.Data {
 		private static readonly string itemsPath = dataPath + "item";
 
 		private static readonly JsonSerializerOptions serializerOptions = new JsonSerializerOptions {
+			ReadCommentHandling = JsonCommentHandling.Skip,
+			AllowTrailingCommas = true,
 			Converters = {new JsonStringEnumConverter()}
 		};
 
