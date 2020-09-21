@@ -6,7 +6,7 @@ using RPGCuzWhyNot.Systems.Data;
 using RPGCuzWhyNot.Systems.Data.Prototypes;
 
 namespace RPGCuzWhyNot.Systems {
-	public static class Terminal {
+	public static partial class Terminal {
 		private static readonly Stack<State> stateStack = new Stack<State>();
 		private static readonly Dictionary<char, Alias> aliases = new Dictionary<char, Alias>();
 
@@ -270,10 +270,6 @@ namespace RPGCuzWhyNot.Systems {
 
 		public static void Clear() {
 			Console.Clear();
-		}
-
-		public static string ReadLine() {
-			return Console.ReadLine();
 		}
 	}
 }
