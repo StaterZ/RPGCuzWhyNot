@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using RPGCuzWhyNot.AttackSystem;
 using RPGCuzWhyNot.Systems.Inventory;
 using RPGCuzWhyNot.Things;
 using RPGCuzWhyNot.Things.Characters;
@@ -396,9 +397,8 @@ namespace RPGCuzWhyNot.Systems.Commands {
 				}
 
 				if (player.location.GetCharacterByCallName(args.FirstArgument, out Character opponent)) {
-					Terminal.WriteLine($"{{fg:Cyan}}(The combat with [{opponent.Name}] has begun!)");
-					Program.EnterCombat(opponent);
-					Terminal.WriteLine($"{{fg:Cyan}}(The combat with [{opponent.Name}] has ended!)");
+					Fight fight = new Fight(Program.player, opponent);
+					fight.BeginCombat();
 				} else {
 					Terminal.WriteLine("There's no one here called that.");
 				}

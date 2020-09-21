@@ -43,7 +43,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 		IEnumerator<IItem> IEnumerable<IItem>.GetEnumerator() => Inventory.GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)Inventory).GetEnumerator();
 
-		public override PlanOfAction PlanTurn(params Character[] opponents) {
+		public override PlanOfAction PlanTurn(Fight fight) {
 			PlanOfAction planOfAction = new PlanOfAction(stats);
 
 			//planning phace
@@ -62,7 +62,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 			});
 			Command run = new Command(new[] { "run", "run away" }, "Run away from the fight.", args => {
 				Terminal.WriteLine("You run away from the enemy!");
-				Program.ExitCombat();
+				fight.EndCombat();
 			});
 			Command plan = new Command(new[] { "ls", "list", "plan" }, "Remove the last move you planned to do from the plan of action.", args => {
 				if (planOfAction.plannedActions.Count > 0) {

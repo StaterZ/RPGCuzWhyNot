@@ -22,7 +22,7 @@ namespace RPGCuzWhyNot.Things.Characters.NPCs {
 			Terminal.WriteLine("Just so you know *cough*", voiceFrequency);
 		}
 
-		public override PlanOfAction PlanTurn(params Character[] opponents) {
+		public override PlanOfAction PlanTurn(Fight fight) {
 			throw new System.NotImplementedException();
 		}
 	}

@@ -26,7 +26,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 
 		public virtual string ListingName => ThingExt.DefaultListingName(this);
 
-		public abstract PlanOfAction PlanTurn(params Character[] opponents);
+		public abstract PlanOfAction PlanTurn(Fight fight);
 	}
 }
 
