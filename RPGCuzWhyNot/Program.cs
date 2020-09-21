@@ -1,10 +1,8 @@
 using System;
-using System.Collections.Generic;
 using RPGCuzWhyNot.AttackSystem;
 using RPGCuzWhyNot.Inventory.Item;
 using RPGCuzWhyNot.NPCs;
 using RPGCuzWhyNot.Systems;
-using RPGCuzWhyNot.Systems.Commands;
 using RPGCuzWhyNot.Systems.Data;
 using RPGCuzWhyNot.Things;
 using RPGCuzWhyNot.Things.Characters;
@@ -48,6 +46,10 @@ namespace RPGCuzWhyNot {
 			TestMenu();
 
 
+			//combat testing shortcut
+			//player.Wielding.MoveItem((IWieldable)DataLoader.CreateItem("greatsword"));
+			//Fight fight = new Fight(player, new TheMother());
+			//fight.BeginCombat();
 
 			//some basic event loop
 			player.location.PrintEnterInformation();
@@ -111,32 +113,6 @@ namespace RPGCuzWhyNot {
 			);
 
 			rootMenu.Enter();
-		}
-
-		private static bool isInCombat;
-		public static void EnterCombat(params Character[] opponents) {
-			isInCombat = true;
-			while (isInCombat) {
-				//Players Turn
-				Terminal.WriteLine($"{player.Name}s Turn (You)");
-				PlanOfAction playersPlanOfAction = player.PlanTurn(opponents);
-				foreach (IPlannableAction action in playersPlanOfAction.plannedActions) {
-					action.Execute();
-				}
-
-				//Opponents Turn
-				foreach (Character opponent in opponents) {
-					Terminal.WriteLine($"{opponent.Name}s Turn");
-					PlanOfAction opponentsPlanOfAction = opponent.PlanTurn(player);
-					foreach (IPlannableAction action in opponentsPlanOfAction.plannedActions) {
-						action.Execute();
-					}
-				}
-			}
-		}
-
-		public static void ExitCombat() {
-			isInCombat = false;
 		}
 	}
 }

@@ -3,7 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using RPGCuzWhyNot.Primitives;
 
-namespace RPGCuzWhyNot.Systems.Data {
+namespace RPGCuzWhyNot.Systems.Data.JsonConverters {
 	public class JsonFractionConverter : JsonConverterFactory {
 		public override bool CanConvert(Type typeToConvert) {
 			return typeToConvert == typeof(Fraction);

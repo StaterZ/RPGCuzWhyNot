@@ -16,11 +16,13 @@ namespace RPGCuzWhyNot.Things.Characters.Enemies {
 			target.health.TakeDamage((int)Math.Ceiling(target.health.CurrentHealth / 2f), this);
 		}
 
-		public override PlanOfAction PlanTurn(params Character[] opponents) {
+		public override PlanOfAction PlanTurn(Fight fight) {
 			PlanOfAction planOfAction = new PlanOfAction(stats);
 
-			foreach (Character opponent in opponents) {
-				AttackWithDuster(opponent);
+			foreach (Character combatant in fight.combatants) {
+				if (combatant == this) continue;
+
+				AttackWithDuster(combatant); //temp
 			}
 
 			return planOfAction;

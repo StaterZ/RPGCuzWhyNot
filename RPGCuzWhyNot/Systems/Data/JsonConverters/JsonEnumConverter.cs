@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace RPGCuzWhyNot.Systems.Data {
+namespace RPGCuzWhyNot.Systems.Data.JsonConverters {
 	public class JsonEnumConverter : JsonConverterFactory {
 		public override bool CanConvert(Type typeToConvert) {
 			return typeToConvert.IsEnum;
