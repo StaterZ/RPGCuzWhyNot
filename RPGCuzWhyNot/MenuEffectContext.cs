@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using RPGCuzWhyNot.Primitives;
 using RPGCuzWhyNot.Systems;
-using System.Collections.Generic;
 
 namespace RPGCuzWhyNot {
 	public class MenuEffectContext {

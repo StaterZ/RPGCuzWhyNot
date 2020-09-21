@@ -5,7 +5,6 @@ using RPGCuzWhyNot.Systems.Inventory;
 using RPGCuzWhyNot.Things;
 using RPGCuzWhyNot.Things.Characters;
 using RPGCuzWhyNot.Things.Item;
-using RPGCuzWhyNot.Utilities;
 
 namespace RPGCuzWhyNot.Systems.Commands {
 	public class PlayerCommands {

@@ -1,7 +1,5 @@
-using RPGCuzWhyNot.Systems;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using RPGCuzWhyNot.Systems;
 
 namespace RPGCuzWhyNot.Utilities {
 	public struct CursorVisibilityScope : IDisposable {

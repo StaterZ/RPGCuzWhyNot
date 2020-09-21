@@ -1,7 +1,7 @@
-using RPGCuzWhyNot.AttackSystem;
-using RPGCuzWhyNot.Systems;
 using System;
 using System.Text.Json.Serialization;
+using RPGCuzWhyNot.AttackSystem;
+using RPGCuzWhyNot.Systems;
 
 namespace RPGCuzWhyNot.Inventory.Item {
 	[Serializable]

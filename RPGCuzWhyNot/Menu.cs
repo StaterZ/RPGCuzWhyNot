@@ -1,10 +1,9 @@
-using RPGCuzWhyNot.Primitives;
-using RPGCuzWhyNot.Systems;
-using RPGCuzWhyNot.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using RPGCuzWhyNot.Primitives;
+using RPGCuzWhyNot.Systems;
+using RPGCuzWhyNot.Utilities;
 
 namespace RPGCuzWhyNot {
 	public class Menu {

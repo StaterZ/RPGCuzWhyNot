@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Threading;
 using RPGCuzWhyNot.Primitives;
 using RPGCuzWhyNot.Systems.Data;
-using RPGCuzWhyNot.Utilities;
 using RPGCuzWhyNot.Systems.Data.Prototypes;
+using RPGCuzWhyNot.Utilities;
 
 namespace RPGCuzWhyNot.Systems {
 	public static class Terminal {
