@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using RPGCuzWhyNot.Systems.Data.JsonConverters;
 using RPGCuzWhyNot.Systems.Data.Prototypes;
 using RPGCuzWhyNot.Things;
 using RPGCuzWhyNot.Things.Item;
@@ -20,7 +21,10 @@ namespace RPGCuzWhyNot.Systems.Data {
 		private static readonly JsonSerializerOptions serializerOptions = new JsonSerializerOptions {
 			ReadCommentHandling = JsonCommentHandling.Skip,
 			AllowTrailingCommas = true,
-			Converters = {new JsonStringEnumConverter()}
+			Converters = {
+				new JsonStringEnumConverter(),
+				new JsonMaybeListConverter()
+			}
 		};
 
 		private static Dictionary<string, Prototype> prototypes;
@@ -84,11 +88,11 @@ namespace RPGCuzWhyNot.Systems.Data {
 			string[] dataFiles = Directory.GetFiles(path, "*.json", SearchOption.AllDirectories);
 
 			foreach (string filePath in dataFiles) {
-				// Deserialize the prototype.
-				TProto prototype;
+				// Deserialize the prototype(s).
+				List<TProto> prototypeList;
 				try {
 					string fileContent = File.ReadAllText(filePath);
-					prototype = JsonSerializer.Deserialize<TProto>(fileContent, serializerOptions);
+					prototypeList = JsonSerializer.Deserialize<List<TProto>>(fileContent, serializerOptions);
 				}
 				catch (IOException e) {
 					Error($"Failed to read file \"{filePath}\":\n{e.Message}");
@@ -99,13 +103,19 @@ namespace RPGCuzWhyNot.Systems.Data {
 					continue;
 				}
 
-				((IOnDeserialized)prototype).OnDeserialized();
+				// Add the new prototypes.
+				foreach (TProto proto in prototypeList) {
+					proto.DataFilePath = filePath;
+					((IOnDeserialized)proto).OnDeserialized();
 
-				// The data file name is used as the item id.
-				string id = Path.GetFileNameWithoutExtension(filePath);
-				prototype.Id = id;
-				if (!prototypes.TryAdd(id, prototype))
-					Error($"Duplicate prototype definition of '{id}': \"{filePath}\".");
+					if (proto.Id == null) {
+						MissingPropertyError(proto, "id");
+						continue;
+					}
+
+					if (!prototypes.TryAdd(proto.Id, proto))
+						Error($"Duplicate prototype definition of '{proto.Id}': \"{proto.DataFilePath}\".");
+				}
 			}
 		}
 
@@ -185,7 +195,7 @@ namespace RPGCuzWhyNot.Systems.Data {
 
 
 		private static void MissingPropertyError(Prototype prototype, string propertyName) {
-			Error($"Missing property '{propertyName}' in prototype '{prototype.Id}'.");
+			Error($"Missing property '{propertyName}' in prototype '{prototype.Id}', in file \"{prototype.DataFilePath}\".");
 		}
 
 		private static void Error(string message) {

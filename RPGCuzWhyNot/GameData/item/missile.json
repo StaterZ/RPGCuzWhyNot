@@ -1,4 +1,5 @@
 {
+  "id": "missile",
 	"callName": "missile",
 	"name": "{Red}(Large Cruise Missile)",
 	"inventoryDescription": "A strange large object shaped like a pole",
