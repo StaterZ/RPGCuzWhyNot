@@ -55,11 +55,7 @@ namespace RPGCuzWhyNot {
 				bool isSelected = i == selectedIndex; //if selectedIndex is null isSelected will go false, hiding the arrows
 				char shortHand = i >= 0 && i < shortHands.Length ? shortHands[i] : '!';
 
-				if (isSelected) {
-					Terminal.WriteDirect(selectedBegin);
-				} else {
-					Terminal.WriteDirect(unselectedBegin);
-				}
+				Terminal.WriteDirect(isSelected ? selectedBegin : unselectedBegin);
 
 				Terminal.WriteDirect(shortHandPattern.Replace('?', shortHand));
 
@@ -67,11 +63,7 @@ namespace RPGCuzWhyNot {
 
 				Terminal.WriteDirect(new string(' ', LongestItemLength - Terminal.GetFormattedLength(items[i].name)));
 
-				if (isSelected) {
-					Terminal.WriteLineDirect(selectedEnd);
-				} else {
-					Terminal.WriteLineDirect(unselectedEnd);
-				}
+				Terminal.WriteLineDirect(isSelected ? selectedEnd : unselectedEnd);
 			}
 			Terminal.WriteLineDirect(new string('#', Width));
 		}
