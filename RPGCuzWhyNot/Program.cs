@@ -1,4 +1,5 @@
 using System;
+using RPGCuzWhyNot.AttackSystem;
 using RPGCuzWhyNot.Inventory.Item;
 using RPGCuzWhyNot.NPCs;
 using RPGCuzWhyNot.Systems;
@@ -6,8 +7,10 @@ using RPGCuzWhyNot.Systems.Data;
 using RPGCuzWhyNot.Systems.MenuSystem;
 using RPGCuzWhyNot.Things;
 using RPGCuzWhyNot.Things.Characters;
+using RPGCuzWhyNot.Things.Characters.Enemies;
 using RPGCuzWhyNot.Things.Characters.NPCs;
 using RPGCuzWhyNot.Things.Characters.Races.Humanoids;
+using RPGCuzWhyNot.Things.Item;
 using RPGCuzWhyNot.Utilities;
 
 namespace RPGCuzWhyNot {
@@ -44,11 +47,10 @@ namespace RPGCuzWhyNot {
 				TestMenu();
 			}
 
-
 			//combat testing shortcut
-			//player.Wielding.MoveItem((IWieldable)DataLoader.CreateItem("greatsword"));
-			//Fight fight = new Fight(player, new TheMother());
-			//fight.BeginCombat();
+			player.Wielding.MoveItem((IWieldable)DataLoader.CreateItem("greatsword"));
+			Fight fight = new Fight(player, new TheMother());
+			fight.BeginCombat();
 
 			//some basic event loop
 			player.location.PrintEnterInformation();
