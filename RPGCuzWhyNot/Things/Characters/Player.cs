@@ -119,7 +119,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 
 				//get next command
 				Terminal.WriteLine();
-				Terminal.WriteLine($"Points Left: {planOfAction.BudgetLeft}");
+				Terminal.WriteLine($"Points Left: {planOfAction.BudgetLeft.Listing}");
 				string commandText = ConsoleUtils.Ask("|> ").ToLower();
 				Terminal.WriteLine();
 				if (!handler.TryHandle(commandText)) {

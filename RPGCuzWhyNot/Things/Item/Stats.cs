@@ -17,6 +17,8 @@ namespace RPGCuzWhyNot.Inventory.Item {
 		[JsonPropertyName("fortitude")]
 		public int Fortitude { get; set; }
 
+		public string Listing => $"SPD:{ConsoleUtils.FormatInt(Speed)}, STR:{ConsoleUtils.FormatInt(Strength)}, ACC:{ConsoleUtils.FormatInt(Accuracy)}, FRT:{ConsoleUtils.FormatInt(Fortitude)}";
+
 		public Stats() { }
 
 		public Stats(int speed, int strength, int accuracy, int fortitude) {
@@ -32,10 +34,6 @@ namespace RPGCuzWhyNot.Inventory.Item {
 
 		public static Stats operator -(Stats a, Stats b) {
 			return new Stats(a.Speed - b.Speed, a.Strength - b.Strength, a.Accuracy - b.Accuracy, a.Fortitude - b.Fortitude);
-		}
-
-		public override string ToString() {
-			return $"SPD:{ConsoleUtils.FormatInt(Speed)}, STR:{ConsoleUtils.FormatInt(Strength)}, ACC:{ConsoleUtils.FormatInt(Accuracy)}, FRT:{ConsoleUtils.FormatInt(Fortitude)}";
 		}
 	}
 }
