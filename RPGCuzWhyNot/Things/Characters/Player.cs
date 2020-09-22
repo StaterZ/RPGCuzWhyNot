@@ -19,7 +19,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 			//init health
 			health = new Health(100);
 			health.OnDamage += ctx => {
-				Terminal.WriteLine($"{ctx.inflictor} hit you for {ctx.Delta} damage");
+				Terminal.WriteLine($"{ctx.inflictor} hit you for {ctx.Delta} damage.");
 			};
 			health.OnDeath += ctx => {
 				Terminal.WriteLine($"{ctx.inflictor} killed you!");
@@ -87,7 +87,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 				handler.AddCommand(undo);
 				handler.AddCommand(plan);
 				handler.AddCommand(run);
-				handler.AddCommand(new Command(new[] { "help", "commands" }, "Show this list", args => {
+				handler.AddCommand(new Command(new[] { "help", "commands" }, "Show this list.", args => {
 					Terminal.WriteLine("Commands:");
 					handler.DisplayHelp();
 				}));
