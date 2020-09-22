@@ -1,5 +1,6 @@
 using RPGCuzWhyNot.AttackSystem;
 using RPGCuzWhyNot.Systems;
+using RPGCuzWhyNot.Things.Characters;
 using RPGCuzWhyNot.Things.Item;
 using System;
 using System.Text.Json.Serialization;
@@ -47,8 +48,8 @@ namespace RPGCuzWhyNot.Inventory.Item {
 			Effects = effects;
 		}
 
-		public void Execute() {
-			Terminal.WriteLine(ExecuteDescription);
+		public void Execute(PlannedAction plannedAction) {
+			Terminal.WriteLine($"[{ListingName}] {ExecuteDescription}");
 		}
 	}
 }

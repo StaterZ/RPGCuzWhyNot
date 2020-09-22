@@ -1,5 +1,6 @@
 using Microsoft.VisualBasic.CompilerServices;
 using RPGCuzWhyNot.AttackSystem;
+using RPGCuzWhyNot.Inventory.Item;
 using RPGCuzWhyNot.Systems;
 using RPGCuzWhyNot.Things.Characters;
 using RPGCuzWhyNot.Utilities;
@@ -28,8 +29,8 @@ namespace RPGCuzWhyNot.AttackSystem {
 				foreach (Character combatant in combatants) {
 					Terminal.WriteLine($"{combatant.Name}s Turn");
 					PlanOfAction opponentsPlanOfAction = combatant.PlanTurn(this);
-					foreach (IPlannableAction action in opponentsPlanOfAction.plannedActions) {
-						action.Execute();
+					foreach (PlannedAction plannedAction in opponentsPlanOfAction.plannedActions) {
+						plannedAction.Execute();
 					}
 				}
 			}

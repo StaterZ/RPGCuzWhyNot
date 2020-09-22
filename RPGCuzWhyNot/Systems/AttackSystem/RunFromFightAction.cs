@@ -14,7 +14,7 @@ namespace RPGCuzWhyNot.AttackSystem {
 			this.fight = fight;
 		}
 
-		public void Execute() {
+		public void Execute(PlannedAction plannedAction) {
 			fight.combatants.Remove(Program.player);
 			fight.EndCombat();
 		}

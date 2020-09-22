@@ -7,6 +7,6 @@ namespace RPGCuzWhyNot.AttackSystem {
 		string ExecuteDescription { get; }
 		Requirements Requirements { get; }
 
-		void Execute();
+		void Execute(PlannedAction ctx);
 	}
 }

@@ -34,18 +34,18 @@ namespace RPGCuzWhyNot.Things.Characters {
 
 			PlanOfAction planOfAction = new PlanOfAction(stats);
 
-			void AddActionToPlan(IPlannableAction action) {
+			void AddActionToPlan(PlannedAction plannedAction) {
 				if (planOfAction.IsOverBudget) {
 					Terminal.WriteLine(overBudgetMessage);
 					return;
 				}
 
-				planOfAction.plannedActions.Add(action);
-				Terminal.WriteLine($"Added action [{action.ListingName}] to plan.");
+				planOfAction.plannedActions.Add(plannedAction);
+				Terminal.WriteLine($"Added action [{plannedAction.action.ListingName}] to plan.");
 			}
-			void RemoveActionFromPlan(IPlannableAction action) {
-				planOfAction.plannedActions.Remove(action);
-				Terminal.WriteLine($"Removed action [{action.ListingName}] from plan.");
+			void RemoveActionFromPlan(PlannedAction plannedAction) {
+				planOfAction.plannedActions.Remove(plannedAction);
+				Terminal.WriteLine($"Removed action [{plannedAction.action.ListingName}] from plan.");
 			}
 
 			//planning phace
@@ -60,20 +60,20 @@ namespace RPGCuzWhyNot.Things.Characters {
 			});
 			Command undo = new Command(new[] { "undo", "revert" }, "Remove the last move you planned to do from the plan of action.", args => {
 				if (planOfAction.plannedActions.Count > 0) {
-					IPlannableAction last = planOfAction.plannedActions.Last();
+					PlannedAction last = planOfAction.plannedActions.Last();
 					RemoveActionFromPlan(last);
 				} else {
 					Terminal.WriteLine("You've got no plan of action. There's nothing to regret...");
 				}
 			});
 			Command run = new Command(new[] { "run", "run away" }, "Run away from the fight.", args => {
-				AddActionToPlan(new RunFromFightAction(fight));
+				AddActionToPlan(new PlannedAction(new RunFromFightAction(fight), this));
 			});
 			Command plan = new Command(new[] { "ls", "list", "plan" }, "Remove the last move you planned to do from the plan of action.", args => {
 				if (planOfAction.plannedActions.Count > 0) {
 					Terminal.WriteLine("{fg:Cyan}(Plan of action:)");
-					foreach (IPlannableAction action in planOfAction.plannedActions) {
-						Terminal.WriteLine($" - {action.ListingName}");
+					foreach (IPlannableAction plannedAction in planOfAction.plannedActions) {
+						Terminal.WriteLine($" - {plannedAction.ListingName}");
 					}
 				} else {
 					Terminal.WriteLine("You've got no plan!");
@@ -103,7 +103,9 @@ namespace RPGCuzWhyNot.Things.Characters {
 
 						foreach (ItemAction itemAction in wieldable.ItemActions) {
 							itemHandler.AddCommand(new Command(itemAction.CallNames, itemAction.Description, itemArgs => {
-								AddActionToPlan(itemAction);
+								//todo: make selection for target when menu has been merged inot branch
+								Character target = fight.combatants.First(combatant => combatant != this);
+								AddActionToPlan(new PlannedAction(itemAction, this, target));
 							}));
 						}
 
