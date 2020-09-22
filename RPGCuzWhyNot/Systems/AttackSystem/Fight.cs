@@ -25,14 +25,6 @@ namespace RPGCuzWhyNot.AttackSystem {
 
 			isInCombat = true;
 			while (isInCombat) {
-				//Players Turn
-				Terminal.WriteLine($"{Program.player.Name}s Turn (You)");
-				PlanOfAction playersPlanOfAction = Program.player.PlanTurn(this);
-				foreach (IPlannableAction action in playersPlanOfAction.plannedActions) {
-					action.Execute();
-				}
-
-				//Opponents Turn
 				foreach (Character combatant in combatants) {
 					Terminal.WriteLine($"{combatant.Name}s Turn");
 					PlanOfAction opponentsPlanOfAction = combatant.PlanTurn(this);
