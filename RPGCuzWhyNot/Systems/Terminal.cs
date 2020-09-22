@@ -75,6 +75,7 @@ namespace RPGCuzWhyNot.Systems {
 		public static void WriteLineDirect() => WriteDirect('\n');
 
 		public static void ClearLine() {
+			CursorPosition = new Vec2(0, CursorPosition.y);
 			WriteLineDirect(new string(' ', WindowSize.x));
 		}
 

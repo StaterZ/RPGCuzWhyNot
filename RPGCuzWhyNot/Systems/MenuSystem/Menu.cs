@@ -58,7 +58,7 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 			if (items.Count > 0) {
 				for (int i = 0; i < ItemCount; i++) {
 					bool isSelected = i == selectedIndex; //if selectedIndex is null isSelected will go false, hiding the arrows
-					char shortHand = i >= 0 && i < shortHands.Length ? shortHands[i] : '!';
+					char shortHand = i < shortHands.Length ? shortHands[i] : '!';
 
 					Terminal.WriteDirect(isSelected ? selectedBegin : unselectedBegin);
 					Terminal.WriteDirect(shortHandPattern.Replace('?', shortHand));
@@ -86,7 +86,7 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 
 		public void ClearHoverDescription(bool offsetToLocation = true) {
 			if (offsetToLocation) {
-				Terminal.CursorPosition += Vec2.Up * BaseHeight;
+				Terminal.CursorPosition += Vec2.Down * BaseHeight;
 			}
 
 			int numOfHoverDescriptionLines = lastDrawnIndex.HasValue && lastDrawnIndex < items.Count
@@ -128,7 +128,7 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 
 					//try finding and using a short hand
 					int shortHandIndex = shortHands.IndexOf(keyPress.KeyChar);
-					if (shortHandIndex >= 0 && shortHandIndex < items.Count) {
+					if (shortHandIndex != -1 && shortHandIndex < items.Count) {
 						Terminal.Beep(200, 50);
 						items[shortHandIndex].effect(ctx);
 					} else {
@@ -153,6 +153,7 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 							//go back
 							case ConsoleKey.LeftArrow:
 							case ConsoleKey.Escape:
+							case ConsoleKey.Backspace:
 								if (stack.Count > 1) {
 									Terminal.Beep(200, 50);
 									ctx.ExitMenu();
