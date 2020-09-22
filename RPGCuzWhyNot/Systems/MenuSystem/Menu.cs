@@ -153,6 +153,7 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 
 							//go back
 							case ConsoleKey.LeftArrow:
+							case ConsoleKey.Escape:
 								if (stack.Count > 1) {
 									Terminal.Beep(200, 50);
 									ctx.ExitMenu();
