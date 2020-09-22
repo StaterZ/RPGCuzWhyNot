@@ -50,8 +50,7 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 			this.items = items.ToList();
 		}
 
-		private int? lastDrawnIndex;
-		public void Draw(int? selectedIndex, Menu[] path) {
+		public void Draw(int? selectedIndex, IEnumerable<Menu> path) {
 			lastDrawnIndex = selectedIndex;
 
 			Terminal.WriteLineDirect(Stringification.StringifyArray(pathBegin, pathSeparator, pathEnd, path.Select(menu => menu.name).ToArray()));
@@ -122,7 +121,7 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 				while (stack.Count > 0 && stack.Peek() == this) {
 					//draw
 					Terminal.CursorPosition = drawPos;
-					Draw(isCursorVisible ? arrowIndex : (int?)null, stack.Reverse().ToArray());
+					Draw(isCursorVisible ? arrowIndex : (int?)null, stack.Reverse());
 
 					//get input
 					ConsoleKeyInfo keyPress = Console.ReadKey(true);
