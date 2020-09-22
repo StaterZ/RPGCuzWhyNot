@@ -45,6 +45,16 @@ namespace RPGCuzWhyNot.Things.Characters {
 		public override PlanOfAction PlanTurn(Fight fight) {
 			PlanOfAction planOfAction = new PlanOfAction(stats);
 
+			void AddActionToPlan(IPlannableAction action) {
+				planOfAction.plannedActions.Add(action);
+				Terminal.WriteLine($"Added action [{action.Name}] to plan.");
+			}
+
+			void RemoveActionFromPlan(IPlannableAction action) {
+				planOfAction.plannedActions.Remove(action);
+				Terminal.WriteLine($"Removed action [{action.Name}] from plan.");
+			}
+
 			//planning phace
 			bool isDonePlanningTurn = false;
 			Command confirm = new Command(new[] { "confirm", "done", "apply", "execute" }, "Confirm your actions and procced to the next turn.", args => {
@@ -53,15 +63,13 @@ namespace RPGCuzWhyNot.Things.Characters {
 			Command undo = new Command(new[] { "undo", "revert" }, "Remove the last move you planned to do from the plan of action.", args => {
 				if (planOfAction.plannedActions.Count > 0) {
 					IPlannableAction last = planOfAction.plannedActions.Last();
-					planOfAction.plannedActions.Remove(last);
-					Terminal.WriteLine($"Removed action [{last.Name}] from plan.");
+					RemoveActionFromPlan(last);
 				} else {
 					Terminal.WriteLine("You've got no plan of action. There's nothing to regret...");
 				}
 			});
 			Command run = new Command(new[] { "run", "run away" }, "Run away from the fight.", args => {
-				Terminal.WriteLine("You run away from the enemy!");
-				fight.EndCombat();
+				AddActionToPlan(new RunFromFightAction(fight));
 			});
 			Command plan = new Command(new[] { "ls", "list", "plan" }, "Remove the last move you planned to do from the plan of action.", args => {
 				if (planOfAction.plannedActions.Count > 0) {
@@ -97,8 +105,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 
 						foreach (ItemAction itemAction in wieldable.ItemActions) {
 							itemHandler.AddCommand(new Command(itemAction.CallNames, itemAction.Description, itemArgs => {
-								planOfAction.plannedActions.Add(itemAction);
-								Terminal.WriteLine($"Added action [{itemAction.Name}] to plan.");
+								AddActionToPlan(itemAction);
 							}));
 						}
 
