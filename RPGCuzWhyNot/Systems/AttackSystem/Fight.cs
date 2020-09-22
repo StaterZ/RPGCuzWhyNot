@@ -21,6 +21,8 @@ namespace RPGCuzWhyNot.AttackSystem {
 
 		public void BeginCombat() {
 			Terminal.WriteLine($"{{fg:Cyan}}(Combat with {Stringification.StringifyArray("[", ", ", "]", combatants.Select(combatant => combatant.Name).ToArray())} has begun!)");
+			Terminal.WriteLine();
+
 			isInCombat = true;
 			while (isInCombat) {
 				//Players Turn
@@ -39,7 +41,9 @@ namespace RPGCuzWhyNot.AttackSystem {
 					}
 				}
 			}
+
 			Terminal.WriteLine($"{{fg:Cyan}}(Combat has ended!)");
+			Terminal.WriteLine();
 		}
 
 		public void EndCombat() {
