@@ -19,6 +19,9 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 
 		public readonly string name;
 		public readonly List<MenuItem> items;
+
+		private int? lastDrawnIndex;
+
 		private int ItemCount => Math.Max(items.Count, 1);
 
 		private int LongestItemLength {
@@ -52,7 +55,6 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 			lastDrawnIndex = selectedIndex;
 
 			Terminal.WriteLineDirect(Stringification.StringifyArray(pathBegin, pathSeparator, pathEnd, path.Select(menu => menu.name).ToArray()));
-
 			Terminal.WriteLineDirect(new string('#', Width));
 			if (items.Count > 0) {
 				for (int i = 0; i < ItemCount; i++) {
@@ -60,13 +62,9 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 					char shortHand = i >= 0 && i < shortHands.Length ? shortHands[i] : '!';
 
 					Terminal.WriteDirect(isSelected ? selectedBegin : unselectedBegin);
-
 					Terminal.WriteDirect(shortHandPattern.Replace('?', shortHand));
-
 					Terminal.WriteDirect(items[i].name);
-
 					Terminal.WriteDirect(new string(' ', LongestItemLength - Terminal.GetFormattedLength(items[i].name)));
-
 					Terminal.WriteLineDirect(isSelected ? selectedEnd : unselectedEnd);
 				}
 			} else {
@@ -92,7 +90,9 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 				Terminal.CursorPosition += Vec2.Up * BaseHeight;
 			}
 
-			int numOfHoverDescriptionLines = lastDrawnIndex.HasValue && lastDrawnIndex < items.Count ? items[lastDrawnIndex.Value].hoverDescription.Count(c => c == '\n') + 1 : 0;
+			int numOfHoverDescriptionLines = lastDrawnIndex.HasValue && lastDrawnIndex < items.Count
+				? items[lastDrawnIndex.Value].hoverDescription.Count(c => c == '\n') + 1
+				: 0;
 
 			for (int i = 0; i < numOfHoverDescriptionLines; i++) {
 				Terminal.ClearLine();
@@ -127,7 +127,7 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 					//get input
 					ConsoleKeyInfo keyPress = Console.ReadKey(true);
 
-					//try finding and useing a short hand
+					//try finding and using a short hand
 					int shortHandIndex = shortHands.IndexOf(keyPress.KeyChar);
 					if (shortHandIndex >= 0 && shortHandIndex < items.Count) {
 						Terminal.Beep(200, 50);
