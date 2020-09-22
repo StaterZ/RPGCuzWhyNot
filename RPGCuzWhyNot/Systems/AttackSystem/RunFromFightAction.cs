@@ -5,6 +5,7 @@ namespace RPGCuzWhyNot.AttackSystem {
 		private readonly Fight fight;
 
 		public string Name => "Run Away";
+		public string ListingName => Name;
 		public string ExecuteDescription => "Fear strikes your body and you run off crying like a baby";
 		public Requirements Requirements { get; } = new Requirements();
 

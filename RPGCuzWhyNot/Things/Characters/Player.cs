@@ -54,12 +54,11 @@ namespace RPGCuzWhyNot.Things.Characters {
 				}
 
 				planOfAction.plannedActions.Add(action);
-				Terminal.WriteLine($"Added action [{action.Name}] to plan.");
+				Terminal.WriteLine($"Added action [{action.ListingName}] to plan.");
 			}
-
 			void RemoveActionFromPlan(IPlannableAction action) {
 				planOfAction.plannedActions.Remove(action);
-				Terminal.WriteLine($"Removed action [{action.Name}] from plan.");
+				Terminal.WriteLine($"Removed action [{action.ListingName}] from plan.");
 			}
 
 			//planning phace
@@ -87,7 +86,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 				if (planOfAction.plannedActions.Count > 0) {
 					Terminal.WriteLine("{fg:Cyan}(Plan of action:)");
 					foreach (IPlannableAction action in planOfAction.plannedActions) {
-						Terminal.WriteLine($" - {action.Name}");
+						Terminal.WriteLine($" - {action.ListingName}");
 					}
 				} else {
 					Terminal.WriteLine("You've got no plan!");

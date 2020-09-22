@@ -1,16 +1,23 @@
 using RPGCuzWhyNot.AttackSystem;
 using RPGCuzWhyNot.Systems;
+using RPGCuzWhyNot.Things.Item;
 using System;
 using System.Text.Json.Serialization;
 
 namespace RPGCuzWhyNot.Inventory.Item {
 	[Serializable]
 	public class ItemAction : IPlannableAction {
+		public IItem item;
+
 		[JsonPropertyName("callNames")]
 		public string[] CallNames { get; set; }
 
 		[JsonPropertyName("name")]
 		public string Name { get; set; }
+
+		//todo: make json loader thing set item when creating object
+		//public string ListingName => $"{item.ListingName}->{Name}";
+		public string ListingName => throw new NotImplementedException();
 
 		[JsonPropertyName("description")]
 		public string Description { get; set; }
@@ -29,7 +36,9 @@ namespace RPGCuzWhyNot.Inventory.Item {
 			Effects = new Effects();
 		}
 
-		public ItemAction(string[] callNames, string name, string description, string executeDescription, Requirements requirements, Effects effects) {
+		public ItemAction(IItem item, string[] callNames, string name, string description, string executeDescription, Requirements requirements, Effects effects) {
+			this.item = item;
+
 			CallNames = callNames;
 			Name = name;
 			Description = description;
