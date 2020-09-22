@@ -12,6 +12,6 @@ namespace RPGCuzWhyNot.AttackSystem {
 		}
 
 		public Stats BudgetLeft => plannedActions.Aggregate(budget, (acc, action) => acc - action.Requirements.Stats);
-		public bool IsInBudget => BudgetLeft.Speed >= 0 && BudgetLeft.Strength >= 0 && BudgetLeft.Accuracy >= 0 && BudgetLeft.Fortitude >= 0;
+		public bool IsOverBudget => BudgetLeft.Speed < 0 || BudgetLeft.Strength < 0 || BudgetLeft.Accuracy < 0 || BudgetLeft.Fortitude < 0;
 	}
 }

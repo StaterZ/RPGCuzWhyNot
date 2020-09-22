@@ -43,9 +43,16 @@ namespace RPGCuzWhyNot.Things.Characters {
 		IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)Inventory).GetEnumerator();
 
 		public override PlanOfAction PlanTurn(Fight fight) {
+			const string overBudgetMessage = "{fg:Red}(You're over budget, undo the last action and try again.)";
+
 			PlanOfAction planOfAction = new PlanOfAction(stats);
 
 			void AddActionToPlan(IPlannableAction action) {
+				if (planOfAction.IsOverBudget) {
+					Terminal.WriteLine(overBudgetMessage);
+					return;
+				}
+
 				planOfAction.plannedActions.Add(action);
 				Terminal.WriteLine($"Added action [{action.Name}] to plan.");
 			}
@@ -58,6 +65,11 @@ namespace RPGCuzWhyNot.Things.Characters {
 			//planning phace
 			bool isDonePlanningTurn = false;
 			Command confirm = new Command(new[] { "confirm", "done", "apply", "execute" }, "Confirm your actions and procced to the next turn.", args => {
+				if (planOfAction.IsOverBudget) {
+					Terminal.WriteLine(overBudgetMessage);
+					return;
+				}
+
 				isDonePlanningTurn = true;
 			});
 			Command undo = new Command(new[] { "undo", "revert" }, "Remove the last move you planned to do from the plan of action.", args => {
@@ -126,7 +138,12 @@ namespace RPGCuzWhyNot.Things.Characters {
 
 				//get next command
 				Terminal.WriteLine();
-				Terminal.WriteLine($"Points Left: {planOfAction.BudgetLeft.Listing}");
+				Terminal.Write($"Points Left: {planOfAction.BudgetLeft.Listing}");
+				if (planOfAction.IsOverBudget) {
+					Terminal.Write(" {fg:White;bg:Red}([Over Budget])");
+				}
+				Terminal.WriteLine();
+
 				string commandText = ConsoleUtils.Ask("|> ").ToLower();
 				Terminal.WriteLine();
 				if (!handler.TryHandle(commandText)) {
