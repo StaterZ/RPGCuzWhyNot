@@ -81,6 +81,10 @@ namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 				wieldable.HandsRequired = HandsRequired ?? 0;
 				wieldable.UsageRequirements = UsageRequirements ?? new Requirements();
 				wieldable.ItemActions = ItemActions ?? Array.Empty<ItemAction>();
+
+				foreach (ItemAction action in wieldable.ItemActions) {
+					action.Item = item;
+				}
 			}
 
 			if (HasInventory) {

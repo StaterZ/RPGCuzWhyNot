@@ -7,7 +7,8 @@ using System.Text.Json.Serialization;
 namespace RPGCuzWhyNot.Inventory.Item {
 	[Serializable]
 	public class ItemAction : IPlannableAction {
-		public IItem item;
+		[JsonIgnore]
+		public IItem Item { get; set; }
 
 		[JsonPropertyName("callNames")]
 		public string[] CallNames { get; set; }
@@ -15,9 +16,8 @@ namespace RPGCuzWhyNot.Inventory.Item {
 		[JsonPropertyName("name")]
 		public string Name { get; set; }
 
-		//todo: make json loader thing set item when creating object
-		//public string ListingName => $"{item.ListingName}->{Name}";
-		public string ListingName => throw new NotImplementedException();
+		[JsonIgnore]
+		public string ListingName => $"{Item.ListingName}->{Name}";
 
 		[JsonPropertyName("description")]
 		public string Description { get; set; }
@@ -37,7 +37,7 @@ namespace RPGCuzWhyNot.Inventory.Item {
 		}
 
 		public ItemAction(IItem item, string[] callNames, string name, string description, string executeDescription, Requirements requirements, Effects effects) {
-			this.item = item;
+			Item = item;
 
 			CallNames = callNames;
 			Name = name;
