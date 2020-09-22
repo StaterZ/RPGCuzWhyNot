@@ -6,6 +6,7 @@
   "groundDescription": "A bottle containing some blue liquid.",
   "actions": [
     {
+      "hasTarget": true,
       "callNames": [ "drink", "consume", "ingest" ],
       "name": "Drink",
       "description": "Consume the strange liquid inside.",
@@ -16,6 +17,7 @@
       }
     },
     {
+      "hasTarget": true,
       "callNames": [ "throw" ],
       "name": "Throw",
       "description": "Throw the potion on someone",

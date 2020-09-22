@@ -14,6 +14,7 @@
   },
   "actions": [
     {
+      "hasTarget": true,
       "callNames": [ "light attack", "light" ],
       "name": "Light Attack",
       "description": "Swing the sword about and hope to hit something...",
@@ -28,6 +29,7 @@
       }
     },
     {
+      "hasTarget": true,
       "callNames": [ "heavy attack", "heavy" ],
       "name": "Heavy Attack",
       "description": "Swing the greatsword with all your might",
@@ -43,6 +45,7 @@
       }
     },
     {
+      "hasTarget": true,
       "callNames": [ "throw" ],
       "name": "Throw Sword",
       "description": "Throw the sword at an enemy with great force",

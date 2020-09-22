@@ -104,7 +104,12 @@ namespace RPGCuzWhyNot.Things.Characters {
 						foreach (ItemAction itemAction in wieldable.ItemActions) {
 							itemHandler.AddCommand(new Command(itemAction.CallNames, itemAction.Description, itemArgs => {
 								//todo: make selection for target when menu has been merged inot branch
-								Character target = fight.combatants.First(combatant => combatant != this);
+								Character target;
+								if (itemAction.HasTarget) {
+									target = fight.combatants.First(combatant => combatant != this);
+								} else {
+									target = null;
+								}
 								AddActionToPlan(new PlannedAction(itemAction, this, target));
 							}));
 						}

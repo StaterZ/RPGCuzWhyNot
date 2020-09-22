@@ -14,6 +14,9 @@ namespace RPGCuzWhyNot.Inventory.Item {
 		[JsonIgnore]
 		public IItem Item { get; set; }
 
+		[JsonPropertyName("hasTarget")]
+		public bool HasTarget { get; set; }
+
 		[JsonPropertyName("callNames")]
 		public string[] CallNames { get; set; }
 
@@ -40,9 +43,10 @@ namespace RPGCuzWhyNot.Inventory.Item {
 			Effects = new Effects();
 		}
 
-		public ItemAction(IItem item, string[] callNames, string name, string description, string executeDescription, Requirements requirements, Effects effects) {
+		public ItemAction(IItem item, bool hasTarget, string[] callNames, string name, string description, string executeDescription, Requirements requirements, Effects effects) {
 			Item = item;
 
+			HasTarget = hasTarget;
 			CallNames = callNames;
 			Name = name;
 			Description = description;
