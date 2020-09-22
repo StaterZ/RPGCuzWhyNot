@@ -17,7 +17,7 @@ namespace RPGCuzWhyNot.Inventory.Item {
 		public string Name { get; set; }
 
 		[JsonIgnore]
-		public string ListingName => $"{Item.ListingName}->{Name}";
+		public string ListingName => $"{Item.Name}->{Name}";
 
 		[JsonPropertyName("description")]
 		public string Description { get; set; }
