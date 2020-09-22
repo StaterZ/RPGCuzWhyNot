@@ -1,5 +1,6 @@
 using RPGCuzWhyNot.AttackSystem;
 using RPGCuzWhyNot.Systems;
+using RPGCuzWhyNot.Systems.HealthSystem;
 using RPGCuzWhyNot.Systems.Inventory;
 using RPGCuzWhyNot.Things.Characters;
 using RPGCuzWhyNot.Things.Item;
@@ -84,6 +85,10 @@ namespace RPGCuzWhyNot.Inventory.Item {
 					}
 				}
 			}
+
+			//heal
+			plannedAction.performer.health.Heal(Effects.HealSelf, plannedAction.performer);
+			plannedAction.target?.health.Heal(Effects.HealTarget, plannedAction.performer);
 
 			Terminal.WriteLine($"[{ListingName}] {ExecuteDescription}");
 		}

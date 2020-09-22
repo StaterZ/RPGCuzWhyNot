@@ -30,11 +30,17 @@ namespace RPGCuzWhyNot.Inventory.Item {
 		[JsonPropertyName("transferItems")]
 		public Dictionary<string, (TransferLocation location, int amount)> TransferItems { get; set; }
 
+		[JsonPropertyName("healSelf")]
+		public int HealSelf { get; set; }
+
+		[JsonPropertyName("healTarget")]
+		public int HealTarget { get; set; }
+
 		public Effects() {
 			Stats = new Stats();
 		}
 
-		public Effects(Stats stats, int meleeDamage, int projectileDamage, float armorPiercing, bool consumeSelf, Dictionary<string, int> consumeItems, TransferLocation? transferSelf, Dictionary<string, (TransferLocation location, int amount)> transferItems) {
+		public Effects(Stats stats, int meleeDamage, int projectileDamage, float armorPiercing, bool consumeSelf, Dictionary<string, int> consumeItems, TransferLocation? transferSelf, Dictionary<string, (TransferLocation location, int amount)> transferItems, int healSelf, int healTarget) {
 			Stats = stats;
 			MeleeDamage = meleeDamage;
 			ProjectileDamage = projectileDamage;
@@ -43,6 +49,8 @@ namespace RPGCuzWhyNot.Inventory.Item {
 			ConsumeItems = consumeItems;
 			TransferSelf = transferSelf;
 			TransferItems = transferItems;
+			HealSelf = healSelf;
+			HealTarget = healTarget;
 		}
 	}
 }

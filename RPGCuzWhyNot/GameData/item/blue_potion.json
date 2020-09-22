@@ -3,5 +3,33 @@
   "callName": "blue",
   "name": "{blue}(Blue) potion",
   "inventoryDescription": "A bottle containing some blue liquid.",
-  "groundDescription": "A bottle containing some blue liquid."
+  "groundDescription": "A bottle containing some blue liquid.",
+  "actions": [
+    {
+      "callNames": [ "drink", "consume", "ingest" ],
+      "name": "Drink",
+      "description": "Consume the strange liquid inside.",
+      "executeDescription": "You unbottle the potion and gulp it down hungrly.",
+      "effects": {
+        "healSelf": 35,
+        "consumeSelf": true
+      }
+    },
+    {
+      "callNames": [ "throw" ],
+      "name": "Throw",
+      "description": "Throw the potion on someone",
+      "executeDescription": "You throw the potion at <target_name>. It cracks open at their feet and spill all over <target_referal_objectPronoun>.",
+      "requirements": {
+        "stats": {
+          "strength": 1,
+          "accuracy": 3
+        }
+      },
+      "effects": {
+        "healTarget": 25,
+        "consumeSelf": true,
+      }
+    }
+  ]
 }
