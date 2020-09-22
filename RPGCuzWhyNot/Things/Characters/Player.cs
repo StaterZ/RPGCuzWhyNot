@@ -12,17 +12,10 @@ using RPGCuzWhyNot.Things.Item;
 using RPGCuzWhyNot.Utilities;
 
 namespace RPGCuzWhyNot.Things.Characters {
-	public class Player : Character, IHasItemInventory, ICanWear, ICanWield {
-		public ItemInventory Inventory { get; }
-		public WearablesInventory Wearing { get; }
-		public WieldablesInventory Wielding { get; }
+	public class Player : Character {
 		private readonly PlayerCommands commands;
 
 		public Player(Race race) : base(race) {
-			Inventory = new ItemInventory(this);
-			Wearing = new WearablesInventory(this);
-			Wielding = new WieldablesInventory(this, 2);
-
 			//init health
 			health = new Health(100);
 			health.OnDamage += ctx => {
@@ -35,12 +28,6 @@ namespace RPGCuzWhyNot.Things.Characters {
 			commands = new PlayerCommands(this);
 			commands.LoadCommands();
 		}
-
-		bool IHasInventory.ContainsCallName(string callName, out IItem item) => Inventory.ContainsCallName(callName, out item);
-		bool IHasInventory.MoveItem(IItem item, bool silent) => Inventory.MoveItem(item, silent);
-
-		IEnumerator<IItem> IEnumerable<IItem>.GetEnumerator() => Inventory.GetEnumerator();
-		IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)Inventory).GetEnumerator();
 
 		public override PlanOfAction PlanTurn(Fight fight) {
 			const string overBudgetMessage = "{fg:Red}(You're over budget, undo the last action and try again.)";
