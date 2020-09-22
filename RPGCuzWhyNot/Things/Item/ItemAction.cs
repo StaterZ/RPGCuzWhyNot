@@ -1,8 +1,10 @@
 using RPGCuzWhyNot.AttackSystem;
 using RPGCuzWhyNot.Systems;
+using RPGCuzWhyNot.Systems.Inventory;
 using RPGCuzWhyNot.Things.Characters;
 using RPGCuzWhyNot.Things.Item;
 using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace RPGCuzWhyNot.Inventory.Item {
@@ -49,6 +51,40 @@ namespace RPGCuzWhyNot.Inventory.Item {
 		}
 
 		public void Execute(PlannedAction plannedAction) {
+			//consume
+			if (Effects.ConsumeSelf) {
+				Item.Destroy();
+			}
+			foreach (KeyValuePair<string, int> item in Effects.ConsumeItems) {
+				for (int i = 0; i < item.Value; i++) {
+					plannedAction.performer.Inventory.GetItemById(item.Key)?.Destroy();
+				}
+			}
+
+			//transfer
+			ItemInventory GetTransferTarget(TransferLocation transferLocation) {
+				switch (transferLocation) {
+					case TransferLocation.Ground:
+						return plannedAction.performer.location.items;
+					case TransferLocation.Target:
+						return plannedAction.target.Inventory;
+					default:
+						throw new InvalidOperationException();
+				}
+			}
+
+			if (Effects.TransferSelf.HasValue) {
+				GetTransferTarget(Effects.TransferSelf.Value).MoveItem(Item);
+			}
+			foreach (KeyValuePair<string, (TransferLocation location, int amount)> pair in Effects.TransferItems) { 
+				for (int i = 0; i < pair.Value.amount; i++) {
+					IItem item = plannedAction.performer.Inventory.GetItemById(pair.Key);
+					if (item != null) {
+						GetTransferTarget(pair.Value.location).MoveItem(item);
+					}
+				}
+			}
+
 			Terminal.WriteLine($"[{ListingName}] {ExecuteDescription}");
 		}
 	}

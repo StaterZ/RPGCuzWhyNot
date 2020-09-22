@@ -56,7 +56,7 @@
       "effects": {
         "projectileDamage": 50,
         "armorPiercing": 1,
-        "consumeItem": true
+        "transferSelf": "target"
       }
     }
   ]

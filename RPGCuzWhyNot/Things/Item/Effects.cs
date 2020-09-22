@@ -1,4 +1,6 @@
+using RPGCuzWhyNot.Things.Item;
 using System;
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace RPGCuzWhyNot.Inventory.Item {
@@ -16,19 +18,31 @@ namespace RPGCuzWhyNot.Inventory.Item {
 		[JsonPropertyName("armorPiercing")]
 		public float ArmorPiercing { get; set; }
 
-		[JsonPropertyName("consumeItem")]
-		public bool ConsumeItem { get; set; }
+		[JsonPropertyName("consumeSelf")]
+		public bool ConsumeSelf { get; set; }
+
+		[JsonPropertyName("consumeItems")]
+		public Dictionary<string, int> ConsumeItems { get; set; }
+
+		[JsonPropertyName("transferSelf")]
+		public TransferLocation? TransferSelf { get; set; }
+
+		[JsonPropertyName("transferItems")]
+		public Dictionary<string, (TransferLocation location, int amount)> TransferItems { get; set; }
 
 		public Effects() {
 			Stats = new Stats();
 		}
 
-		public Effects(Stats stats, int meleeDamage, int projectileDamage, float armorPiercing, bool consumeItem) {
+		public Effects(Stats stats, int meleeDamage, int projectileDamage, float armorPiercing, bool consumeSelf, Dictionary<string, int> consumeItems, TransferLocation? transferSelf, Dictionary<string, (TransferLocation location, int amount)> transferItems) {
 			Stats = stats;
 			MeleeDamage = meleeDamage;
 			ProjectileDamage = projectileDamage;
 			ArmorPiercing = armorPiercing;
-			ConsumeItem = consumeItem;
+			ConsumeSelf = consumeSelf;
+			ConsumeItems = consumeItems;
+			TransferSelf = transferSelf;
+			TransferItems = transferItems;
 		}
 	}
 }
