@@ -109,19 +109,24 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 			Vec2 drawPos = Terminal.CursorPosition;
 			bool isCursorVisible = false;
 			int arrowIndex = 0;
+			bool needsRedraw = true;
 			MenuEffectContext ctx = new MenuEffectContext(drawPos, stack);
 
 			void OnArrowIndexChange() {
 				arrowIndex = ExtraMath.Mod(arrowIndex, items.Count);
 				Terminal.CursorPosition = drawPos;
 				ClearHoverDescription();
+				needsRedraw = true;
 			}
 
 			using (new CursorVisibilityScope(false)) {
 				while (stack.Count > 0 && stack.Peek() == this) {
 					//draw
-					Terminal.CursorPosition = drawPos;
-					Draw(isCursorVisible ? arrowIndex : (int?)null, stack.Reverse());
+					if (needsRedraw) {
+						Terminal.CursorPosition = drawPos;
+						Draw(isCursorVisible ? arrowIndex : (int?)null, stack.Reverse());
+						needsRedraw = false;
+					}
 
 					//get input
 					ConsoleKeyInfo keyPress = Console.ReadKey(true);
@@ -131,6 +136,7 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 					if (shortHandIndex != -1 && shortHandIndex < items.Count) {
 						Terminal.Beep(200, 50);
 						items[shortHandIndex].effect(ctx);
+						needsRedraw = true;
 					} else {
 						//else, update the arrow key system
 						switch (keyPress.Key) {
@@ -169,6 +175,7 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 								isCursorVisible = true;
 								if (arrowIndex < items.Count) {
 									items[arrowIndex].effect(ctx);
+									needsRedraw = true;
 								}
 								break;
 						}
