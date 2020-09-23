@@ -264,6 +264,7 @@ namespace RPGCuzWhyNot.Systems {
 				beepFrequency = BeepFrequency,
 				charsPerBeep = CharsPerBeep,
 				beepDuration = BeepDuration,
+				cursorVisible = IsCursorVisible,
 			};
 		}
 
@@ -274,6 +275,7 @@ namespace RPGCuzWhyNot.Systems {
 			BeepFrequency = state.beepFrequency;
 			CharsPerBeep = state.charsPerBeep;
 			BeepDuration = state.beepDuration;
+			IsCursorVisible = state.cursorVisible;
 		}
 
 		public static string Escape(string text) {
@@ -287,6 +289,7 @@ namespace RPGCuzWhyNot.Systems {
 			public int millisPerChar;
 			public int beepFrequency;
 			public int beepDuration;
+			public bool cursorVisible;
 		}
 
 		public delegate void AliasEffect();
