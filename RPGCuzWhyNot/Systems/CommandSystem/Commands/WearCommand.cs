@@ -14,9 +14,9 @@ namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
 
 			string callName = args.FirstArgument;
 			if (NumericCallNames.Get(callName, out IItem item)
-				|| Player.Inventory.ContainsCallName(callName, out item)
-				|| Player.location.items.ContainsCallName(callName, out item)
-				|| Player.Wielding.ContainsCallName(callName, out item)) {
+			|| Player.Inventory.ContainsCallName(callName, out item)
+			|| Player.location.items.ContainsCallName(callName, out item)
+			|| Player.Wielding.ContainsCallName(callName, out item)) {
 				PlayerCommands.Wear(item);
 			} else {
 				Terminal.WriteLine("Item not found, does it exist?");

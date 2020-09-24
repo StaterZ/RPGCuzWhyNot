@@ -15,7 +15,7 @@ namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
 			}
 
 			if (!NumericCallNames.Get(throwableCallName, out IItem throwable)
-				&& !Player.Inventory.ContainsCallName(throwableCallName, out throwable)) {
+			&& !Player.Inventory.ContainsCallName(throwableCallName, out throwable)) {
 				Terminal.WriteLine("I don't understand what you're trying to throw.");
 			} else if (!args.Get("at", out string atCallName) || atCallName == "") {
 				Terminal.WriteLine($"You need something to throw {throwable.Name} at.");

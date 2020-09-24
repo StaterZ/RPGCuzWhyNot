@@ -13,13 +13,13 @@ namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
 			}
 
 			string callName = args.FirstArgument;
-			if ((NumericCallNames.Get(callName, out IItem item) &&
-					(item.ContainedInventory == Player.Inventory
-						|| item.ContainedInventory == Player.Wielding
-						|| item.ContainedInventory == Player.Wearing))
-				|| Player.Inventory.ContainsCallName(callName, out item)
-				|| Player.Wielding.ContainsCallName(callName, out item)
-				|| Player.Wearing.ContainsCallName(callName, out item)) {
+			if ((NumericCallNames.Get(callName, out IItem item)
+				&& (item.ContainedInventory == Player.Inventory
+				|| item.ContainedInventory == Player.Wielding
+				|| item.ContainedInventory == Player.Wearing))
+			|| Player.Inventory.ContainsCallName(callName, out item)
+			|| Player.Wielding.ContainsCallName(callName, out item)
+			|| Player.Wearing.ContainsCallName(callName, out item)) {
 				if (Player.location.items.MoveItem(item)) {
 					Terminal.WriteLine($"You dropped {item.Name}.");
 				} else {

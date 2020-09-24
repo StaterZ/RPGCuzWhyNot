@@ -14,7 +14,7 @@ namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
 
 			string callName = args.FirstArgument;
 			if ((NumericCallNames.Get(callName, out IWearable item) && item.ContainedInventory == Player.Wearing)
-				|| Player.Wearing.ContainsCallName(callName, out item)) {
+			|| Player.Wearing.ContainsCallName(callName, out item)) {
 				if (Player.Inventory.MoveItem(item)) {
 					Terminal.WriteLine($"You remove {item.Name} and put it in your inventory");
 				}

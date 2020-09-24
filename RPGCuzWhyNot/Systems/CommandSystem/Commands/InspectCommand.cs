@@ -18,12 +18,12 @@ namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
 			Character locationCharacter = null;
 			Location connectedLocation = null;
 			if (NumericCallNames.Get(callName, out IThing thing)
-				|| Player.Inventory.ContainsCallName(callName, out thing)
-				|| Player.Wearing.ContainsCallName(callName, out thing)
-				|| Player.Wielding.ContainsCallName(callName, out thing)
-				|| Player.location.items.ContainsCallName(callName, out thing)
-				|| Player.location.GetCharacterByCallName(callName, out locationCharacter)
-				|| Player.location.GetConnectedLocationByCallName(callName, out connectedLocation)) {
+			|| Player.Inventory.ContainsCallName(callName, out thing)
+			|| Player.Wearing.ContainsCallName(callName, out thing)
+			|| Player.Wielding.ContainsCallName(callName, out thing)
+			|| Player.location.items.ContainsCallName(callName, out thing)
+			|| Player.location.GetCharacterByCallName(callName, out locationCharacter)
+			|| Player.location.GetConnectedLocationByCallName(callName, out connectedLocation)) {
 				Terminal.WriteLine((connectedLocation ?? locationCharacter ?? thing) switch
 				{
 					IItem item when item.ContainedInventory == Player.location.items => item.DescriptionOnGround,

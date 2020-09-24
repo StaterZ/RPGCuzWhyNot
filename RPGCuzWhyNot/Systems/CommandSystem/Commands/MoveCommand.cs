@@ -24,10 +24,10 @@ namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
 				}
 
 				if ((NumericCallNames.Get(fromCallName, out IItemWithInventory fromItem)
-						&& (fromItem.ContainedInventory == Player.Wearing
-							|| fromItem.ContainedInventory == Player.Wielding))
-					|| Player.Wielding.ContainsCallName(fromCallName, out fromItem)
-					|| Player.Wearing.ContainsCallName(fromCallName, out fromItem)) {
+					&& (fromItem.ContainedInventory == Player.Wearing
+					|| fromItem.ContainedInventory == Player.Wielding))
+				|| Player.Wielding.ContainsCallName(fromCallName, out fromItem)
+				|| Player.Wearing.ContainsCallName(fromCallName, out fromItem)) {
 					source = $" from {fromItem.Name}";
 				} else {
 					Terminal.WriteLine("I don't understand what you're trying to move from.");
@@ -40,13 +40,13 @@ namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
 				}
 			} else {
 				if (!(NumericCallNames.Get(movedCallName, out itemToMove)
-						&& (!itemToMove.IsInsideItemWithInventory(out IItemWithInventory parent)
-							|| parent.ContainedInventory == Player.Wearing
-							|| parent.ContainedInventory == Player.Wielding))
-					&& !Player.Wielding.ContainsCallName(movedCallName, out itemToMove)
-					&& !Player.Wearing.ContainsCallName(movedCallName, out itemToMove)
-					&& !Player.location.items.ContainsCallName(movedCallName, out itemToMove)
-					&& !Player.Inventory.ContainsCallName(movedCallName, out itemToMove)) {
+					&& (!itemToMove.IsInsideItemWithInventory(out IItemWithInventory parent)
+					|| parent.ContainedInventory == Player.Wearing
+					|| parent.ContainedInventory == Player.Wielding))
+				&& !Player.Wielding.ContainsCallName(movedCallName, out itemToMove)
+				&& !Player.Wearing.ContainsCallName(movedCallName, out itemToMove)
+				&& !Player.location.items.ContainsCallName(movedCallName, out itemToMove)
+				&& !Player.Inventory.ContainsCallName(movedCallName, out itemToMove)) {
 					Terminal.WriteLine("I don't understand what you're trying to move.");
 					return;
 				}
@@ -57,10 +57,10 @@ namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
 
 			if (args.Get("to", out string toCallName)) {
 				if ((NumericCallNames.Get(toCallName, out IItemWithInventory toItem)
-						&& (toItem.ContainedInventory == Player.Wearing
-							|| toItem.ContainedInventory == Player.Wielding))
-					|| Player.Wielding.ContainsCallName(toCallName, out toItem)
-					|| Player.Wearing.ContainsCallName(toCallName, out toItem)) {
+					&& (toItem.ContainedInventory == Player.Wearing
+					|| toItem.ContainedInventory == Player.Wielding))
+				|| Player.Wielding.ContainsCallName(toCallName, out toItem)
+				|| Player.Wearing.ContainsCallName(toCallName, out toItem)) {
 					destination = $" to {toItem.Name}";
 					success = toItem.MoveItem(itemToMove);
 				} else {

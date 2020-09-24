@@ -14,7 +14,7 @@ namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
 
 			string callName = args.FirstArgument;
 			if ((NumericCallNames.Get(callName, out IItem item) && item.ContainedInventory == Player.location.items)
-				|| Player.location.items.ContainsCallName(callName, out item)) {
+			|| Player.location.items.ContainsCallName(callName, out item)) {
 				if (Player.Inventory.MoveItem(item)) {
 					Terminal.WriteLine($"You picked up {item.Name} and put it in your inventory.");
 				} else {
