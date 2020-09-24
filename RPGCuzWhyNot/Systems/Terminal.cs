@@ -312,22 +312,22 @@ namespace RPGCuzWhyNot.Systems {
 		}
 
 		public static int GetFormattedLength(string formattedText) {
-			int Formatbegin = formattedText.IndexOf('{');
-			if (Formatbegin == -1) {
+			int formatBegin = formattedText.IndexOf('{');
+			if (formatBegin == -1) {
 				return formattedText.Length;
 			}
 
-			int FormatEnd = formattedText.IndexOf('}', Formatbegin + 1);
-			if (FormatEnd == -1) {
+			int formatEnd = formattedText.IndexOf('}', formatBegin + 1);
+			if (formatEnd == -1) {
 				throw new TerminalFormatException("Missing closing brace in terminal format string.");
 			}
 
 			int additionalLengthFromCommands = 0;
-			int cmdBegin = Formatbegin + 1;
-			while (cmdBegin < FormatEnd) {
-				int cmdEnd = formattedText.IndexOf(';', cmdBegin, FormatEnd - cmdBegin);
+			int cmdBegin = formatBegin + 1;
+			while (cmdBegin < formatEnd) {
+				int cmdEnd = formattedText.IndexOf(';', cmdBegin, formatEnd - cmdBegin);
 				if (cmdEnd == -1) {
-					cmdEnd = FormatEnd;
+					cmdEnd = formatEnd;
 				}
 				if (cmdBegin == cmdEnd) {
 					break;
@@ -350,9 +350,9 @@ namespace RPGCuzWhyNot.Systems {
 				cmdBegin = cmdEnd + 1;
 			}
 
-			if (FormatEnd + 1 < formattedText.Length && formattedText[FormatEnd + 1] == '(') {
+			if (formatEnd + 1 < formattedText.Length && formattedText[formatEnd + 1] == '(') {
 				int depth = 1;
-				int parenBegin = FormatEnd + 2;
+				int parenBegin = formatEnd + 2;
 				int remainder = parenBegin;
 
 				for (; depth > 0; ++remainder) {
@@ -368,13 +368,13 @@ namespace RPGCuzWhyNot.Systems {
 
 				int parenEnd = remainder - 1;
 
-				return Formatbegin + additionalLengthFromCommands
+				return formatBegin + additionalLengthFromCommands
 					+ GetFormattedLength(formattedText[parenBegin..parenEnd])
 					+ (remainder < formattedText.Length ? GetFormattedLength(formattedText[remainder..]) : 0);
 
 			} else {
-				return Formatbegin + additionalLengthFromCommands
-					+ (FormatEnd + 1 < formattedText.Length ? GetFormattedLength(formattedText[(FormatEnd + 1)..]) : 0);
+				return formatBegin + additionalLengthFromCommands
+					+ (formatEnd + 1 < formattedText.Length ? GetFormattedLength(formattedText[(formatEnd + 1)..]) : 0);
 			}
 		}
 	}
