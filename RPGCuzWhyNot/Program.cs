@@ -20,6 +20,7 @@ namespace RPGCuzWhyNot {
 		private static void Main() {
 			Terminal.IsCursorVisible = false; //default to not showing cursor
 
+
 			//Load content
 			Terminal.WriteLineDirect("{fg:Yellow}(Loading Content...)");
 			if (!DataLoader.LoadGameData()) {
@@ -29,10 +30,14 @@ namespace RPGCuzWhyNot {
 			ConsoleUtils.Sleep(100);
 			Terminal.Clear();
 
+
+
 			//add npcs to smithy
 			Location smithy = DataLoader.GetLocation("village_smithy");
 			smithy.AddNPC(new Orchibald(), "A smith can be seen by a large forge", "You walk up to the smith. He turns around to look at you.");
 			smithy.AddNPC(new SmithyCustomer(), "A customer casually stands leaning against a pillar.", "You walk up to the customer. She glares angrily as you approach...");
+
+
 
 			//construct player
 			player = new Player(new Human(Humanoid.Gender.Male)) {
@@ -41,18 +46,20 @@ namespace RPGCuzWhyNot {
 				stats = new Stats(10, 10, 10, 10)
 			};
 
+
+
 			//add start items to player
 			player.Inventory.MoveItem(DataLoader.CreateItem("blue_potion"));
 			player.Inventory.MoveItem(DataLoader.CreateItem("backpack"));
 
-			while (true) {
-				TestMenu();
-			}
+
 
 			//combat testing shortcut
 			player.Wielding.MoveItem((IWieldable)DataLoader.CreateItem("greatsword"));
 			Fight fight = new Fight(player, new TheMother());
 			fight.BeginCombat();
+
+
 
 			//some basic event loop
 			player.location.PrintEnterInformation();
