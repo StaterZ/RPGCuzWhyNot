@@ -36,11 +36,13 @@ namespace RPGCuzWhyNot.Systems.Commands {
 					Terminal.WriteLine("I don't know where that is.");
 				}
 			}));
+
 			commandHandler.AddCommand(new Command(new[] { "where", "location" }, "Show information about the current location", args => {
 				Terminal.WriteLine($"You are in: {Location.Name}");
 				NumericCallNames.Clear();
 				Location.PrintInformation();
 			}));
+
 			commandHandler.AddCommand(new Command(new[] { "ls", "list", "locations" }, "List all locations accessible from the current one", args => {
 				Terminal.WriteLine("Locations:");
 				foreach (Location.Path path in Location.Paths) {
@@ -48,6 +50,7 @@ namespace RPGCuzWhyNot.Systems.Commands {
 					Terminal.WriteLine(path.location.ListingName);
 				}
 			}));
+
 			commandHandler.AddCommand(new Command(new[] { "wear" }, "Wear something", args => {
 				if (args.FirstArgument == "") {
 					Terminal.WriteLine("No item specified");
@@ -64,6 +67,7 @@ namespace RPGCuzWhyNot.Systems.Commands {
 					Terminal.WriteLine("Item not found, does it exist?");
 				}
 			}));
+
 			commandHandler.AddCommand(new Command(new[] { "unwear" }, "Remove something worn", args => {
 				if (args.FirstArgument == "") {
 					Terminal.WriteLine("No item specified");
@@ -80,10 +84,12 @@ namespace RPGCuzWhyNot.Systems.Commands {
 					Terminal.WriteLine("You're wearing nothing such");
 				}
 			}));
+
 			commandHandler.AddCommand(new Command(new[] { "wearing", "armor" }, "List what is currently being worn", args => {
 				NumericCallNames.Clear();
 				ListWearing();
 			}));
+
 			commandHandler.AddCommand(new Command(new[] { "wield" }, "Wield something", args => {
 				if (args.FirstArgument == "") {
 					Terminal.WriteLine("No item specified");
@@ -100,6 +106,7 @@ namespace RPGCuzWhyNot.Systems.Commands {
 					Terminal.WriteLine("Item not found, does it exist?");
 				}
 			}));
+
 			commandHandler.AddCommand(new Command(new[] { "unwield" }, "Remove something wielded", args => {
 				if (args.FirstArgument == "") {
 					Terminal.WriteLine("No item specified");
@@ -118,10 +125,12 @@ namespace RPGCuzWhyNot.Systems.Commands {
 					Terminal.WriteLine("You're wielding nothing such.");
 				}
 			}));
+
 			commandHandler.AddCommand(new Command(new[] { "wielding" }, "List what is currently being wielded", args => {
 				NumericCallNames.Clear();
 				ListWielding();
 			}));
+
 			commandHandler.AddCommand(new Command(new[] { "equip" }, "Equip something, either by wearing it, or wielding it", args => {
 				if (args.FirstArgument == "") {
 					Terminal.WriteLine("No item specified");
@@ -147,6 +156,7 @@ namespace RPGCuzWhyNot.Systems.Commands {
 					Terminal.WriteLine("Item not found, does it exist?");
 				}
 			}));
+
 			commandHandler.AddCommand(new Command(new[] { "unequip" }, "Remove something worn or wielded", args => {
 				if (args.FirstArgument == "") {
 					Terminal.WriteLine("No item specified");
@@ -167,16 +177,19 @@ namespace RPGCuzWhyNot.Systems.Commands {
 					Terminal.WriteLine("You have nothing such equipped.");
 				}
 			}));
+
 			commandHandler.AddCommand(new Command(new[] { "equipped", "gear" }, "List what is currently worn and wielded", args => {
 				if (args.FirstArgument != "") {
 					Terminal.WriteLine($"'{args.CommandName}' does not take any arguments");
 					return;
 				}
+
 				NumericCallNames.Clear();
 				ListWielding();
 				Terminal.WriteLine();
 				ListWearing();
 			}));
+
 			commandHandler.AddCommand(new Command(new[] { "move" }, "move items between inventories", args => {
 				if (args.FirstArgument == "") {
 					Terminal.WriteLine("What are you trying to move?");
@@ -192,6 +205,7 @@ namespace RPGCuzWhyNot.Systems.Commands {
 						Terminal.WriteLine("What are you trying to move from?");
 						return;
 					}
+
 					if ((NumericCallNames.Get(fromCallName, out IItemWithInventory fromItem)
 						&& (fromItem.ContainedInventory == Wearing
 						|| fromItem.ContainedInventory == Wielding))
@@ -202,6 +216,7 @@ namespace RPGCuzWhyNot.Systems.Commands {
 						Terminal.WriteLine("I don't understand what you're trying to move from.");
 						return;
 					}
+
 					if (!fromItem.ContainsCallName(movedCallName, out itemToMove)) {
 						Terminal.WriteLine("I don't understand what you're trying to move.");
 						return;
@@ -248,7 +263,8 @@ namespace RPGCuzWhyNot.Systems.Commands {
 				if (success) {
 					Terminal.WriteLine($"Moved {itemToMove.Name}{source}{destination}.");
 				}
-			}, new string[] { "from", "to" }));
+			}, new[] { "from", "to" }));
+
 			commandHandler.AddCommand(new Command(new[] { "take", "pickup", "grab", "yoink" }, "Take an item from the current location", args => {
 				if (args.FirstArgument == "") {
 					Terminal.WriteLine("Take what?");
@@ -267,6 +283,7 @@ namespace RPGCuzWhyNot.Systems.Commands {
 					Terminal.WriteLine("Can't see that here.");
 				}
 			}));
+
 			commandHandler.AddCommand(new Command(new[] { "drop" }, "Drop an item on the current location", args => {
 				if (args.FirstArgument == "") {
 					Terminal.WriteLine("Drop what?");
@@ -290,14 +307,17 @@ namespace RPGCuzWhyNot.Systems.Commands {
 					Terminal.WriteLine("I don't know what that is.");
 				}
 			}));
+
 			commandHandler.AddCommand(new Command(new[] { "inventory" }, "List the items in your inventory", args => {
 				NumericCallNames.Clear();
 				ListInventory();
 			}));
+
 			commandHandler.AddCommand(new Command(new[] { "items" }, "List the items nearby", args => {
 				NumericCallNames.Clear();
 				ListLocationItems();
 			}));
+
 			commandHandler.AddCommand(new Command(new[] { "inspect", "what" }, "Inspect an item in your inventory", args => {
 				if (args.FirstArgument == "") {
 					Terminal.WriteLine("Inspect what?");
@@ -319,14 +339,13 @@ namespace RPGCuzWhyNot.Systems.Commands {
 						IItem item when item.ContainedInventory == Location.items => item.DescriptionOnGround,
 						IItem item => item.DescriptionInInventory,
 						Location location when player.location == location => location.description,
-						Location location =>
-							player.location.Paths.Where(a => a.location == location)
-							.FirstOrDefault()?.description ?? "I don't know where that is.",
-						Character character =>
-							character.location.Characters.Where(a => a.character == character)
-							.FirstOrDefault()?.glanceDescription ?? "I don't know who that is.",
+						Location location => player.location.Paths
+							.FirstOrDefault(a => a.location == location)?.description ?? "I don't know where that is.",
+						Character character => character.location.Characters
+							.FirstOrDefault(a => a.character == character)?.glanceDescription ?? "I don't know who that is.",
 						_ => "I'm not sure what to say..."
 					});
+
 					if (thing is IItemWithInventory itemWithInventory) {
 						NumericCallNames.Clear();
 						ListItemWithInventory("", "", itemWithInventory);
@@ -335,6 +354,7 @@ namespace RPGCuzWhyNot.Systems.Commands {
 					Terminal.WriteLine("I don't know what that is.");
 				}
 			}));
+
 			commandHandler.AddCommand(new Command(new[] { "help", "commands" }, "Show this list", args => {
 				Terminal.WriteLine("Commands:");
 				string[] formattedCommandCallNames = new string[commandHandler.commands.Count];
@@ -347,6 +367,7 @@ namespace RPGCuzWhyNot.Systems.Commands {
 						longestFormattedCommandCallName = formattedCommandCallName.Length;
 					}
 				}
+
 				Terminal.PushState();
 				Terminal.MillisPerChar = 1000 / 300;
 				for (int i = 0; i < commandHandler.commands.Count; i++) {
@@ -356,11 +377,14 @@ namespace RPGCuzWhyNot.Systems.Commands {
 					Terminal.Write(" - ");
 					Terminal.WriteLine(commandHandler.commands[i].helpText);
 				}
+
 				Terminal.PopState();
 			}));
+
 			commandHandler.AddCommand(new Command(new[] { "clear" }, "Clear the console", args => {
 				Terminal.Clear();
 			}));
+
 			commandHandler.AddCommand(new Command(new[] { "speak", "talk", "converse" }, "Begin a conversation with someone", args => {
 				if (args.FirstArgument == "") {
 					Terminal.WriteLine($"{args.CommandName} with who?");
@@ -377,6 +401,7 @@ namespace RPGCuzWhyNot.Systems.Commands {
 					Terminal.WriteLine("Who now?");
 				}
 			}));
+
 			commandHandler.AddCommand(new Command(new[] { "everything" }, "List everything interactible", args => {
 				NumericCallNames.Clear();
 				ListLocationItems();
@@ -389,7 +414,8 @@ namespace RPGCuzWhyNot.Systems.Commands {
 				Terminal.WriteLine();
 				ListLocations();
 			}));
-			commandHandler.AddCommand(new Command(new string[] { "throw", "yeet" }, "Throw {darkgray}(something) at {darkgray}(something else)", args => {
+
+			commandHandler.AddCommand(new Command(new[] { "throw", "yeet" }, "Throw {darkgray}(something) at {darkgray}(something else)", args => {
 				string throwableCallName = args.FirstArgument;
 				if (throwableCallName == "") {
 					Terminal.WriteLine("You need something to throw.");
@@ -404,10 +430,13 @@ namespace RPGCuzWhyNot.Systems.Commands {
 				} else {
 					Terminal.WriteLine($"{{darkgray}}((pretenting)) Threw {throwable.Name} at {atCallName}.");
 				}
-			}, new string[] { "at" }));
-			commandHandler.AddCommand(new Command(new string[] { "type" }, "Echo whats written", args => {
+			}, new[] { "at" }));
+
+			commandHandler.AddCommand(new Command(new[] { "type" }, "Echo whats written", args => {
 				Terminal.WriteLine(args.FirstArgument);
 			}));
+
+			commandHandler.AddCommand(new Command(new[] {":q!"}, "Quit the game", _ => { Environment.Exit(0); }));
 		}
 
 		public void Handle(string message) {
@@ -493,9 +522,11 @@ namespace RPGCuzWhyNot.Systems.Commands {
 			} else {
 				Terminal.WriteLine(" contains:");
 			}
+
 			foreach (IItem item in inv) {
 				Terminal.WriteLine($"  {NumericCallNames.HeadingOfAdd(item)}{item.ListingName}");
 			}
+
 			foreach (IItem item in inv) {
 				if (item is IItemWithInventory nested) {
 					ListItemWithInventory("", $" inside {prefix}{item.Name}{suffix}", nested);
@@ -508,6 +539,7 @@ namespace RPGCuzWhyNot.Systems.Commands {
 				Terminal.WriteLine("You are not wearing anything");
 				return;
 			}
+
 			Terminal.WriteLine("You are currently wearing:");
 			foreach (IWearable wearable in Wearing) {
 				Terminal.WriteLine($"  {NumericCallNames.HeadingOfAdd(wearable)}{wearable.ListingWithStats}");
@@ -519,6 +551,7 @@ namespace RPGCuzWhyNot.Systems.Commands {
 				Terminal.WriteLine("You are unarmed.");
 				return;
 			}
+
 			Terminal.WriteLine("You are currently wielding:");
 			foreach (IWieldable wieldable in Wielding) {
 				Terminal.WriteLine($"  {NumericCallNames.HeadingOfAdd(wieldable)}{wieldable.ListingWithStats}");
