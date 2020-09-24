@@ -1,11 +1,9 @@
-using Microsoft.VisualBasic.CompilerServices;
-using RPGCuzWhyNot.AttackSystem;
+using System.Collections.Generic;
+using System.Linq;
 using RPGCuzWhyNot.Inventory.Item;
 using RPGCuzWhyNot.Systems;
 using RPGCuzWhyNot.Things.Characters;
 using RPGCuzWhyNot.Utilities;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace RPGCuzWhyNot.AttackSystem {
 	public class Fight {

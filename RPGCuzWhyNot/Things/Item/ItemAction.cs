@@ -7,6 +7,8 @@ using RPGCuzWhyNot.Things.Item;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using RPGCuzWhyNot.AttackSystem;
+using RPGCuzWhyNot.Systems;
 
 namespace RPGCuzWhyNot.Inventory.Item {
 	[Serializable]
