@@ -19,7 +19,6 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 
 		public readonly string name;
 		public readonly List<MenuItem> items;
-
 		private int? lastDrawnIndex;
 
 		private int ItemCount => Math.Max(items.Count, 1);
@@ -119,66 +118,64 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 				needsRedraw = true;
 			}
 
-			using (new CursorVisibilityScope(false)) {
-				while (stack.Count > 0 && stack.Peek() == this) {
-					//draw
-					if (needsRedraw) {
-						Terminal.CursorPosition = drawPos;
-						Draw(isCursorVisible ? arrowIndex : (int?)null, stack.Reverse());
-						needsRedraw = false;
-					}
+			while (stack.Count > 0 && stack.Peek() == this) {
+				//draw
+				if (needsRedraw) {
+					Terminal.CursorPosition = drawPos;
+					Draw(isCursorVisible ? arrowIndex : (int?)null, stack.Reverse());
+					needsRedraw = false;
+				}
 
-					//get input
-					ConsoleKeyInfo keyPress = Console.ReadKey(true);
+				//get input
+				ConsoleKeyInfo keyPress = Console.ReadKey(true);
 
-					//try finding and using a short hand
-					int shortHandIndex = shortHands.IndexOf(keyPress.KeyChar);
-					if (shortHandIndex != -1 && shortHandIndex < items.Count) {
-						Terminal.Beep(200, 50);
-						items[shortHandIndex].effect(ctx);
-						needsRedraw = true;
-					} else {
-						//else, update the arrow key system
-						switch (keyPress.Key) {
-							//go up
-							case ConsoleKey.UpArrow:
-								Terminal.Beep(100, 50);
-								isCursorVisible = true;
-								arrowIndex--;
-								OnArrowIndexChange();
-								break;
+				//try finding and using a short hand
+				int shortHandIndex = shortHands.IndexOf(keyPress.KeyChar);
+				if (shortHandIndex != -1 && shortHandIndex < items.Count) {
+					Terminal.Beep(200, 50);
+					items[shortHandIndex].effect(ctx);
+					needsRedraw = true;
+				} else {
+					//else, update the arrow key system
+					switch (keyPress.Key) {
+						//go up
+						case ConsoleKey.UpArrow:
+							Terminal.Beep(100, 50);
+							isCursorVisible = true;
+							arrowIndex--;
+							OnArrowIndexChange();
+							break;
 
-							//go down
-							case ConsoleKey.DownArrow:
-								Terminal.Beep(100, 50);
-								isCursorVisible = true;
-								arrowIndex++;
-								OnArrowIndexChange();
-								break;
+						//go down
+						case ConsoleKey.DownArrow:
+							Terminal.Beep(100, 50);
+							isCursorVisible = true;
+							arrowIndex++;
+							OnArrowIndexChange();
+							break;
 
-							//go back
-							case ConsoleKey.LeftArrow:
-							case ConsoleKey.Escape:
-							case ConsoleKey.Backspace:
-								if (stack.Count > 1) {
-									Terminal.Beep(200, 50);
-									ctx.ExitMenu();
-								} else {
-									Terminal.Beep(50, 100);
-								}
-								break;
-
-							//execute selected menu item
-							case ConsoleKey.RightArrow:
-							case ConsoleKey.Enter:
+						//go back
+						case ConsoleKey.LeftArrow:
+						case ConsoleKey.Escape:
+						case ConsoleKey.Backspace:
+							if (stack.Count > 1) {
 								Terminal.Beep(200, 50);
-								isCursorVisible = true;
-								if (arrowIndex < items.Count) {
-									items[arrowIndex].effect(ctx);
-									needsRedraw = true;
-								}
-								break;
-						}
+								ctx.ExitMenu();
+							} else {
+								Terminal.Beep(50, 100);
+							}
+							break;
+
+						//execute selected menu item
+						case ConsoleKey.RightArrow:
+						case ConsoleKey.Enter:
+							Terminal.Beep(200, 50);
+							isCursorVisible = true;
+							if (arrowIndex < items.Count) {
+								items[arrowIndex].effect(ctx);
+								needsRedraw = true;
+							}
+							break;
 					}
 				}
 			}

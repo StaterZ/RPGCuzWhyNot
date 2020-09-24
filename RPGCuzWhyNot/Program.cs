@@ -18,6 +18,8 @@ namespace RPGCuzWhyNot {
 		public static Player player;
 
 		private static void Main() {
+			Terminal.IsCursorVisible = false; //default to not showing cursor
+
 			//Load content
 			Terminal.WriteLineDirect("{fg:Yellow}(Loading Content...)");
 			if (!DataLoader.LoadGameData()) {

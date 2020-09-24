@@ -83,19 +83,17 @@ namespace RPGCuzWhyNot.Systems {
 
 		public static void Write(char c) => WriteChar(c);
 		public static void Write(string text) {
-			using (new CursorVisibilityScope(false)) {
-				for (int i = 0; i < text.Length;) {
-					char c = text[i++];
-					if (c == '{') {
-						if (i < text.Length && text[i] == '{') {
-							WriteChar(c);
-							++i;
-						} else {
-							i = Decode(text, i);
-						}
-					} else {
+			for (int i = 0; i < text.Length;) {
+				char c = text[i++];
+				if (c == '{') {
+					if (i < text.Length && text[i] == '{') {
 						WriteChar(c);
+						++i;
+					} else {
+						i = Decode(text, i);
 					}
+				} else {
+					WriteChar(c);
 				}
 			}
 		}
