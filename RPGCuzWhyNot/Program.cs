@@ -31,12 +31,10 @@ namespace RPGCuzWhyNot {
 			Terminal.Clear();
 
 
-
 			//add npcs to smithy
 			Location smithy = DataLoader.GetLocation("village_smithy");
 			smithy.AddNPC(new Orchibald(), "A smith can be seen by a large forge", "You walk up to the smith. He turns around to look at you.");
 			smithy.AddNPC(new SmithyCustomer(), "A customer casually stands leaning against a pillar.", "You walk up to the customer. She glares angrily as you approach...");
-
 
 
 			//construct player
@@ -47,18 +45,15 @@ namespace RPGCuzWhyNot {
 			};
 
 
-
 			//add start items to player
 			player.Inventory.MoveItem(DataLoader.CreateItem("blue_potion"));
 			player.Inventory.MoveItem(DataLoader.CreateItem("backpack"));
-
 
 
 			//combat testing shortcut
 			player.Wielding.MoveItem((IWieldable)DataLoader.CreateItem("greatsword"));
 			Fight fight = new Fight(player, new TheMother());
 			fight.BeginCombat();
-
 
 
 			//some basic event loop
