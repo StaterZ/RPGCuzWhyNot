@@ -53,7 +53,7 @@ namespace RPGCuzWhyNot.Systems.Commands {
 					longestFormattedCommandCallName = formattedCommandCallName.Length;
 				}
 			}
-			using (new TerminalStateScope()) {
+			using (Terminal.PushState()) {
 				Terminal.MillisPerChar = 1000 / 300;
 				for (int i = 0; i < commands.Count; i++) {
 					Terminal.ForegroundColor = ConsoleColor.Magenta;

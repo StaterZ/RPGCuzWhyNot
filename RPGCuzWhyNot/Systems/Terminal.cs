@@ -44,12 +44,16 @@ namespace RPGCuzWhyNot.Systems {
 
 		private static int charBeepCounter = 0;
 
-		public static void PushState() => stateStack.Push(GetState());
+		public static StateScope PushState() {
+			stateStack.Push(GetState());
+			return new StateScope();
+		}
+
 		public static void PopState() => SetState(stateStack.Pop());
 
 		public static void WriteLine(string text, int frequency, int charsPerSecond = -1) => Write(text + '\n', frequency, charsPerSecond);
 		public static void Write(string text, int frequency, int charsPerSecond = -1) {
-			using (new TerminalStateScope()) {
+			using (PushState()) {
 				if (charsPerSecond < 0) {
 					MillisPerChar = 1000 / charsPerSecond;
 				}
@@ -102,14 +106,14 @@ namespace RPGCuzWhyNot.Systems {
 		/// Write without delay or beeping.
 		/// </summary>
 		public static void WriteDirect(string text) {
-			using (new TerminalStateScope()) {
+			using (PushState()) {
 				MillisPerChar = 0;
 				BeepDuration = 0;
 				Write(text);
 			}
 		}
 		public static void WriteDirect(char c) {
-			using (new TerminalStateScope()) {
+			using (PushState()) {
 				MillisPerChar = 0;
 				BeepDuration = 0;
 				Write(c);
@@ -280,25 +284,6 @@ namespace RPGCuzWhyNot.Systems {
 			return text.Replace("{", "{{");
 		}
 
-		public struct State {
-			public ConsoleColor foregroundColor;
-			public ConsoleColor backgroundColor;
-			public int charsPerBeep;
-			public int millisPerChar;
-			public int beepFrequency;
-			public int beepDuration;
-			public bool cursorVisible;
-		}
-
-		public delegate void AliasEffect();
-
-		private struct Alias {
-			public char symbol;
-			public bool showChar;
-			public AliasEffect preEffect;
-			public AliasEffect postEffect;
-		}
-
 		public static void Beep(int frequency, int duration) {
 			Console.Beep(frequency, duration);
 		}
@@ -377,19 +362,34 @@ namespace RPGCuzWhyNot.Systems {
 					+ (formatEnd + 1 < formattedText.Length ? GetFormattedLength(formattedText[(formatEnd + 1)..]) : 0);
 			}
 		}
+
+		public struct State {
+			public ConsoleColor foregroundColor;
+			public ConsoleColor backgroundColor;
+			public int charsPerBeep;
+			public int millisPerChar;
+			public int beepFrequency;
+			public int beepDuration;
+			public bool cursorVisible;
+		}
+
+		public delegate void AliasEffect();
+
+		private struct Alias {
+			public char symbol;
+			public bool showChar;
+			public AliasEffect preEffect;
+			public AliasEffect postEffect;
+		}
+
+		public struct StateScope : IDisposable {
+			public void Dispose() {
+				PopState();
+			}
+		}
 	}
 
 	public class TerminalFormatException : Exception {
 		public TerminalFormatException(string message) : base(message) { }
-	}
-
-	public class TerminalStateScope : IDisposable {
-		public TerminalStateScope() {
-			Terminal.PushState();
-		}
-
-		public void Dispose() {
-			Terminal.PopState();
-		}
 	}
 }
