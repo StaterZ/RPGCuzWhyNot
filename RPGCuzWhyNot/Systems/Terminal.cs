@@ -49,13 +49,13 @@ namespace RPGCuzWhyNot.Systems {
 
 		public static void WriteLine(string text, int frequency, int charsPerSecond = -1) => Write(text + '\n', frequency, charsPerSecond);
 		public static void Write(string text, int frequency, int charsPerSecond = -1) {
-			PushState();
-			if (charsPerSecond < 0) {
-				MillisPerChar = 1000 / charsPerSecond;
+			using (new TerminalStateScope()) {
+				if (charsPerSecond < 0) {
+					MillisPerChar = 1000 / charsPerSecond;
+				}
+				BeepFrequency = frequency;
+				Write(text);
 			}
-			BeepFrequency = frequency;
-			Write(text);
-			PopState();
 		}
 
 		public static void WriteLine() => Write("\n");
@@ -102,18 +102,18 @@ namespace RPGCuzWhyNot.Systems {
 		/// Write without delay or beeping.
 		/// </summary>
 		public static void WriteDirect(string text) {
-			PushState();
-			MillisPerChar = 0;
-			BeepDuration = 0;
-			Write(text);
-			PopState();
+			using (new TerminalStateScope()) {
+				MillisPerChar = 0;
+				BeepDuration = 0;
+				Write(text);
+			}
 		}
 		public static void WriteDirect(char c) {
-			PushState();
-			MillisPerChar = 0;
-			BeepDuration = 0;
-			Write(c);
-			PopState();
+			using (new TerminalStateScope()) {
+				MillisPerChar = 0;
+				BeepDuration = 0;
+				Write(c);
+			}
 		}
 
 		private static void WriteChar(char c) {
@@ -381,5 +381,15 @@ namespace RPGCuzWhyNot.Systems {
 
 	public class TerminalFormatException : Exception {
 		public TerminalFormatException(string message) : base(message) { }
+	}
+
+	public class TerminalStateScope : IDisposable {
+		public TerminalStateScope() {
+			Terminal.PushState();
+		}
+
+		public void Dispose() {
+			Terminal.PopState();
+		}
 	}
 }
