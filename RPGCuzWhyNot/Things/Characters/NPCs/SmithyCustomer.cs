@@ -1,10 +1,8 @@
-using RPGCuzWhyNot.AttackSystem;
 using RPGCuzWhyNot.Systems;
-using RPGCuzWhyNot.Things.Characters;
-using RPGCuzWhyNot.Things.Characters.NPCs;
+using RPGCuzWhyNot.Systems.AttackSystem;
 using RPGCuzWhyNot.Things.Characters.Races.Humanoids;
 
-namespace RPGCuzWhyNot.NPCs {
+namespace RPGCuzWhyNot.Things.Characters.NPCs {
 	public class SmithyCustomer : NPC {
 		private const int voiceFrequency = 1000;
 

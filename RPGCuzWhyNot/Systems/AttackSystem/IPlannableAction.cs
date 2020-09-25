@@ -1,6 +1,6 @@
-using RPGCuzWhyNot.Inventory.Item;
+using RPGCuzWhyNot.Things.Item;
 
-namespace RPGCuzWhyNot.AttackSystem {
+namespace RPGCuzWhyNot.Systems.AttackSystem {
 	public interface IPlannableAction {
 		string Name { get; }
 		string ListingName { get; }

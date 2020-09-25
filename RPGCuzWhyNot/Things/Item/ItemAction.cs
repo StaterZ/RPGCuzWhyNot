@@ -1,14 +1,11 @@
-using RPGCuzWhyNot.AttackSystem;
-using RPGCuzWhyNot.Systems;
-using RPGCuzWhyNot.Systems.HealthSystem;
-using RPGCuzWhyNot.Systems.Inventory;
-using RPGCuzWhyNot.Things.Characters;
-using RPGCuzWhyNot.Things.Item;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using RPGCuzWhyNot.Systems;
+using RPGCuzWhyNot.Systems.AttackSystem;
+using RPGCuzWhyNot.Systems.Inventory;
 
-namespace RPGCuzWhyNot.Inventory.Item {
+namespace RPGCuzWhyNot.Things.Item {
 	[Serializable]
 	public class ItemAction : IPlannableAction {
 		[JsonIgnore]

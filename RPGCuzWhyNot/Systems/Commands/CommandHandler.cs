@@ -53,16 +53,16 @@ namespace RPGCuzWhyNot.Systems.Commands {
 					longestFormattedCommandCallName = formattedCommandCallName.Length;
 				}
 			}
-			Terminal.PushState();
-			Terminal.MillisPerChar = 1000 / 300;
-			for (int i = 0; i < commands.Count; i++) {
-				Terminal.ForegroundColor = ConsoleColor.Magenta;
-				Terminal.Write(formattedCommandCallNames[i].PadRight(longestFormattedCommandCallName));
-				Terminal.ForegroundColor = ConsoleColor.White;
-				Terminal.Write(" - ");
-				Terminal.WriteLine(commands[i].helpText);
+			using (Terminal.PushState()) {
+				Terminal.MillisPerChar = 1000 / 300;
+				for (int i = 0; i < commands.Count; i++) {
+					Terminal.ForegroundColor = ConsoleColor.Magenta;
+					Terminal.Write(formattedCommandCallNames[i].PadRight(longestFormattedCommandCallName));
+					Terminal.ForegroundColor = ConsoleColor.White;
+					Terminal.Write(" - ");
+					Terminal.WriteLine(commands[i].helpText);
+				}
 			}
-			Terminal.PopState();
 		}
 
 		internal bool TryHandle(object trailingCommand) {

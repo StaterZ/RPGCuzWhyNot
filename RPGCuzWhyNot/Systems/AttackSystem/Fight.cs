@@ -1,13 +1,10 @@
-using Microsoft.VisualBasic.CompilerServices;
-using RPGCuzWhyNot.AttackSystem;
-using RPGCuzWhyNot.Inventory.Item;
-using RPGCuzWhyNot.Systems;
-using RPGCuzWhyNot.Things.Characters;
-using RPGCuzWhyNot.Utilities;
 using System.Collections.Generic;
 using System.Linq;
+using RPGCuzWhyNot.Things.Characters;
+using RPGCuzWhyNot.Things.Item;
+using RPGCuzWhyNot.Utilities;
 
-namespace RPGCuzWhyNot.AttackSystem {
+namespace RPGCuzWhyNot.Systems.AttackSystem {
 	public class Fight {
 		public List<Character> combatants;
 		private bool isInCombat;

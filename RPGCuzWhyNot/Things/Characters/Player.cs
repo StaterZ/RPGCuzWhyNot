@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using RPGCuzWhyNot.AttackSystem;
-using RPGCuzWhyNot.Inventory.Item;
 using RPGCuzWhyNot.Systems;
+using RPGCuzWhyNot.Systems.AttackSystem;
 using RPGCuzWhyNot.Systems.Commands;
 using RPGCuzWhyNot.Systems.HealthSystem;
 using RPGCuzWhyNot.Systems.Inventory;
