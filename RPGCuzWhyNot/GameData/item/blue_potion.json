@@ -30,7 +30,7 @@
       },
       "effects": {
         "healTarget": 25,
-        "consumeSelf": true,
+        "consumeSelf": true
       }
     }
   ]
