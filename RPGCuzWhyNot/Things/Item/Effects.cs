@@ -1,9 +1,8 @@
-using RPGCuzWhyNot.Things.Item;
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace RPGCuzWhyNot.Inventory.Item {
+namespace RPGCuzWhyNot.Things.Item {
 	[Serializable]
 	public class Effects {
 		[JsonPropertyName("stats")]

@@ -1,4 +1,4 @@
-namespace RPGCuzWhyNot.Inventory.Item {
+namespace RPGCuzWhyNot.Things.Item {
 	public enum TransferLocation {
 		Ground,
 		Target

@@ -1,8 +1,7 @@
-using RPGCuzWhyNot.AttackSystem;
+using RPGCuzWhyNot.Systems.AttackSystem;
 using RPGCuzWhyNot.Things.Characters;
-using System;
 
-namespace RPGCuzWhyNot.Inventory.Item {
+namespace RPGCuzWhyNot.Things.Item {
 	public class PlannedAction {
 		public readonly IPlannableAction action;
 		public readonly Character performer;

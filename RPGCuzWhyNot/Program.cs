@@ -1,8 +1,6 @@
 using System;
-using RPGCuzWhyNot.AttackSystem;
-using RPGCuzWhyNot.Inventory.Item;
-using RPGCuzWhyNot.NPCs;
 using RPGCuzWhyNot.Systems;
+using RPGCuzWhyNot.Systems.AttackSystem;
 using RPGCuzWhyNot.Systems.Data;
 using RPGCuzWhyNot.Systems.MenuSystem;
 using RPGCuzWhyNot.Things;

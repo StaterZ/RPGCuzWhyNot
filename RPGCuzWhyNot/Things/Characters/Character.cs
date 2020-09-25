@@ -1,5 +1,3 @@
-using RPGCuzWhyNot.AttackSystem;
-using RPGCuzWhyNot.Inventory.Item;
 using RPGCuzWhyNot.Systems;
 using RPGCuzWhyNot.Systems.HealthSystem;
 using RPGCuzWhyNot.Systems.HealthSystem.Alignments;
@@ -8,6 +6,7 @@ using RPGCuzWhyNot.Things.Characters.Races;
 using RPGCuzWhyNot.Things.Item;
 using System.Collections;
 using System.Collections.Generic;
+using RPGCuzWhyNot.Systems.AttackSystem;
 
 namespace RPGCuzWhyNot.Things.Characters {
 	public abstract class Character : IInflictor, IThing, ICanWear, ICanWield, IHasItemInventory {

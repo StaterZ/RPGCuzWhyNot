@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using RPGCuzWhyNot.AttackSystem;
+using RPGCuzWhyNot.Systems.AttackSystem;
 using RPGCuzWhyNot.Systems.Inventory;
 using RPGCuzWhyNot.Things;
 using RPGCuzWhyNot.Things.Characters;

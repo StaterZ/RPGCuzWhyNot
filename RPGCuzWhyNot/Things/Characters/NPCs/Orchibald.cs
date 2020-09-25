@@ -1,5 +1,5 @@
-using RPGCuzWhyNot.AttackSystem;
 using RPGCuzWhyNot.Systems;
+using RPGCuzWhyNot.Systems.AttackSystem;
 using RPGCuzWhyNot.Things.Characters.Races.Humanoids;
 using RPGCuzWhyNot.Utilities;
 

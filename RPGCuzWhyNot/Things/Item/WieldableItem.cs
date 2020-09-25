@@ -1,5 +1,3 @@
-using RPGCuzWhyNot.Inventory.Item;
-
 namespace RPGCuzWhyNot.Things.Item {
 	public class WieldableItem : SimpleItem, IWieldable {
 		public int HandsRequired { get; set; } = 1;

@@ -1,7 +1,7 @@
 using System;
 using System.Text.Json.Serialization;
 
-namespace RPGCuzWhyNot.Inventory.Item {
+namespace RPGCuzWhyNot.Things.Item {
 	[Serializable]
 	public class Requirements {
 		[JsonPropertyName("stats")]

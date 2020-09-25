@@ -1,6 +1,5 @@
 using System;
 using System.Text.Json.Serialization;
-using RPGCuzWhyNot.Inventory.Item;
 using RPGCuzWhyNot.Primitives;
 using RPGCuzWhyNot.Systems.Data.JsonConverters;
 using RPGCuzWhyNot.Things.Item;

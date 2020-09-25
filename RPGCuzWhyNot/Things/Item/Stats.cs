@@ -2,7 +2,7 @@ using System;
 using System.Text.Json.Serialization;
 using RPGCuzWhyNot.Utilities;
 
-namespace RPGCuzWhyNot.Inventory.Item {
+namespace RPGCuzWhyNot.Things.Item {
 	[Serializable]
 	public class Stats {
 		[JsonPropertyName("speed")]
