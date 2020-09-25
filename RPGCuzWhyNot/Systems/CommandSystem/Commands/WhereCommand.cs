@@ -6,9 +6,9 @@ namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
 		public override string HelpText { get; } = "Show information about the current location";
 
 		public override void Execute(CommandArguments args) {
-			Terminal.WriteLine($"You are in: {Player.location.Name}");
+			Terminal.WriteLine($"You are in: {Program.player.location.Name}");
 			NumericCallNames.Clear();
-			Player.location.PrintInformation();
+			Program.player.location.PrintInformation();
 		}
 	}
 }

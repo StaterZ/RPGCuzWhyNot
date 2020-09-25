@@ -18,18 +18,18 @@ namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
 			Character locationCharacter = null;
 			Location connectedLocation = null;
 			if (NumericCallNames.Get(callName, out IThing thing)
-			|| Player.Inventory.ContainsCallName(callName, out thing)
-			|| Player.Wearing.ContainsCallName(callName, out thing)
-			|| Player.Wielding.ContainsCallName(callName, out thing)
-			|| Player.location.items.ContainsCallName(callName, out thing)
-			|| Player.location.GetCharacterByCallName(callName, out locationCharacter)
-			|| Player.location.GetConnectedLocationByCallName(callName, out connectedLocation)) {
+			|| Program.player.Inventory.ContainsCallName(callName, out thing)
+			|| Program.player.Wearing.ContainsCallName(callName, out thing)
+			|| Program.player.Wielding.ContainsCallName(callName, out thing)
+			|| Program.player.location.items.ContainsCallName(callName, out thing)
+			|| Program.player.location.GetCharacterByCallName(callName, out locationCharacter)
+			|| Program.player.location.GetConnectedLocationByCallName(callName, out connectedLocation)) {
 				Terminal.WriteLine((connectedLocation ?? locationCharacter ?? thing) switch
 				{
-					IItem item when item.ContainedInventory == Player.location.items => item.DescriptionOnGround,
+					IItem item when item.ContainedInventory == Program.player.location.items => item.DescriptionOnGround,
 					IItem item => item.DescriptionInInventory,
-					Location location when Player.location == location => location.description,
-					Location location => Player.location.Paths
+					Location location when Program.player.location == location => location.description,
+					Location location => Program.player.location.Paths
 						.FirstOrDefault(a => a.location == location)?.description ?? "I don't know where that is.",
 					Character character => character.location.Characters
 						.FirstOrDefault(a => a.character == character)?.glanceDescription ?? "I don't know who that is.",

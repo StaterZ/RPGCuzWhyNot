@@ -12,9 +12,9 @@ namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
 
 			string callName = args.FirstArgument;
 			if (NumericCallNames.Get(callName, out Location newLocation)
-			|| Player.location.GetConnectedLocationByCallName(callName, out newLocation)) {
-				Player.location = newLocation;
-				Player.location.PrintEnterInformation();
+			|| Program.player.location.GetConnectedLocationByCallName(callName, out newLocation)) {
+				Program.player.location = newLocation;
+				Program.player.location.PrintEnterInformation();
 			} else {
 				Terminal.WriteLine("I don't know where that is.");
 			}

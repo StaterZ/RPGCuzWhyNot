@@ -13,9 +13,9 @@ namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
 			}
 
 			string callName = args.FirstArgument;
-			if ((NumericCallNames.Get(callName, out IWieldable item) && item.ContainedInventory == Player.Wielding)
-			|| Player.Wielding.ContainsCallName(callName, out item)) {
-				if (Player.Inventory.MoveItem(item)) {
+			if ((NumericCallNames.Get(callName, out IWieldable item) && item.ContainedInventory == Program.player.Wielding)
+			|| Program.player.Wielding.ContainsCallName(callName, out item)) {
+				if (Program.player.Inventory.MoveItem(item)) {
 					Terminal.WriteLine($"You unwield {item.Name} and put it in your inventory.");
 				} else {
 					Terminal.WriteLine($"Couldn't unwield {item.Name}.");

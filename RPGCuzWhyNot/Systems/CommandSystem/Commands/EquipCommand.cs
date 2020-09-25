@@ -14,8 +14,8 @@ namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
 
 			string callName = args.FirstArgument;
 			if (NumericCallNames.Get(callName, out IItem item)
-			|| Player.Inventory.ContainsCallName(callName, out item)
-			|| Player.location.items.ContainsCallName(callName, out item)) {
+			|| Program.player.Inventory.ContainsCallName(callName, out item)
+			|| Program.player.location.items.ContainsCallName(callName, out item)) {
 				if (item is IWearable) {
 					if (item is IWieldable) {
 						Terminal.WriteLine($"That's ambiguous, as {item.Name} can be wielded and worn.");

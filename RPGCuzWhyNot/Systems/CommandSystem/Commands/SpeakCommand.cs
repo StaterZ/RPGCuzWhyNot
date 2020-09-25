@@ -15,7 +15,7 @@ namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
 
 			string callName = args.FirstArgument;
 			if (NumericCallNames.Get(callName, out Character conversationPartner)
-			|| Player.location.GetCharacterByCallName(callName, out conversationPartner)) {
+			|| Program.player.location.GetCharacterByCallName(callName, out conversationPartner)) {
 				Terminal.WriteLine($"{{fg:Cyan}}(A conversation with [{conversationPartner.Name}] has begun:)");
 
 				throw new NotImplementedException();

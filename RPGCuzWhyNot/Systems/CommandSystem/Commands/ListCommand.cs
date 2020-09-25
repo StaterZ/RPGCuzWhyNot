@@ -7,7 +7,7 @@ namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
 
 		public override void Execute(CommandArguments args) {
 			Terminal.WriteLine("Locations:");
-			foreach (Location.Path path in Player.location.Paths) {
+			foreach (Location.Path path in Program.player.location.Paths) {
 				Terminal.Write("  ");
 				Terminal.WriteLine(path.location.ListingName);
 			}
