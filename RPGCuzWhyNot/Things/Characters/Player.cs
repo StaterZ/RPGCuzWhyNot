@@ -71,8 +71,8 @@ namespace RPGCuzWhyNot.Things.Characters {
 			Command plan = new Command(new[] { "ls", "list", "plan" }, "Remove the last move you planned to do from the plan of action.", args => {
 				if (planOfAction.plannedActions.Count > 0) {
 					Terminal.WriteLine("{fg:Cyan}(Plan of action:)");
-					foreach (IPlannableAction plannedAction in planOfAction.plannedActions) {
-						Terminal.WriteLine($" - {plannedAction.ListingName}");
+					foreach (PlannedAction plannedAction in planOfAction.plannedActions) {
+						Terminal.WriteLine($" - {plannedAction.action.ListingName}");
 					}
 				} else {
 					Terminal.WriteLine("You've got no plan!");
