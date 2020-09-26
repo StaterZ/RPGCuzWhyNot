@@ -47,7 +47,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 				Terminal.WriteLine($"Removed action [{plannedAction.action.ListingName}] from plan.");
 			}
 
-			//planning phace
+			//planning phase
 			bool isDonePlanningTurn = false;
 			Command confirm = new Command(new[] { "confirm", "done", "apply", "execute" }, "Confirm your actions and procced to the next turn.", args => {
 				if (planOfAction.IsOverBudget) {
@@ -65,7 +65,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 					Terminal.WriteLine("You've got no plan of action. There's nothing to regret...");
 				}
 			});
-			Command run = new Command(new[] { "run", "run away" }, "Run away from the fight.", args => {
+			Command run = new Command(new[] { "run", "flee" }, "Run away from the fight.", args => {
 				AddActionToPlan(new PlannedAction(new RunFromFightAction(fight), this));
 			});
 			Command plan = new Command(new[] { "ls", "list", "plan" }, "Remove the last move you planned to do from the plan of action.", args => {
