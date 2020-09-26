@@ -37,6 +37,8 @@ namespace RPGCuzWhyNot.Things.Item {
 
 		public Effects() {
 			Stats = new Stats();
+			ConsumeItems = new Dictionary<string, int>();
+			TransferItems = new Dictionary<string, (TransferLocation location, int amount)>();
 		}
 
 		public Effects(Stats stats, int meleeDamage, int projectileDamage, float armorPiercing, bool consumeSelf, Dictionary<string, int> consumeItems, TransferLocation? transferSelf, Dictionary<string, (TransferLocation location, int amount)> transferItems, int healSelf, int healTarget) {

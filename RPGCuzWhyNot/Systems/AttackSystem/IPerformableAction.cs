@@ -1,13 +1,13 @@
 using RPGCuzWhyNot.Things.Item;
 
 namespace RPGCuzWhyNot.Systems.AttackSystem {
-	public interface IPlannableAction {
+	public interface IPerformableAction {
+		bool HasTarget { get; }
 		string Name { get; }
 		string ListingName { get; }
 		string ExecuteDescription { get; }
-		bool HasTarget { get; }
 		Requirements Requirements { get; }
 
-		void Execute(PlannedAction ctx);
+		void Execute(TurnAction ctx);
 	}
 }

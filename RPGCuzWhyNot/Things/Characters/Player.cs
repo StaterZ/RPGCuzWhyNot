@@ -1,11 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using RPGCuzWhyNot.Primitives;
 using RPGCuzWhyNot.Systems;
 using RPGCuzWhyNot.Systems.AttackSystem;
 using RPGCuzWhyNot.Systems.Commands;
 using RPGCuzWhyNot.Systems.HealthSystem;
 using RPGCuzWhyNot.Systems.Inventory;
+using RPGCuzWhyNot.Systems.MenuSystem;
 using RPGCuzWhyNot.Things.Characters.Races;
 using RPGCuzWhyNot.Things.Item;
 using RPGCuzWhyNot.Utilities;
@@ -28,123 +31,126 @@ namespace RPGCuzWhyNot.Things.Characters {
 			commands.LoadCommands();
 		}
 
-		public override PlanOfAction PlanTurn(Fight fight) {
-			const string overBudgetMessage = "{fg:Red}(You're over budget, undo the last action and try again.)";
+		public override void DoTurn(Fight fight) {
+			const string performFailMessage = "{fg:Red}(You can't afford this action right now.)";
 
-			PlanOfAction planOfAction = new PlanOfAction(stats);
-
-			void AddActionToPlan(PlannedAction plannedAction) {
-				if (planOfAction.IsOverBudget) {
-					Terminal.WriteLine(overBudgetMessage);
-					return;
-				}
-
-				planOfAction.plannedActions.Add(plannedAction);
-				Terminal.WriteLine($"Added action [{plannedAction.action.ListingName}] to plan.");
-			}
-			void RemoveActionFromPlan(PlannedAction plannedAction) {
-				planOfAction.plannedActions.Remove(plannedAction);
-				Terminal.WriteLine($"Removed action [{plannedAction.action.ListingName}] from plan.");
-			}
-
-			//planning phase
 			bool isDonePlanningTurn = false;
-			Command confirm = new Command(new[] { "confirm", "done", "apply", "execute" }, "Confirm your actions and procced to the next turn.", args => {
-				if (planOfAction.IsOverBudget) {
-					Terminal.WriteLine(overBudgetMessage);
-					return;
-				}
+			TurnActions turnActions = new TurnActions(stats);
 
-				isDonePlanningTurn = true;
-			});
-			Command undo = new Command(new[] { "undo", "revert" }, "Remove the last move you planned to do from the plan of action.", args => {
-				if (planOfAction.plannedActions.Count > 0) {
-					PlannedAction last = planOfAction.plannedActions.Last();
-					RemoveActionFromPlan(last);
-				} else {
-					Terminal.WriteLine("You've got no plan of action. There's nothing to regret...");
-				}
-			});
-			Command run = new Command(new[] { "run", "flee" }, "Run away from the fight.", args => {
-				AddActionToPlan(new PlannedAction(new RunFromFightAction(fight), this));
-			});
-			Command plan = new Command(new[] { "ls", "list", "plan" }, "Remove the last move you planned to do from the plan of action.", args => {
-				if (planOfAction.plannedActions.Count > 0) {
-					Terminal.WriteLine("{fg:Cyan}(Plan of action:)");
-					foreach (PlannedAction plannedAction in planOfAction.plannedActions) {
-						Terminal.WriteLine($" - {plannedAction.action.ListingName}");
-					}
-				} else {
-					Terminal.WriteLine("You've got no plan!");
-				}
-			});
+			Menu CreateCombatantSelectMenu(string menuName, IEnumerable<Character> combatants, Action<Character> combatantSelectCallback) {
+				Menu menu = new Menu(menuName);
 
-			while (!isDonePlanningTurn) {
-				//find valid commands
-				CommandHandler handler = new CommandHandler();
-				handler.AddCommand(confirm);
-				handler.AddCommand(undo);
-				handler.AddCommand(plan);
-				handler.AddCommand(run);
-				handler.AddCommand(new Command(new[] { "help", "commands" }, "Show this list.", args => {
-					Terminal.WriteLine("Commands:");
-					handler.DisplayHelp();
-				}));
-
-				foreach (IWieldable wieldable in Wielding) {
-					handler.AddCommand(new Command(new[] { wieldable.CallName }, "Do something with this item.", args => {
-						if (args.FirstArgument == "") {
-							Terminal.WriteLine("Do what with it?");
-							return;
-						}
-
-						CommandHandler itemHandler = new CommandHandler();
-
-						foreach (ItemAction itemAction in wieldable.ItemActions) {
-							itemHandler.AddCommand(new Command(itemAction.CallNames, itemAction.Description, itemArgs => {
-								//todo: make selection for target when menu has been merged inot branch
-								Character target;
-								if (itemAction.HasTarget) {
-									target = fight.combatants.First(combatant => combatant != this);
-								} else {
-									target = null;
-								}
-								AddActionToPlan(new PlannedAction(itemAction, this, target));
-							}));
-						}
-
-						itemHandler.AddCommand(new Command(new[] { "help" }, "Get help for this item.", args => {
-							Terminal.WriteLine("Actions:");
-							if (wieldable.ItemActions.Any()) {
-								itemHandler.DisplayHelp();
-							} else {
-								Terminal.WriteLine("There's no actions for this item.");
-							}
-						}));
-
-						if (!itemHandler.TryHandle(args.FirstArgument)) {
-							Terminal.WriteLine("No such action exists for this item.");
-						}
+				foreach (Character combatant in combatants) {
+					menu.items.Add(new MenuItem(combatant.Name, $"Do action on {combatant.Name}", ctx => {
+						combatantSelectCallback(combatant);
+						ctx.ExitMenu();
 					}));
 				}
 
-				//get next command
-				Terminal.WriteLine();
-				Terminal.Write($"Points Left: {planOfAction.BudgetLeft.Listing}");
-				if (planOfAction.IsOverBudget) {
-					Terminal.Write(" {fg:White;bg:Red}([Over Budget])");
-				}
-				Terminal.WriteLine();
+				return menu;
+			}
 
-				string commandText = ConsoleUtils.Ask("|> ").ToLower();
-				Terminal.WriteLine();
-				if (!handler.TryHandle(commandText)) {
-					Terminal.WriteLine("I don't understand.");
+			void InsertItemActions(Menu menu, IEnumerable<ItemAction> itemActions) {
+				foreach (ItemAction itemAction in itemActions) {
+					menu.items.Add(new MenuItem(itemAction.Name, itemAction.Description, ctx => {
+						Character target = null;
+
+						if (itemAction.HasTarget) {
+							ctx.EnterMenu(CreateCombatantSelectMenu(
+								itemAction.Name,
+								fight.combatants.Where(combatant => combatant != this),
+								combatant => target = combatant)
+							);
+
+							//if target is null then we didn't select any combatant in CreateCombatantSelectMenu and the only way to do that is to back out of the menu
+							//if we backed out, return so to not execute the action with null
+							if (target == null) {
+								return;
+							}
+						}
+
+
+						if (!turnActions.TryPerform(new TurnAction(itemAction, this, target))) {
+							Terminal.WriteLine(performFailMessage);
+						}
+						ConsoleUtils.WaitForPlayer();
+						ctx.ExitEntireMenuStack();
+					}));
 				}
 			}
-			Terminal.WriteLine("Now Executeing actions...");
 
-			return planOfAction;
+			while (!isDonePlanningTurn) {
+				Menu attack = new Menu("{fg:Red}(Attack)");
+				foreach (IWieldable wieldable in Wielding) {
+					Menu menu = new Menu(wieldable.Name);
+					attack.items.Add(new SubMenu(menu, "Do something with this item. (Temp Desc)"));
+
+					InsertItemActions(menu, wieldable.ItemActions);
+				}
+
+				Menu allItems = new Menu("{fg:White}(All)");
+				Menu wearableItems = new Menu("{fg:Yellow}(Wearables)");
+				Menu wieldableItems = new Menu("{fg:Yellow}(Wieldables)");
+				Menu inventoriesItems = new Menu("{fg:DarkYellow}(Inventories)");
+				Menu consumeableItems = new Menu("{fg:Blue}(Consumeables)");
+				foreach (IItem item in Inventory) {
+					Menu menu = new Menu(item.Name);
+
+					allItems.items.Add(new SubMenu(menu, "Do something with this item. (Temp Desc)"));
+					if (item is IWieldable) {
+						wieldableItems.items.Add(new SubMenu(menu, "Do something with this item. (Temp Desc)"));
+					}
+					if (item is IWearable) {
+						wearableItems.items.Add(new SubMenu(menu, "Do something with this item. (Temp Desc)"));
+					}
+					if (item is ItemWithInventory) {
+						inventoriesItems.items.Add(new SubMenu(menu, "Do something with this item. (Temp Desc)"));
+					}
+					if (item.ItemActions.Any(action => action.Effects.ConsumeSelf)) {
+						consumeableItems.items.Add(new SubMenu(menu, "Do something with this item. (Temp Desc)"));
+					}
+
+					InsertItemActions(menu, item.ItemActions);
+				}
+
+				Menu items = new Menu("{fg:Green}(Items)",
+					new SubMenu(allItems, "List everything"),
+					new SubMenu(wearableItems, "List wearables"),
+					new SubMenu(wieldableItems, "List wieldables"),
+					new SubMenu(consumeableItems, "List consumeables")
+				);
+
+				Menu equippment = new Menu("{fg:Yellow}(Equippment)");
+				foreach (IWearable wearable in Wearing) {
+					Menu menu = new Menu(wearable.Name);
+					equippment.items.Add(new SubMenu(menu, "Do something with this item. (Temp Desc)"));
+
+					InsertItemActions(menu, wearable.ItemActions);
+				}
+
+				Menu root = new Menu("Root",
+					new SubMenu(attack, "Attack something"),
+					new SubMenu(items, "Use an item"),
+					new SubMenu(equippment, "Manage equippment"),
+					new MenuItem("Flee", "Run away from the fight.", ctx => {
+						//fight.combatants.Remove(this);
+						fight.EndCombat();
+
+						isDonePlanningTurn = true;
+						ctx.ExitEntireMenuStack();
+					}),
+					new MenuItem("EndTurn", "Confirm your actions and procced to the next turn.", ctx => {
+						isDonePlanningTurn = true;
+						ctx.ExitEntireMenuStack();
+					})
+				);
+
+				Terminal.WriteLineDirect($"Points Left: {turnActions.BudgetLeft.Listing}");
+				root.Enter();
+				Terminal.CursorPosition += Vec2.Up;
+				Terminal.ClearLine();
+				Terminal.CursorPosition += Vec2.Up;
+			}
 		}
 
 		public void Handle(string message) {

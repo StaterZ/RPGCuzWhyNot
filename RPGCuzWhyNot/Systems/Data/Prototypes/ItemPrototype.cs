@@ -79,11 +79,6 @@ namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 				IWieldable wieldable = (IWieldable)item;
 				wieldable.HandsRequired = HandsRequired ?? 0;
 				wieldable.UsageRequirements = UsageRequirements ?? new Requirements();
-				wieldable.ItemActions = ItemActions ?? Array.Empty<ItemAction>();
-
-				foreach (ItemAction action in wieldable.ItemActions) {
-					action.Item = item;
-				}
 			}
 
 			if (HasInventory) {
@@ -91,7 +86,13 @@ namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 				inventory.WeightFraction = WeightFraction;
 			}
 
+			item.ItemActions = ItemActions ?? Array.Empty<ItemAction>();
+			foreach (ItemAction action in item.ItemActions) {
+				action.Item = item;
+			}
+
 			item.Prototype = this;
+
 			return item;
 		}
 	}

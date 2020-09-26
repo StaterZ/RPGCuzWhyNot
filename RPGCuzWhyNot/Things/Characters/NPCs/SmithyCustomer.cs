@@ -15,7 +15,7 @@ namespace RPGCuzWhyNot.Things.Characters.NPCs {
 			Terminal.Write("Get away from me you vulgar beast!", voiceFrequency);
 		}
 
-		public override PlanOfAction PlanTurn(Fight fight) {
+		public override void DoTurn(Fight fight) {
 			throw new System.NotImplementedException();
 		}
 	}

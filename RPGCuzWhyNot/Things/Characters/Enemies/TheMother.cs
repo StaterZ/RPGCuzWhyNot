@@ -16,16 +16,14 @@ namespace RPGCuzWhyNot.Things.Characters.Enemies {
 			target.health.TakeDamage((int)Math.Ceiling(target.health.CurrentHealth / 2f), this);
 		}
 
-		public override PlanOfAction PlanTurn(Fight fight) {
-			PlanOfAction planOfAction = new PlanOfAction(stats);
+		public override void DoTurn(Fight fight) {
+			//TurnActions planOfAction = new TurnActions(stats); //use later to ensure we're within budget
 
 			foreach (Character combatant in fight.combatants) {
 				if (combatant == this) continue;
 
 				AttackWithDuster(combatant); //temp
 			}
-
-			return planOfAction;
 		}
 
 		private void Die(HealthChangeInfo ctx) {

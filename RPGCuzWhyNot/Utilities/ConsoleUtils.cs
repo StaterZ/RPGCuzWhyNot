@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading;
 using RPGCuzWhyNot.Systems;
@@ -57,6 +58,11 @@ namespace RPGCuzWhyNot.Utilities {
 			} else {
 				return $"{{fg:Yellow}}({value})";
 			}
+		}
+
+		public static void WaitForPlayer() {
+			Terminal.WriteDirect("Press any key to continue");
+			Console.ReadKey(true);
 		}
 	}
 }

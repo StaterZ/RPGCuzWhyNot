@@ -7,7 +7,7 @@ using RPGCuzWhyNot.Systems.Inventory;
 
 namespace RPGCuzWhyNot.Things.Item {
 	[Serializable]
-	public class ItemAction : IPlannableAction {
+	public class ItemAction : IPerformableAction {
 		[JsonIgnore]
 		public IItem Item { get; set; }
 
@@ -52,7 +52,7 @@ namespace RPGCuzWhyNot.Things.Item {
 			Effects = effects;
 		}
 
-		public void Execute(PlannedAction plannedAction) {
+		public void Execute(TurnAction plannedAction) {
 			//consume
 			if (Effects.ConsumeSelf) {
 				Item.Destroy();

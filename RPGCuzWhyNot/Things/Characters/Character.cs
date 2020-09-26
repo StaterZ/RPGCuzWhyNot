@@ -44,7 +44,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 
 		public virtual string ListingName => ThingExt.DefaultListingName(this);
 
-		public abstract PlanOfAction PlanTurn(Fight fight);
+		public abstract void DoTurn(Fight fight);
 	}
 }
 

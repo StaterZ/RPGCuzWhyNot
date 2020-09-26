@@ -3,7 +3,6 @@ namespace RPGCuzWhyNot.Things.Item {
 		int HandsRequired { get; set; }
 		string ListingWithStats { get; }
 		Requirements UsageRequirements { get; set; }
-		ItemAction[] ItemActions { get; set; }
 	}
 }
 
