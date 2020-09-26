@@ -61,7 +61,7 @@ namespace RPGCuzWhyNot.Utilities {
 		}
 
 		public static void WaitForPlayer() {
-			Terminal.WriteDirect("Press any key to continue");
+			Terminal.WriteDirect("{fg:Blue}(Press Enter)");
 			Console.ReadKey(true);
 		}
 	}
