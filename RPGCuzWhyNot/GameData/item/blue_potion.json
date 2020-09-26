@@ -10,7 +10,7 @@
       "callNames": [ "drink", "consume", "ingest" ],
       "name": "Drink",
       "description": "Consume the strange liquid inside.",
-      "executeDescription": "You unbottle the potion and gulp it down hungrly.",
+      "executeDescription": "You uncork the potion and gulp it down hastily.",
       "effects": {
         "healSelf": 35,
         "consumeSelf": true
@@ -20,8 +20,8 @@
       "hasTarget": true,
       "callNames": [ "throw" ],
       "name": "Throw",
-      "description": "Throw the potion on someone",
-      "executeDescription": "You throw the potion at <target_name>. It cracks open at their feet and spill all over <target_referal_objectPronoun>.",
+      "description": "Throw the potion at something.",
+      "executeDescription": "You throw the potion at <target_name>. It cracks open and spills all over <target_referal_objectPronoun>.",
       "requirements": {
         "stats": {
           "strength": 1,
