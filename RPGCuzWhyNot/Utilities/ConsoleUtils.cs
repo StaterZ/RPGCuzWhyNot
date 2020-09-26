@@ -11,7 +11,10 @@ namespace RPGCuzWhyNot.Utilities {
 		/// <returns></returns>
 		public static string Ask(string question) {
 			Terminal.Write(question);
-			return Terminal.ReadLine();
+			using (Terminal.PushState()) {
+				Terminal.IsCursorVisible = true;
+				return Terminal.ReadLine();
+			}
 		}
 
 		/// <summary>
@@ -24,7 +27,11 @@ namespace RPGCuzWhyNot.Utilities {
 			Terminal.Write(question + "   " + Stringification.StringifyArray("[", ", ", "]", options));
 
 			while (true) {
-				string answer = Terminal.ReadLine();
+				string answer;
+				using (Terminal.PushState()) {
+					Terminal.IsCursorVisible = true;
+					answer = Terminal.ReadLine();
+				}
 
 				if (options.Contains(answer)) {
 					return answer;
