@@ -262,21 +262,8 @@ namespace RPGCuzWhyNot.Systems.Data {
 			if (proto.DescriptionInInventory == null) MissingPropertyError(proto, "inventoryDescription");
 			if (proto.DescriptionOnGround == null) MissingPropertyError(proto, "groundDescription");
 
-			if (proto.IsWieldable) {
-				if (proto.HandsRequired == null) MissingPropertyError(proto, "handsRequired");
-				if (proto.MeleeDamage == null) MissingPropertyError(proto, "meleeDamage");
-			}
-
-			if (proto.IsWearable) {
-				if (proto.Defense == null) MissingPropertyError(proto, "defense");
-				if (proto.CoveredParts == 0) MissingPropertyError(proto, "coveredParts");
-				if (proto.CoveredLayers == 0) MissingPropertyError(proto, "coveredLayers");
-			}
-
-			if (proto.HasInventory) {
-				if (proto.WeightFraction.numerator == 0 && proto.WeightFraction.denominator == 0)
-					MissingPropertyError(proto, "weightFraction");
-			}
+			if (proto.Inventory != null && proto.Wieldable == null)
+				Error($"Item with inventory '{proto.Id}' must be wieldable, in file \"{proto.DataFilePath}\".");
 		}
 
 		private static void ValidateNpcPrototype(NpcPrototype proto) {

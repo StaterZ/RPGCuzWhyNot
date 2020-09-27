@@ -4,11 +4,13 @@
   "name": "{DarkYellow}(Rusty Bucket)",
   "inventoryDescription": "A rusty old bucket",
   "groundDescription": "There is an old rusty bucket on the ground.",
-  "wieldable": true,
-  "wearable": true,
-  "meleeDamage": 3,
-  "handsRequired": 1,
-  "defense": 1,
-  "coveredParts": "head",
-  "coveredLayers": "outer"
+  "wieldable": {
+    "handsRequired": 1,
+    "meleeDamage": 3
+  },
+  "wearable": {
+    "defense": 1,
+    "coveredParts": "head",
+    "coveredLayers": "outer"
+  }
 }
