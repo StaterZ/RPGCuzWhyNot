@@ -47,7 +47,7 @@ namespace RPGCuzWhyNot.Systems.CommandSystem {
 			string[] formattedCommandCallNames = new string[commands.Count];
 			int longestFormattedCommandCallName = 0;
 			for (int i = 0; i < commands.Count; i++) {
-				string formattedCommandCallName = Stringification.StringifyArray("[", ", ", "]", commands[i].callNames);
+				string formattedCommandCallName = Stringification.StringifyArray("[", ", ", "]", commands[i].CallNames);
 				formattedCommandCallNames[i] = formattedCommandCallName;
 
 				if (formattedCommandCallName.Length > longestFormattedCommandCallName) {
@@ -61,7 +61,7 @@ namespace RPGCuzWhyNot.Systems.CommandSystem {
 					Terminal.Write(formattedCommandCallNames[i].PadRight(longestFormattedCommandCallName));
 					Terminal.ForegroundColor = ConsoleColor.White;
 					Terminal.Write(" - ");
-					Terminal.WriteLine(commands[i].helpText);
+					Terminal.WriteLine(commands[i].HelpText);
 				}
 			}
 		}
