@@ -1,47 +1,36 @@
 using System;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using RPGCuzWhyNot.Primitives;
 
 namespace RPGCuzWhyNot.Systems.Data.JsonConverters {
-	public class JsonFractionConverter : JsonConverterFactory {
-		public override bool CanConvert(Type typeToConvert) {
-			return typeToConvert == typeof(Fraction);
+	public class JsonFractionConverter : JsonConverter<Fraction> {
+		private static int ParseInt(ReadOnlySpan<char> str) {
+			if (!int.TryParse(str, out int value))
+				throw new JsonException("Bad integer in fraction.");
+
+			return value;
 		}
 
-		public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options) {
-			return new Inner();
+		public override Fraction ReadJson(JsonReader reader, Type objectType, Fraction existingValue, bool hasExistingValue, JsonSerializer serializer) {
+			if (reader.TokenType != JsonToken.String)
+				throw new JsonException("Fraction string expected.");
+
+			string str = (string)reader.Value;
+
+			int divIndex = str!.IndexOf('/');
+			if (divIndex != -1) {
+				return new Fraction(
+					ParseInt(str.AsSpan(0, divIndex)),
+					ParseInt(str.AsSpan(divIndex + 1)));
+			}
+
+			return new Fraction(ParseInt(str), 1);
 		}
 
-		private class Inner : JsonConverter<Fraction> {
-			private static int ParseInt(ReadOnlySpan<char> str) {
-				if (!int.TryParse(str, out int value))
-					throw new JsonException();
-
-				return value;
-			}
-
-			public override Fraction Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) {
-				if (reader.TokenType != JsonTokenType.String)
-					throw new JsonException();
-
-				string str = reader.GetString();
-
-				int divIndex = str.IndexOf('/');
-				if (divIndex != -1) {
-					return new Fraction(
-						ParseInt(str.AsSpan(0, divIndex)),
-						ParseInt(str.AsSpan(divIndex + 1)));
-				}
-
-				return new Fraction(ParseInt(str), 1);
-			}
-
-			public override void Write(Utf8JsonWriter writer, Fraction value, JsonSerializerOptions options) {
-				writer.WriteStringValue(value.denominator == 1
-					                        ? value.numerator.ToString()
-					                        : $"{value.numerator}/{value.denominator}");
-			}
+		public override void WriteJson(JsonWriter writer, Fraction value, JsonSerializer serializer) {
+			writer.WriteValue(value.denominator == 1
+				                  ? value.numerator.ToString()
+				                  : $"{value.numerator}/{value.denominator}");
 		}
 	}
 }

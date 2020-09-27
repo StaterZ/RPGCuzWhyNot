@@ -1,49 +1,48 @@
 using System;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using RPGCuzWhyNot.Primitives;
-using RPGCuzWhyNot.Systems.Data.JsonConverters;
 using RPGCuzWhyNot.Things.Item;
 
 namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 	[Serializable]
 	public sealed class ItemPrototype : Prototype {
-		[JsonPropertyName("inventoryDescription")]
+		[JsonProperty("inventoryDescription")]
 		public string DescriptionInInventory { get; set; }
 
-		[JsonPropertyName("groundDescription")]
+		[JsonProperty("groundDescription")]
 		public string DescriptionOnGround { get; set; }
 
 		// Wieldable
 
-		[JsonPropertyName("wieldable")]
+		[JsonProperty("wieldable")]
 		public bool IsWieldable { get; set; }
 
-		[JsonPropertyName("handsRequired")]
+		[JsonProperty("handsRequired")]
 		public int? HandsRequired { get; set; }
 
-		[JsonPropertyName("meleeDamage")]
+		[JsonProperty("meleeDamage")]
 		public int? MeleeDamage { get; set; }
 
 		// Wearable
 
-		[JsonPropertyName("wearable")]
+		[JsonProperty("wearable")]
 		public bool IsWearable { get; set; }
 
-		[JsonPropertyName("defense")]
+		[JsonProperty("defense")]
 		public int? Defense { get; set; }
 
-		[JsonPropertyName("coveredParts"), JsonConverter(typeof(JsonEnumConverter))]
+		[JsonProperty("coveredParts")]
 		public WearableSlots CoveredParts { get; set; }
 
-		[JsonPropertyName("coveredLayers"), JsonConverter(typeof(JsonEnumConverter))]
+		[JsonProperty("coveredLayers")]
 		public WearableLayers CoveredLayers { get; set; }
 
 		// Inventory
 
-		[JsonPropertyName("hasInventory")]
+		[JsonProperty("hasInventory")]
 		public bool HasInventory { get; set; }
 
-		[JsonPropertyName("weightFraction"), JsonConverter(typeof(JsonFractionConverter))]
+		[JsonProperty("weightFraction")]
 		public Fraction WeightFraction { get; set; }
 
 

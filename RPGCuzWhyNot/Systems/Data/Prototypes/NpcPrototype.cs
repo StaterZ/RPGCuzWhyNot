@@ -1,16 +1,17 @@
 ﻿using System;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using RPGCuzWhyNot.Things.Characters.NPCs;
 
 namespace RPGCuzWhyNot.Systems.Data.Prototypes {
+	[Serializable]
 	public class NpcPrototype : Prototype {
-		[JsonPropertyName("location")]
+		[JsonProperty("location")]
 		public string Location { get; set; }
 
-		[JsonPropertyName("glanceDescription")]
+		[JsonProperty("glanceDescription")]
 		public string GlanceDescription { get; set; }
 
-		[JsonPropertyName("approachDescription")]
+		[JsonProperty("approachDescription")]
 		public string ApproachDescription { get; set; }
 	}
 }

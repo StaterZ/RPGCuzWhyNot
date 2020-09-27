@@ -5,9 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using RPGCuzWhyNot.Systems.Data.JsonConverters;
+using Newtonsoft.Json;
 using RPGCuzWhyNot.Systems.Data.Prototypes;
 using RPGCuzWhyNot.Things;
 using RPGCuzWhyNot.Things.Characters.NPCs;
@@ -20,14 +18,11 @@ namespace RPGCuzWhyNot.Systems.Data {
 		private static readonly string itemsPath = dataPath + "item";
 		private static readonly string npcsPath = dataPath + "npc";
 
-		private static readonly JsonSerializerOptions serializerOptions = new JsonSerializerOptions {
-			ReadCommentHandling = JsonCommentHandling.Skip,
-			AllowTrailingCommas = true,
-			Converters = {
-				new JsonStringEnumConverter(),
-				new JsonMaybeListConverter()
-			}
+		private static readonly JsonSerializerSettings serializerSettings = new JsonSerializerSettings {
+			MissingMemberHandling = MissingMemberHandling.Error
 		};
+
+		private static readonly JsonSerializer serializer = JsonSerializer.CreateDefault(serializerSettings);
 
 		private static Dictionary<string, Prototype> prototypes;
 		private static Dictionary<string, Location> locations;
@@ -146,6 +141,32 @@ namespace RPGCuzWhyNot.Systems.Data {
 			return npc;
 		}
 
+		private static List<T> DeserializeOneOrMore<T>(string json) {
+			var reader = new JsonTextReader(new StringReader(json));
+			var list = new List<T>();
+
+			reader.Read();
+			if (reader.TokenType == JsonToken.StartArray) {
+				// Read an array of objects.
+				reader.Read();
+				do {
+					T value = serializer.Deserialize<T>(reader);
+					list.Add(value);
+					reader.Read();
+				} while (reader.TokenType != JsonToken.EndArray);
+			}
+			else {
+				// Read a single object.
+				T value = serializer.Deserialize<T>(reader);
+				list.Add(value);
+			}
+
+			if (reader.Read())
+				throw new JsonException("Expected end of file after array/object.");
+
+			return list;
+		}
+
 		private static void LoadPrototypesFromPath<TProto>(string path) where TProto : Prototype {
 			string[] dataFiles = Directory.GetFiles(path, "*.json", SearchOption.AllDirectories);
 
@@ -154,7 +175,7 @@ namespace RPGCuzWhyNot.Systems.Data {
 				List<TProto> prototypeList;
 				try {
 					string fileContent = File.ReadAllText(filePath);
-					prototypeList = JsonSerializer.Deserialize<List<TProto>>(fileContent, serializerOptions);
+					prototypeList = DeserializeOneOrMore<TProto>(fileContent);
 				}
 				catch (IOException e) {
 					Error($"Failed to read file \"{filePath}\":\n{e.Message}");
@@ -168,7 +189,6 @@ namespace RPGCuzWhyNot.Systems.Data {
 				// Add the new prototypes.
 				foreach (TProto proto in prototypeList) {
 					proto.DataFilePath = filePath;
-					((IOnDeserialized)proto).OnDeserialized();
 
 					if (proto.Id == null) {
 						MissingPropertyError(proto, "id");
@@ -287,12 +307,12 @@ namespace RPGCuzWhyNot.Systems.Data {
 
 		private static void LogError(string message) {
 			Terminal.WriteDirect("{red}([ERROR/Data]) ");
-			Terminal.WriteLineDirect(message);
+			Console.WriteLine(message);
 		}
 
 		private static void LogWarning(string message) {
 			Terminal.WriteDirect("{yellow}([WARN/Data]) ");
-			Terminal.WriteLineDirect(message);
+			Console.WriteLine(message);
 		}
 	}
 }

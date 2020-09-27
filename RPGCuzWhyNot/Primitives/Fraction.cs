@@ -1,4 +1,8 @@
+using Newtonsoft.Json;
+using RPGCuzWhyNot.Systems.Data.JsonConverters;
+
 namespace RPGCuzWhyNot.Primitives {
+	[JsonConverter(typeof(JsonFractionConverter))]
 	public struct Fraction {
 		public readonly int numerator;
 		public readonly int denominator;

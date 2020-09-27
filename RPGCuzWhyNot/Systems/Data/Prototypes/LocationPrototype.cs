@@ -1,24 +1,19 @@
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using RPGCuzWhyNot.Things;
 
 namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 	[Serializable]
 	public class LocationPrototype : Prototype {
-		[JsonPropertyName("description")]
+		[JsonProperty("description")]
 		public string Description { get; set; }
 
-		[JsonPropertyName("items")]
+		[JsonProperty("items", NullValueHandling = NullValueHandling.Ignore)]
 		public List<string> Items { get; set; } = new List<string>();
 
-		[JsonPropertyName("paths")]
+		[JsonProperty("paths", NullValueHandling = NullValueHandling.Ignore)]
 		public Dictionary<string, string> Paths { get; set; } = new Dictionary<string, string>();
-
-		protected override void OnDeserialized() {
-			Items ??= new List<string>();
-			Paths ??= new Dictionary<string, string>();
-		}
 
 		/// <summary>
 		/// Create an instance of the prototype.
