@@ -1,22 +1,24 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using RPGCuzWhyNot.Systems.Data.JsonConverters;
 using RPGCuzWhyNot.Systems.Data.Prototypes;
 using RPGCuzWhyNot.Things;
+using RPGCuzWhyNot.Things.Characters.NPCs;
 using RPGCuzWhyNot.Things.Item;
-
-// TODO: Add character prototypes when they have been implemented in the rest of the game.
 
 namespace RPGCuzWhyNot.Systems.Data {
 	public static class DataLoader {
 		private static readonly string dataPath = "GameData" + Path.DirectorySeparatorChar;
 		private static readonly string locationsPath = dataPath + "location";
 		private static readonly string itemsPath = dataPath + "item";
+		private static readonly string npcsPath = dataPath + "npc";
 
 		private static readonly JsonSerializerOptions serializerOptions = new JsonSerializerOptions {
 			ReadCommentHandling = JsonCommentHandling.Skip,
@@ -29,11 +31,18 @@ namespace RPGCuzWhyNot.Systems.Data {
 
 		private static Dictionary<string, Prototype> prototypes;
 		private static Dictionary<string, Location> locations;
+		private static Dictionary<string, NPC> npcs;
+		private static Dictionary<string, Type> npcTypeMap = new Dictionary<string, Type>();
 
 		public static ReadOnlyDictionary<string, Prototype> Prototypes { get; private set; }
 		public static ReadOnlyDictionary<string, Location> Locations { get; private set; }
+		public static ReadOnlyDictionary<string, NPC> NPCs { get; private set; }
 
 		private static bool loadError;
+
+		static DataLoader() {
+			FindRegisteredNPCs();
+		}
 
 		/// <summary>
 		/// Load all the game data files into the registry.
@@ -45,6 +54,7 @@ namespace RPGCuzWhyNot.Systems.Data {
 			Prototypes = new ReadOnlyDictionary<string, Prototype>(prototypes);
 			LoadPrototypesFromPath<ItemPrototype>(itemsPath);
 			LoadPrototypesFromPath<LocationPrototype>(locationsPath);
+			LoadPrototypesFromPath<NpcPrototype>(npcsPath);
 
 			ValidatePrototypes();
 
@@ -58,6 +68,15 @@ namespace RPGCuzWhyNot.Systems.Data {
 			}
 
 			SetupLocations();
+
+			npcs = new Dictionary<string, NPC>();
+			NPCs = new ReadOnlyDictionary<string, NPC>(npcs);
+
+			// Create the NPCs.
+			foreach (NpcPrototype proto in prototypes.Values.OfType<NpcPrototype>()) {
+				NPC npc = CreateNpc(proto);
+				if (npc != null) npcs.Add(proto.Id, npc);
+			}
 
 			return !loadError;
 		}
@@ -82,6 +101,49 @@ namespace RPGCuzWhyNot.Systems.Data {
 				throw new Exception($"A location with the id '{id} was not found.");
 
 			return location;
+		}
+
+		private static void FindRegisteredNPCs() { // Find all registered NPCs (those marked with UniqueNpcAttribute).
+			foreach (TypeInfo type in typeof(NPC).Assembly.DefinedTypes) {
+				UniqueNpcAttribute attribute = type.GetCustomAttribute<UniqueNpcAttribute>();
+				if (attribute != null) {
+					if (!typeof(NPC).IsAssignableFrom(type)) {
+						Error($"UniqueNpcAttribute used on a non NPC type '{type}'.");
+						continue;
+					}
+
+					if (type.GetConstructor(Array.Empty<Type>()) == null) {
+						Error($"Type marked with UniqueNpcAttribute '{type}' does not have a public parameterless constructor.");
+						continue;
+					}
+
+					if (!npcTypeMap.TryAdd(attribute.Id, type)) {
+						Error($"Duplicate UniqueNpcAttribute with id '{attribute.Id}' on type '{type}'.");
+						continue;
+					}
+				}
+			}
+		}
+
+		private static NPC CreateNpc(NpcPrototype proto) {
+			if (!npcTypeMap.TryGetValue(proto.Id, out Type type))
+				return null;
+
+			if (!locations.TryGetValue(proto.Location, out Location location))
+				return null;
+
+			NPC npc = (NPC)Activator.CreateInstance(type);
+			if (npc == null) {
+				Debug.Assert(false);
+				return null;
+			}
+
+			npc.Name = proto.Name;
+			npc.CallName = proto.CallName;
+			npc.location = location;
+			location.AddNPC(npc, proto.GlanceDescription, proto.ApproachDescription);
+
+			return npc;
 		}
 
 		private static void LoadPrototypesFromPath<TProto>(string path) where TProto : Prototype {
@@ -114,7 +176,7 @@ namespace RPGCuzWhyNot.Systems.Data {
 					}
 
 					if (!prototypes.TryAdd(proto.Id, proto))
-						Error($"Duplicate prototype definition of '{proto.Id}': \"{proto.DataFilePath}\".");
+						Error($"Duplicate prototype definition of '{proto.Id}' in file \"{proto.DataFilePath}\".");
 				}
 			}
 		}
@@ -158,6 +220,10 @@ namespace RPGCuzWhyNot.Systems.Data {
 					case ItemPrototype itemPrototype:
 						ValidateItemPrototype(itemPrototype);
 						break;
+
+					case NpcPrototype npcPrototype:
+						ValidateNpcPrototype(npcPrototype);
+						break;
 				}
 			}
 		}
@@ -190,6 +256,22 @@ namespace RPGCuzWhyNot.Systems.Data {
 				if (proto.WeightFraction.numerator == 0 && proto.WeightFraction.denominator == 0)
 					MissingPropertyError(proto, "weightFraction");
 			}
+		}
+
+		private static void ValidateNpcPrototype(NpcPrototype proto) {
+			if (proto.Location == null) {
+				MissingPropertyError(proto, "location");
+			}
+			else {
+				if (!prototypes.TryGetValue(proto.Location, out Prototype locationPrototype) || !(locationPrototype is LocationPrototype))
+					Error($"Unknown location '{proto.Location}' referenced by '{proto.Id}' in file \"{proto.DataFilePath}\".");
+			}
+
+			if (proto.GlanceDescription == null) MissingPropertyError(proto, "glanceDescription");
+			if (proto.ApproachDescription == null) MissingPropertyError(proto, "approachDescription");
+
+			if (!npcTypeMap.ContainsKey(proto.Id))
+				Error($"Unknown NPC '{proto.Id}' in file \"{proto.DataFilePath}\".");
 		}
 
 

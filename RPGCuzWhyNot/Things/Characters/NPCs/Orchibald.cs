@@ -1,16 +1,16 @@
 using RPGCuzWhyNot.Systems;
 using RPGCuzWhyNot.Systems.AttackSystem;
+using RPGCuzWhyNot.Systems.Data;
 using RPGCuzWhyNot.Things.Characters.Races.Humanoids;
 using RPGCuzWhyNot.Utilities;
 
-namespace RPGCuzWhyNot.Things.Characters.NPCs {
+namespace RPGCuzWhyNot.Things.Characters.NPCs
+{
+	[UniqueNpc("orchibald")]
 	public class Orchibald : NPC {
 		private const int voiceFrequency = 400;
 
 		public Orchibald() : base(new Dwarf(Humanoid.Gender.Male)) {
-			CallName = "orhibald";
-			Name = "Orhibald (Smith)";
-
 		}
 
 		public override void Converse(Character character, string response) {

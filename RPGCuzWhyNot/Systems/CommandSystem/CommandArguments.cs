@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace RPGCuzWhyNot.Systems.Commands {
+namespace RPGCuzWhyNot.Systems.CommandSystem {
 	public struct CommandArguments {
 		private readonly Dictionary<string, string> args;
 

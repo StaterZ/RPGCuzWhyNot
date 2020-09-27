@@ -5,7 +5,7 @@ using System.Linq;
 using RPGCuzWhyNot.Primitives;
 using RPGCuzWhyNot.Systems;
 using RPGCuzWhyNot.Systems.AttackSystem;
-using RPGCuzWhyNot.Systems.Commands;
+using RPGCuzWhyNot.Systems.CommandSystem;
 using RPGCuzWhyNot.Systems.HealthSystem;
 using RPGCuzWhyNot.Systems.Inventory;
 using RPGCuzWhyNot.Systems.MenuSystem;
@@ -27,7 +27,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 				Terminal.WriteLine($"{ctx.inflictor} killed you!");
 			};
 
-			commands = new PlayerCommands(this);
+			commands = new PlayerCommands();
 			commands.LoadCommands();
 		}
 
