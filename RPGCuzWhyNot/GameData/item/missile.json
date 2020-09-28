@@ -4,11 +4,13 @@
 	"name": "{Red}(Large Cruise Missile)",
 	"inventoryDescription": "A strange large object shaped like a pole",
 	"groundDescription": "There is a strange large pole-shaped object on the ground.",
-	"wieldable": true,
-	"wearable": true,
-	"meleeDamage": 999,
-	"handsRequired": 2,
-	"defense": -999,
-	"coveredParts": "back",
-	"coveredLayers": "outer"
+	"wieldable": {
+    "handsRequired": 2,
+    "meleeDamage": 999,
+  },
+	"wearable": {
+    "defense": -999,
+    "coveredParts": "back",
+    "coveredLayers": "outer"
+  },
 }

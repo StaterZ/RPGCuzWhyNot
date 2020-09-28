@@ -5,9 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using RPGCuzWhyNot.Systems.Data.JsonConverters;
+using Newtonsoft.Json;
 using RPGCuzWhyNot.Systems.Data.Prototypes;
 using RPGCuzWhyNot.Things;
 using RPGCuzWhyNot.Things.Characters.NPCs;
@@ -20,14 +18,11 @@ namespace RPGCuzWhyNot.Systems.Data {
 		private static readonly string itemsPath = dataPath + "item";
 		private static readonly string npcsPath = dataPath + "npc";
 
-		private static readonly JsonSerializerOptions serializerOptions = new JsonSerializerOptions {
-			ReadCommentHandling = JsonCommentHandling.Skip,
-			AllowTrailingCommas = true,
-			Converters = {
-				new JsonStringEnumConverter(),
-				new JsonMaybeListConverter()
-			}
+		private static readonly JsonSerializerSettings serializerSettings = new JsonSerializerSettings {
+			MissingMemberHandling = MissingMemberHandling.Error
 		};
+
+		private static readonly JsonSerializer serializer = JsonSerializer.CreateDefault(serializerSettings);
 
 		private static Dictionary<string, Prototype> prototypes;
 		private static Dictionary<string, Location> locations;
@@ -146,6 +141,32 @@ namespace RPGCuzWhyNot.Systems.Data {
 			return npc;
 		}
 
+		private static List<T> DeserializeOneOrMore<T>(string json) {
+			var reader = new JsonTextReader(new StringReader(json));
+			var list = new List<T>();
+
+			reader.Read();
+			if (reader.TokenType == JsonToken.StartArray) {
+				// Read an array of objects.
+				reader.Read();
+				while (reader.TokenType != JsonToken.EndArray) {
+					T value = serializer.Deserialize<T>(reader);
+					list.Add(value);
+					reader.Read();
+				}
+			}
+			else {
+				// Read a single object.
+				T value = serializer.Deserialize<T>(reader);
+				list.Add(value);
+			}
+
+			if (reader.Read())
+				throw new JsonException("Expected end of file after array/object.");
+
+			return list;
+		}
+
 		private static void LoadPrototypesFromPath<TProto>(string path) where TProto : Prototype {
 			string[] dataFiles = Directory.GetFiles(path, "*.json", SearchOption.AllDirectories);
 
@@ -154,7 +175,7 @@ namespace RPGCuzWhyNot.Systems.Data {
 				List<TProto> prototypeList;
 				try {
 					string fileContent = File.ReadAllText(filePath);
-					prototypeList = JsonSerializer.Deserialize<List<TProto>>(fileContent, serializerOptions);
+					prototypeList = DeserializeOneOrMore<TProto>(fileContent);
 				}
 				catch (IOException e) {
 					Error($"Failed to read file \"{filePath}\":\n{e.Message}");
@@ -168,7 +189,6 @@ namespace RPGCuzWhyNot.Systems.Data {
 				// Add the new prototypes.
 				foreach (TProto proto in prototypeList) {
 					proto.DataFilePath = filePath;
-					((IOnDeserialized)proto).OnDeserialized();
 
 					if (proto.Id == null) {
 						MissingPropertyError(proto, "id");
@@ -209,9 +229,6 @@ namespace RPGCuzWhyNot.Systems.Data {
 
 		private static void ValidatePrototypes() {
 			foreach (Prototype proto in prototypes.Values) {
-				if (proto.CallName == null) MissingPropertyError(proto, "callName");
-				if (proto.Name == null) MissingPropertyError(proto, "name");
-
 				switch (proto) {
 					case LocationPrototype locationPrototype:
 						ValidateLocationPrototype(locationPrototype);
@@ -229,8 +246,6 @@ namespace RPGCuzWhyNot.Systems.Data {
 		}
 
 		private static void ValidateLocationPrototype(LocationPrototype proto) {
-			if (proto.Description == null) MissingPropertyError(proto, "description");
-
 			if (proto.Paths.Count == 0)
 				LogWarning($"Location '{proto.Id}' has no paths.");
 
@@ -239,37 +254,13 @@ namespace RPGCuzWhyNot.Systems.Data {
 		}
 
 		private static void ValidateItemPrototype(ItemPrototype proto) {
-			if (proto.DescriptionInInventory == null) MissingPropertyError(proto, "inventoryDescription");
-			if (proto.DescriptionOnGround == null) MissingPropertyError(proto, "groundDescription");
-
-			if (proto.IsWieldable) {
-				if (proto.HandsRequired == null) MissingPropertyError(proto, "handsRequired");
-				if (proto.MeleeDamage == null) MissingPropertyError(proto, "meleeDamage");
-			}
-
-			if (proto.IsWearable) {
-				if (proto.Defense == null) MissingPropertyError(proto, "defense");
-				if (proto.CoveredParts == 0) MissingPropertyError(proto, "coveredParts");
-				if (proto.CoveredLayers == 0) MissingPropertyError(proto, "coveredLayers");
-			}
-
-			if (proto.HasInventory) {
-				if (proto.WeightFraction.numerator == 0 && proto.WeightFraction.denominator == 0)
-					MissingPropertyError(proto, "weightFraction");
-			}
+			if (proto.Inventory != null && proto.Wieldable == null)
+				Error($"Item with inventory '{proto.Id}' must be wieldable, in file \"{proto.DataFilePath}\".");
 		}
 
 		private static void ValidateNpcPrototype(NpcPrototype proto) {
-			if (proto.Location == null) {
-				MissingPropertyError(proto, "location");
-			}
-			else {
-				if (!prototypes.TryGetValue(proto.Location, out Prototype locationPrototype) || !(locationPrototype is LocationPrototype))
-					Error($"Unknown location '{proto.Location}' referenced by '{proto.Id}' in file \"{proto.DataFilePath}\".");
-			}
-
-			if (proto.GlanceDescription == null) MissingPropertyError(proto, "glanceDescription");
-			if (proto.ApproachDescription == null) MissingPropertyError(proto, "approachDescription");
+			if (!prototypes.TryGetValue(proto.Location, out Prototype locationPrototype) || !(locationPrototype is LocationPrototype))
+				Error($"Unknown location '{proto.Location}' referenced by '{proto.Id}' in file \"{proto.DataFilePath}\".");
 
 			if (!npcTypeMap.ContainsKey(proto.Id))
 				Error($"Unknown NPC '{proto.Id}' in file \"{proto.DataFilePath}\".");
@@ -287,12 +278,12 @@ namespace RPGCuzWhyNot.Systems.Data {
 
 		private static void LogError(string message) {
 			Terminal.WriteDirect("{red}([ERROR/Data]) ");
-			Terminal.WriteLineDirect(message);
+			Console.WriteLine(message);
 		}
 
 		private static void LogWarning(string message) {
 			Terminal.WriteDirect("{yellow}([WARN/Data]) ");
-			Terminal.WriteLineDirect(message);
+			Console.WriteLine(message);
 		}
 	}
 }

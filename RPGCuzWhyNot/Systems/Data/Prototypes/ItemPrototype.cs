@@ -1,50 +1,25 @@
 using System;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using RPGCuzWhyNot.Primitives;
-using RPGCuzWhyNot.Systems.Data.JsonConverters;
 using RPGCuzWhyNot.Things.Item;
 
 namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 	[Serializable]
 	public sealed class ItemPrototype : Prototype {
-		[JsonPropertyName("inventoryDescription")]
+		[JsonProperty("inventoryDescription", Required = Required.Always)]
 		public string DescriptionInInventory { get; set; }
 
-		[JsonPropertyName("groundDescription")]
+		[JsonProperty("groundDescription", Required = Required.Always)]
 		public string DescriptionOnGround { get; set; }
 
-		// Wieldable
+		[JsonProperty("wieldable")]
+		public WieldableProps Wieldable { get; set; }
 
-		[JsonPropertyName("wieldable")]
-		public bool IsWieldable { get; set; }
+		[JsonProperty("wearable")]
+		public WearableProps Wearable { get; set; }
 
-		[JsonPropertyName("handsRequired")]
-		public int? HandsRequired { get; set; }
-
-		[JsonPropertyName("meleeDamage")]
-		public int? MeleeDamage { get; set; }
-
-		// Wearable
-
-		[JsonPropertyName("wearable")]
-		public bool IsWearable { get; set; }
-
-		[JsonPropertyName("defense")]
-		public int? Defense { get; set; }
-
-		[JsonPropertyName("coveredParts"), JsonConverter(typeof(JsonEnumConverter))]
-		public WearableSlots CoveredParts { get; set; }
-
-		[JsonPropertyName("coveredLayers"), JsonConverter(typeof(JsonEnumConverter))]
-		public WearableLayers CoveredLayers { get; set; }
-
-		// Inventory
-
-		[JsonPropertyName("hasInventory")]
-		public bool HasInventory { get; set; }
-
-		[JsonPropertyName("weightFraction"), JsonConverter(typeof(JsonFractionConverter))]
-		public Fraction WeightFraction { get; set; }
+		[JsonProperty("inventory")]
+		public InventoryProps Inventory { get; set; }
 
 
 		/// <summary>
@@ -52,39 +27,67 @@ namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 		/// </summary>
 		public IItem Create() {
 			IItem item;
-			if (HasInventory && IsWearable)
+			if (Inventory != null && Wearable != null)
 				item = new WearableItemWithInventory(Name, CallName, DescriptionInInventory, DescriptionOnGround);
-			else if (HasInventory)
+			else if (Inventory != null)
 				item = new ItemWithInventory(Name, CallName, DescriptionInInventory, DescriptionOnGround);
-			else if (IsWearable && IsWieldable)
+			else if (Wearable != null && Wieldable != null)
 				item = new WieldableWearableItem(Name, CallName, DescriptionInInventory, DescriptionOnGround);
-			else if (IsWearable)
+			else if (Wearable != null)
 				item = new WearableItem(Name, CallName, DescriptionInInventory, DescriptionOnGround);
-			else if (IsWieldable)
+			else if (Wieldable != null)
 				item = new WieldableItem(Name, CallName, DescriptionInInventory, DescriptionOnGround);
 			else
 				item = new SimpleItem(Name, CallName, DescriptionInInventory, DescriptionOnGround);
 
-			if (IsWearable) {
+			if (Wearable != null) {
 				IWearable wearable = (IWearable)item;
-				wearable.Defense = Defense ?? 0;
-				wearable.CoveredParts = CoveredParts;
-				wearable.CoveredLayers = CoveredLayers;
+				wearable.Defense = Wearable.Defense;
+				wearable.CoveredParts = Wearable.CoveredParts;
+				wearable.CoveredLayers = Wearable.CoveredLayers;
 			}
 
-			if (IsWieldable || HasInventory) {
+			if (Wieldable != null) {
 				IWieldable wieldable = (IWieldable)item;
-				wieldable.HandsRequired = HandsRequired ?? 0;
-				wieldable.MeleeDamage = MeleeDamage ?? 0;
+				wieldable.HandsRequired = Wieldable.HandsRequired;
+				wieldable.MeleeDamage = Wieldable.MeleeDamage;
 			}
 
-			if (HasInventory) {
+			if (Inventory != null) {
 				IItemWithInventory inventory = (IItemWithInventory)item;
-				inventory.WeightFraction = WeightFraction;
+				inventory.WeightFraction = Inventory.WeightFraction;
 			}
 
 			item.Prototype = this;
 			return item;
+		}
+
+
+		[JsonObject(ItemRequired = Required.Always)]
+		public class WieldableProps {
+			[JsonProperty("handsRequired")]
+			public int HandsRequired { get; set; }
+
+			[JsonProperty("meleeDamage")]
+			public int MeleeDamage { get; set; }
+		}
+
+		[JsonObject(ItemRequired = Required.Always)]
+		public class WearableProps {
+			[JsonProperty("defense")]
+			public int Defense { get; set; }
+
+			[JsonProperty("coveredParts")]
+			public WearableSlots CoveredParts { get; set; }
+
+			[JsonProperty("coveredLayers")]
+			public WearableLayers CoveredLayers { get; set; }
+		}
+
+		[JsonObject(ItemRequired = Required.Always)]
+		public class InventoryProps {
+			[JsonProperty("weightFraction")]
+			public Fraction WeightFraction { get; set; }
 		}
 	}
 }
