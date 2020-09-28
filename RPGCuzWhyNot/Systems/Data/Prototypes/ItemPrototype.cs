@@ -6,10 +6,10 @@ using RPGCuzWhyNot.Things.Item;
 namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 	[Serializable]
 	public sealed class ItemPrototype : Prototype {
-		[JsonProperty("inventoryDescription")]
+		[JsonProperty("inventoryDescription", Required = Required.Always)]
 		public string DescriptionInInventory { get; set; }
 
-		[JsonProperty("groundDescription")]
+		[JsonProperty("groundDescription", Required = Required.Always)]
 		public string DescriptionOnGround { get; set; }
 
 		[JsonProperty("wieldable")]

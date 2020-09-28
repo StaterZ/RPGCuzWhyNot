@@ -5,13 +5,13 @@ using RPGCuzWhyNot.Things.Characters.NPCs;
 namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 	[Serializable]
 	public class NpcPrototype : Prototype {
-		[JsonProperty("location")]
+		[JsonProperty("location", Required = Required.Always)]
 		public string Location { get; set; }
 
-		[JsonProperty("glanceDescription")]
+		[JsonProperty("glanceDescription", Required = Required.Always)]
 		public string GlanceDescription { get; set; }
 
-		[JsonProperty("approachDescription")]
+		[JsonProperty("approachDescription", Required = Required.Always)]
 		public string ApproachDescription { get; set; }
 	}
 }

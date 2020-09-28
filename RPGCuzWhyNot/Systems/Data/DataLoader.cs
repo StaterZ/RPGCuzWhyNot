@@ -229,9 +229,6 @@ namespace RPGCuzWhyNot.Systems.Data {
 
 		private static void ValidatePrototypes() {
 			foreach (Prototype proto in prototypes.Values) {
-				if (proto.CallName == null) MissingPropertyError(proto, "callName");
-				if (proto.Name == null) MissingPropertyError(proto, "name");
-
 				switch (proto) {
 					case LocationPrototype locationPrototype:
 						ValidateLocationPrototype(locationPrototype);
@@ -249,8 +246,6 @@ namespace RPGCuzWhyNot.Systems.Data {
 		}
 
 		private static void ValidateLocationPrototype(LocationPrototype proto) {
-			if (proto.Description == null) MissingPropertyError(proto, "description");
-
 			if (proto.Paths.Count == 0)
 				LogWarning($"Location '{proto.Id}' has no paths.");
 
@@ -259,24 +254,13 @@ namespace RPGCuzWhyNot.Systems.Data {
 		}
 
 		private static void ValidateItemPrototype(ItemPrototype proto) {
-			if (proto.DescriptionInInventory == null) MissingPropertyError(proto, "inventoryDescription");
-			if (proto.DescriptionOnGround == null) MissingPropertyError(proto, "groundDescription");
-
 			if (proto.Inventory != null && proto.Wieldable == null)
 				Error($"Item with inventory '{proto.Id}' must be wieldable, in file \"{proto.DataFilePath}\".");
 		}
 
 		private static void ValidateNpcPrototype(NpcPrototype proto) {
-			if (proto.Location == null) {
-				MissingPropertyError(proto, "location");
-			}
-			else {
-				if (!prototypes.TryGetValue(proto.Location, out Prototype locationPrototype) || !(locationPrototype is LocationPrototype))
-					Error($"Unknown location '{proto.Location}' referenced by '{proto.Id}' in file \"{proto.DataFilePath}\".");
-			}
-
-			if (proto.GlanceDescription == null) MissingPropertyError(proto, "glanceDescription");
-			if (proto.ApproachDescription == null) MissingPropertyError(proto, "approachDescription");
+			if (!prototypes.TryGetValue(proto.Location, out Prototype locationPrototype) || !(locationPrototype is LocationPrototype))
+				Error($"Unknown location '{proto.Location}' referenced by '{proto.Id}' in file \"{proto.DataFilePath}\".");
 
 			if (!npcTypeMap.ContainsKey(proto.Id))
 				Error($"Unknown NPC '{proto.Id}' in file \"{proto.DataFilePath}\".");

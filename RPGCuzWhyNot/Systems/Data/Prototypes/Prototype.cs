@@ -5,13 +5,13 @@ namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 		[JsonIgnore]
 		public string DataFilePath { get; set; }
 
-		[JsonProperty("id")]
+		[JsonProperty("id", Required = Required.Always)]
 		public string Id { get; set; }
 
-		[JsonProperty("callName")]
+		[JsonProperty("callName", Required = Required.Always)]
 		public string CallName { get; set; }
 
-		[JsonProperty("name")]
+		[JsonProperty("name", Required = Required.Always)]
 		public string Name { get; set; }
 	}
 }
