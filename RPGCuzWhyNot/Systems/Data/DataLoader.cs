@@ -29,11 +29,22 @@ namespace RPGCuzWhyNot.Systems.Data {
 		private static Dictionary<string, NPC> npcs;
 		private static Dictionary<string, Type> npcTypeMap = new Dictionary<string, Type>();
 
-		public static ReadOnlyDictionary<string, Prototype> Prototypes { get; private set; }
-		public static ReadOnlyDictionary<string, Location> Locations { get; private set; }
-		public static ReadOnlyDictionary<string, NPC> NPCs { get; private set; }
-
 		private static bool loadError;
+
+		/// <summary>
+		/// All of the loaded prototypes.
+		/// </summary>
+		public static ReadOnlyDictionary<string, Prototype> Prototypes { get; private set; }
+
+		/// <summary>
+		/// All of the loaded locations.
+		/// </summary>
+		public static ReadOnlyDictionary<string, Location> Locations { get; private set; }
+
+		/// <summary>
+		/// All of the loaded NPCs.
+		/// </summary>
+		public static ReadOnlyDictionary<string, NPC> NPCs { get; private set; }
 
 		static DataLoader() {
 			FindRegisteredNPCs();
@@ -50,28 +61,11 @@ namespace RPGCuzWhyNot.Systems.Data {
 			LoadPrototypesFromPath<ItemPrototype>(itemsPath);
 			LoadPrototypesFromPath<LocationPrototype>(locationsPath);
 			LoadPrototypesFromPath<NpcPrototype>(npcsPath);
-
 			ValidatePrototypes();
 
-			locations = new Dictionary<string, Location>();
-			Locations = new ReadOnlyDictionary<string, Location>(locations);
-
-			// Create the locations.
-			foreach (LocationPrototype prototype in prototypes.Values.OfType<LocationPrototype>()) {
-				Location location = prototype.Create();
-				locations.Add(prototype.Id, location);
-			}
-
-			SetupLocations();
-
-			npcs = new Dictionary<string, NPC>();
-			NPCs = new ReadOnlyDictionary<string, NPC>(npcs);
-
-			// Create the NPCs.
-			foreach (NpcPrototype proto in prototypes.Values.OfType<NpcPrototype>()) {
-				NPC npc = CreateNpc(proto);
-				if (npc != null) npcs.Add(proto.Id, npc);
-			}
+			ConstructLocations();
+			InitializeLocations();
+			ConstructNPCs();
 
 			return !loadError;
 		}
@@ -84,7 +78,7 @@ namespace RPGCuzWhyNot.Systems.Data {
 			if (prototypes.TryGetValue(id, out Prototype prototype) && prototype is ItemPrototype itemPrototype)
 				return itemPrototype.Create();
 
-			throw new Exception($"An item prototype with the id '{id}' was not found.");
+			throw new DataLoaderException($"An item prototype with the id '{id}' was not found.");
 		}
 
 		/// <summary>
@@ -93,78 +87,20 @@ namespace RPGCuzWhyNot.Systems.Data {
 		/// <param name="id">The id of the location.</param>
 		public static Location GetLocation(string id) {
 			if (!locations.TryGetValue(id, out Location location))
-				throw new Exception($"A location with the id '{id} was not found.");
+				throw new DataLoaderException($"A location with the id '{id} was not found.");
 
 			return location;
 		}
 
-		private static void FindRegisteredNPCs() { // Find all registered NPCs (those marked with UniqueNpcAttribute).
-			foreach (TypeInfo type in typeof(NPC).Assembly.DefinedTypes) {
-				UniqueNpcAttribute attribute = type.GetCustomAttribute<UniqueNpcAttribute>();
-				if (attribute != null) {
-					if (!typeof(NPC).IsAssignableFrom(type)) {
-						Error($"UniqueNpcAttribute used on a non NPC type '{type}'.");
-						continue;
-					}
-
-					if (type.GetConstructor(Array.Empty<Type>()) == null) {
-						Error($"Type marked with UniqueNpcAttribute '{type}' does not have a public parameterless constructor.");
-						continue;
-					}
-
-					if (!npcTypeMap.TryAdd(attribute.Id, type)) {
-						Error($"Duplicate UniqueNpcAttribute with id '{attribute.Id}' on type '{type}'.");
-						continue;
-					}
-				}
-			}
-		}
-
-		private static NPC CreateNpc(NpcPrototype proto) {
-			if (!npcTypeMap.TryGetValue(proto.Id, out Type type))
-				return null;
-
-			if (!locations.TryGetValue(proto.Location, out Location location))
-				return null;
-
-			NPC npc = (NPC)Activator.CreateInstance(type);
-			if (npc == null) {
-				Debug.Assert(false);
-				return null;
-			}
-
-			npc.Name = proto.Name;
-			npc.CallName = proto.CallName;
-			npc.location = location;
-			location.AddNPC(npc, proto.GlanceDescription, proto.ApproachDescription);
+		/// <summary>
+		/// Get an existing NPC from the registry.
+		/// </summary>
+		/// <param name="id">The id of the NPC.</param>
+		public static NPC GetNPC(string id) {
+			if (!npcs.TryGetValue(id, out NPC npc))
+				throw new DataLoaderException($"An NPC with the id '{id}' was not found.");
 
 			return npc;
-		}
-
-		private static List<T> DeserializeOneOrMore<T>(string json) {
-			var reader = new JsonTextReader(new StringReader(json));
-			var list = new List<T>();
-
-			reader.Read();
-			if (reader.TokenType == JsonToken.StartArray) {
-				// Read an array of objects.
-				reader.Read();
-				while (reader.TokenType != JsonToken.EndArray) {
-					T value = serializer.Deserialize<T>(reader);
-					list.Add(value);
-					reader.Read();
-				}
-			}
-			else {
-				// Read a single object.
-				T value = serializer.Deserialize<T>(reader);
-				list.Add(value);
-			}
-
-			if (reader.Read())
-				throw new JsonException("Expected end of file after array/object.");
-
-			return list;
 		}
 
 		private static void LoadPrototypesFromPath<TProto>(string path) where TProto : Prototype {
@@ -201,7 +137,77 @@ namespace RPGCuzWhyNot.Systems.Data {
 			}
 		}
 
-		private static void SetupLocations() {
+		// Deserializes either an array or a single object from a string.
+		private static List<T> DeserializeOneOrMore<T>(string json) {
+			var reader = new JsonTextReader(new StringReader(json));
+			var list = new List<T>();
+
+			reader.Read();
+			if (reader.TokenType == JsonToken.StartArray) {
+				// Read an array of objects.
+				reader.Read();
+				while (reader.TokenType != JsonToken.EndArray) {
+					T value = serializer.Deserialize<T>(reader);
+					list.Add(value);
+					reader.Read();
+				}
+			}
+			else {
+				// Read a single object.
+				T value = serializer.Deserialize<T>(reader);
+				list.Add(value);
+			}
+
+			if (reader.Read())
+				throw new JsonException("Expected end of file after array/object.");
+
+			return list;
+		}
+
+		private static NPC CreateNpc(NpcPrototype proto) {
+			if (!npcTypeMap.TryGetValue(proto.Id, out Type type))
+				return null;
+
+			if (!locations.TryGetValue(proto.Location, out Location location))
+				return null;
+
+			NPC npc = (NPC)Activator.CreateInstance(type);
+			if (npc == null) {
+				Debug.Assert(false);
+				return null;
+			}
+
+			npc.Name = proto.Name;
+			npc.CallName = proto.CallName;
+			npc.location = location;
+			location.AddNPC(npc, proto.GlanceDescription, proto.ApproachDescription);
+
+			return npc;
+		}
+
+		private static void ConstructLocations() {
+			locations = new Dictionary<string, Location>();
+			Locations = new ReadOnlyDictionary<string, Location>(locations);
+
+			// Create the locations.
+			foreach (LocationPrototype prototype in prototypes.Values.OfType<LocationPrototype>()) {
+				Location location = prototype.Create();
+				locations.Add(prototype.Id, location);
+			}
+		}
+
+		private static void ConstructNPCs() {
+			npcs = new Dictionary<string, NPC>();
+			NPCs = new ReadOnlyDictionary<string, NPC>(npcs);
+
+			// Create the NPCs.
+			foreach (NpcPrototype proto in prototypes.Values.OfType<NpcPrototype>()) {
+				NPC npc = CreateNpc(proto);
+				if (npc != null) npcs.Add(proto.Id, npc);
+			}
+		}
+
+		private static void InitializeLocations() {
 			foreach ((string id, Location location) in locations) {
 				LocationPrototype locationPrototype = location.Prototype;
 
@@ -226,6 +232,30 @@ namespace RPGCuzWhyNot.Systems.Data {
 				}
 			}
 		}
+
+		private static void FindRegisteredNPCs() { // Find all registered NPCs (those marked with UniqueNpcAttribute).
+			foreach (TypeInfo type in typeof(NPC).Assembly.DefinedTypes) {
+				UniqueNpcAttribute attribute = type.GetCustomAttribute<UniqueNpcAttribute>();
+				if (attribute != null) {
+					if (!typeof(NPC).IsAssignableFrom(type)) {
+						Error($"UniqueNpcAttribute used on a non NPC type '{type}'.");
+						continue;
+					}
+
+					if (type.GetConstructor(Array.Empty<Type>()) == null) {
+						Error($"Type marked with UniqueNpcAttribute '{type}' does not have a public parameterless constructor.");
+						continue;
+					}
+
+					if (!npcTypeMap.TryAdd(attribute.Id, type)) {
+						Error($"Duplicate UniqueNpcAttribute with id '{attribute.Id}' on type '{type}'.");
+						continue;
+					}
+				}
+			}
+		}
+
+		#region Validation
 
 		private static void ValidatePrototypes() {
 			foreach (Prototype proto in prototypes.Values) {
@@ -265,6 +295,8 @@ namespace RPGCuzWhyNot.Systems.Data {
 			if (!npcTypeMap.ContainsKey(proto.Id))
 				Error($"Unknown NPC '{proto.Id}' in file \"{proto.DataFilePath}\".");
 		}
+
+		#endregion
 
 
 		private static void MissingPropertyError(Prototype prototype, string propertyName) {
