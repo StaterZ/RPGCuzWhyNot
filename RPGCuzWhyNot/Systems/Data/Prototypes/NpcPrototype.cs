@@ -1,6 +1,5 @@
 ﻿using System;
 using Newtonsoft.Json;
-using RPGCuzWhyNot.Things.Characters.NPCs;
 
 namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 	[Serializable]

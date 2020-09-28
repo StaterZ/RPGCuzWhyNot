@@ -37,7 +37,7 @@ namespace RPGCuzWhyNot.Systems {
 		// If MillisPerChar is greater than BeepDuration then the time not spend beeping will be used for sleeping.
 		// If MillisPerChar is less than BeepDuration then there will be noticable stutters when beeping.
 
-		private static int charBeepCounter = 0;
+		private static int charBeepCounter;
 
 		public static void PushState() => stateStack.Push(GetState());
 		public static void PopState() => SetState(stateStack.Pop());

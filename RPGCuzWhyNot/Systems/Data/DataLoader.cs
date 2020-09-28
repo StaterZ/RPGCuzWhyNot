@@ -239,17 +239,12 @@ namespace RPGCuzWhyNot.Systems.Data {
 				if (attribute != null) {
 					if (!typeof(NPC).IsAssignableFrom(type)) {
 						Error($"UniqueNpcAttribute used on a non NPC type '{type}'.");
-						continue;
 					}
-
-					if (type.GetConstructor(Array.Empty<Type>()) == null) {
+					else if (type.GetConstructor(Array.Empty<Type>()) == null) {
 						Error($"Type marked with UniqueNpcAttribute '{type}' does not have a public parameterless constructor.");
-						continue;
 					}
-
-					if (!npcTypeMap.TryAdd(attribute.Id, type)) {
+					else if (!npcTypeMap.TryAdd(attribute.Id, type)) {
 						Error($"Duplicate UniqueNpcAttribute with id '{attribute.Id}' on type '{type}'.");
-						continue;
 					}
 				}
 			}
