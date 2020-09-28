@@ -1,5 +1,5 @@
 namespace RPGCuzWhyNot.Things.Characters {
-	public class Referal {
+	public class Referral {
 		/// <summary>
 		/// as in "did you know [subject] stole a knife?"
 		/// in 1st person it would be "I"
@@ -51,7 +51,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 		/// as in "control [subject]"
 		/// in 1st person it would be "Myself"
 		/// </param>
-		public Referal(string subjectPronoun, string objectPronoun, string possessiveAdjective, string possessivePronoun, string reflexivePronoun) {
+		public Referral(string subjectPronoun, string objectPronoun, string possessiveAdjective, string possessivePronoun, string reflexivePronoun) {
 			this.subjectPronoun = subjectPronoun;
 			this.objectPronoun = objectPronoun;
 			this.possessiveAdjective = possessiveAdjective;
