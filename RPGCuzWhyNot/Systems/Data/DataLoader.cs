@@ -149,11 +149,11 @@ namespace RPGCuzWhyNot.Systems.Data {
 			if (reader.TokenType == JsonToken.StartArray) {
 				// Read an array of objects.
 				reader.Read();
-				do {
+				while (reader.TokenType != JsonToken.EndArray) {
 					T value = serializer.Deserialize<T>(reader);
 					list.Add(value);
 					reader.Read();
-				} while (reader.TokenType != JsonToken.EndArray);
+				}
 			}
 			else {
 				// Read a single object.
