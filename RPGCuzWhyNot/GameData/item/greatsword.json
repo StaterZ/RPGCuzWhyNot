@@ -18,7 +18,7 @@
       "callNames": [ "light attack", "light" ],
       "name": "Light Attack",
       "description": "Swing the sword about and hope to hit something...",
-      "executeDescription": "You lash the sword about while eating a burrito. You manage to drop the burrito in the eyes if your enemy. They take damage",
+      "executeDescription": "You slash the sword about while eating a burrito. You manage to drop the burrito in the eyes of your enemy. They take damage",
       "requirements": {
         "stats": {
           "strength": 2
