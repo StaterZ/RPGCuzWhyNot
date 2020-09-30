@@ -19,7 +19,7 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 
 		public readonly string name;
 		public readonly List<MenuItem> items;
-		private int? lastDrawnIndex;
+		private int lastDrawnIndex = -1;
 
 		private int ItemCount => Math.Max(items.Count, 1);
 
@@ -49,7 +49,7 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 			this.items = items.ToList();
 		}
 
-		public void Draw(int? selectedIndex, IEnumerable<Menu> path) {
+		public void Draw(int selectedIndex, IEnumerable<Menu> path) {
 			lastDrawnIndex = selectedIndex;
 
 			Terminal.WriteLineDirect(Stringification.StringifyArray(pathBegin, pathSeparator, pathEnd, path.Select(menu => menu.name).ToArray()));
@@ -70,8 +70,8 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 			}
 			Terminal.WriteLineDirect(new string('#', Width));
 
-			if (selectedIndex.HasValue && selectedIndex < items.Count) {
-				Terminal.WriteLine(items[selectedIndex.Value].hoverDescription);
+			if (selectedIndex < items.Count) {
+				Terminal.WriteLine(items[selectedIndex].hoverDescription);
 			}
 		}
 
@@ -88,8 +88,8 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 				Terminal.CursorPosition += Vec2.Down * BaseHeight;
 			}
 
-			int numOfHoverDescriptionLines = lastDrawnIndex.HasValue && lastDrawnIndex < items.Count
-				? items[lastDrawnIndex.Value].hoverDescription.Count(c => c == '\n') + 1
+			int numOfHoverDescriptionLines = lastDrawnIndex != -1 && lastDrawnIndex < items.Count
+				? items[lastDrawnIndex].hoverDescription.Count(c => c == '\n') + 1
 				: 0;
 
 			for (int i = 0; i < numOfHoverDescriptionLines; i++) {
@@ -106,7 +106,6 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 
 		public void Enter(Stack<Menu> stack) {
 			Vec2 drawPos = Terminal.CursorPosition;
-			bool isCursorVisible = false;
 			int arrowIndex = 0;
 			bool needsRedraw = true;
 			MenuEffectContext ctx = new MenuEffectContext(drawPos, stack);
@@ -122,7 +121,7 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 				//draw
 				if (needsRedraw) {
 					Terminal.CursorPosition = drawPos;
-					Draw(isCursorVisible ? arrowIndex : (int?)null, stack.Reverse());
+					Draw(arrowIndex, stack.Reverse());
 					needsRedraw = false;
 				}
 
@@ -141,7 +140,6 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 						//go up
 						case ConsoleKey.UpArrow:
 							Terminal.Beep(100, 50);
-							isCursorVisible = true;
 							arrowIndex--;
 							OnArrowIndexChange();
 							break;
@@ -149,7 +147,6 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 						//go down
 						case ConsoleKey.DownArrow:
 							Terminal.Beep(100, 50);
-							isCursorVisible = true;
 							arrowIndex++;
 							OnArrowIndexChange();
 							break;
@@ -170,7 +167,6 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 						case ConsoleKey.RightArrow:
 						case ConsoleKey.Enter:
 							Terminal.Beep(200, 50);
-							isCursorVisible = true;
 							if (arrowIndex < items.Count) {
 								items[arrowIndex].effect(ctx);
 								needsRedraw = true;
