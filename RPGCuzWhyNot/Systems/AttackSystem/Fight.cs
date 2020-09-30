@@ -27,6 +27,10 @@ namespace RPGCuzWhyNot.Systems.AttackSystem {
 					Terminal.WriteLine($"{{fg:Cyan}}({combatant.Name}s Turn)");
 					combatant.DoTurn(this);
 					Terminal.WriteLine();
+
+					if (!isInCombat) {
+						break;
+					}
 				}
 			}
 
