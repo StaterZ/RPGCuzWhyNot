@@ -82,6 +82,7 @@ namespace RPGCuzWhyNot.Systems {
 			int startLine = CursorPosition.y;
 			CursorPosition = new Vec2(0, startLine);
 			WriteDirect(new string(' ', WindowSize.x));
+			WriteLineDirect();
 			CursorPosition = new Vec2(0, startLine + 1);
 		}
 
