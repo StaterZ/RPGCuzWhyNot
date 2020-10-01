@@ -8,7 +8,6 @@ using RPGCuzWhyNot.Systems.Data.Prototypes;
 namespace RPGCuzWhyNot.Systems {
 	public static class Terminal {
 		private static readonly Stack<State> stateStack = new Stack<State>();
-		private static readonly Dictionary<char, Alias> aliases = new Dictionary<char, Alias>();
 
 		public static ConsoleColor ForegroundColor { get => Console.ForegroundColor; set => Console.ForegroundColor = value; }
 		public static ConsoleColor BackgroundColor { get => Console.BackgroundColor; set => Console.BackgroundColor = value; }
@@ -96,13 +95,6 @@ namespace RPGCuzWhyNot.Systems {
 		}
 
 		private static void WriteChar(char c) {
-			bool doAlias = aliases.TryGetValue(c, out Alias alias);
-			if (doAlias) {
-				alias.preEffect?.Invoke();
-				if (!alias.showChar) {
-					goto postEffect;
-				}
-			}
 			Console.Write(c);
 			++charBeepCounter;
 			if (charBeepCounter >= CharsPerBeep) {
@@ -118,10 +110,6 @@ namespace RPGCuzWhyNot.Systems {
 				}
 			} else if (!Console.KeyAvailable) {
 				Thread.Sleep(MillisPerChar);
-			}
-		postEffect:
-			if (doAlias) {
-				alias.postEffect?.Invoke();
 			}
 		}
 
@@ -213,15 +201,6 @@ namespace RPGCuzWhyNot.Systems {
 			}
 		}
 
-		public static void AddAlias(char symbol, bool showChar, AliasEffect preEffect, AliasEffect postEffect) {
-			aliases.Add(symbol, new Alias {
-				symbol = symbol,
-				showChar = showChar,
-				preEffect = preEffect,
-				postEffect = postEffect,
-			});
-		}
-
 		public static State GetState() {
 			return new State {
 				foregroundColor = ForegroundColor,
@@ -253,15 +232,6 @@ namespace RPGCuzWhyNot.Systems {
 			public int millisPerChar;
 			public int beepFrequency;
 			public int beepDuration;
-		}
-
-		public delegate void AliasEffect();
-
-		private struct Alias {
-			public char symbol;
-			public bool showChar;
-			public AliasEffect preEffect;
-			public AliasEffect postEffect;
 		}
 
 		public static void Beep(int frequency, int duration) {
