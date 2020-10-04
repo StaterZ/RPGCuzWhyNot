@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using RPGCuzWhyNot.Utilities;
 
 namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {

@@ -1,4 +1,4 @@
-﻿using RPGCuzWhyNot.Things;
+using RPGCuzWhyNot.Things;
 
 namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
 	public class EquippedCommand : Command {

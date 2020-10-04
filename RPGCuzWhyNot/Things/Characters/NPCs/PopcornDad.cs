@@ -1,4 +1,4 @@
-﻿using RPGCuzWhyNot.Systems.Data;
+using RPGCuzWhyNot.Systems.Data;
 
 namespace RPGCuzWhyNot.Things.Characters.NPCs {
 	[UniqueNpc("popcorn_dad")]
