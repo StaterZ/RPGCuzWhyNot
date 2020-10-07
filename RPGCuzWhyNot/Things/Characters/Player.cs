@@ -92,7 +92,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 				Menu wearableItems = new Menu("{fg:Yellow}(Wearables)");
 				Menu wieldableItems = new Menu("{fg:Yellow}(Wieldables)");
 				Menu inventoriesItems = new Menu("{fg:DarkYellow}(Inventories)");
-				Menu consumeableItems = new Menu("{fg:Blue}(Consumeables)");
+				Menu consumableItems = new Menu("{fg:Blue}(Consumables)");
 				foreach (IItem item in Inventory) {
 					Menu menu = new Menu(item.Name);
 
@@ -107,7 +107,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 						inventoriesItems.items.Add(new SubMenu(menu, "Do something with this item. (Temp Desc)"));
 					}
 					if (item.ItemActions.Any(action => action.Effects.ConsumeSelf)) {
-						consumeableItems.items.Add(new SubMenu(menu, "Do something with this item. (Temp Desc)"));
+						consumableItems.items.Add(new SubMenu(menu, "Do something with this item. (Temp Desc)"));
 					}
 
 					InsertItemActions(menu, item.ItemActions);
@@ -117,13 +117,13 @@ namespace RPGCuzWhyNot.Things.Characters {
 					new SubMenu(allItems, "List everything"),
 					new SubMenu(wearableItems, "List wearables"),
 					new SubMenu(wieldableItems, "List wieldables"),
-					new SubMenu(consumeableItems, "List consumeables")
+					new SubMenu(consumableItems, "List consumables")
 				);
 
-				Menu equippment = new Menu("{fg:Yellow}(Equippment)");
+				Menu equipment = new Menu("{fg:Yellow}(Equipment)");
 				foreach (IWearable wearable in Wearing) {
 					Menu menu = new Menu(wearable.Name);
-					equippment.items.Add(new SubMenu(menu, "Do something with this item. (Temp Desc)"));
+					equipment.items.Add(new SubMenu(menu, "Do something with this item. (Temp Desc)"));
 
 					InsertItemActions(menu, wearable.ItemActions);
 				}
@@ -131,7 +131,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 				Menu root = new Menu("Root",
 					new SubMenu(attack, "Attack something"),
 					new SubMenu(items, "Use an item"),
-					new SubMenu(equippment, "Manage equippment"),
+					new SubMenu(equipment, "Manage equippment"),
 					new MenuItem("Flee", "Run away from the fight.", ctx => {
 						//fight.combatants.Remove(this);
 						fight.EndCombat();
@@ -139,7 +139,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 						isDonePlanningTurn = true;
 						ctx.ExitEntireMenuStack();
 					}),
-					new MenuItem("EndTurn", "Confirm your actions and procced to the next turn.", ctx => {
+					new MenuItem("EndTurn", "Confirm your actions and proceed to the next turn.", ctx => {
 						isDonePlanningTurn = true;
 						ctx.ExitEntireMenuStack();
 					})
