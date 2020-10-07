@@ -9,6 +9,8 @@ namespace RPGCuzWhyNot.Systems {
 	public static class Terminal {
 		private static readonly Stack<State> stateStack = new Stack<State>();
 
+		private static int cursorRowDisplacement = 0;
+
 		public static ConsoleColor ForegroundColor { get => Console.ForegroundColor; set => Console.ForegroundColor = value; }
 		public static ConsoleColor BackgroundColor { get => Console.BackgroundColor; set => Console.BackgroundColor = value; }
 
@@ -18,8 +20,8 @@ namespace RPGCuzWhyNot.Systems {
 		}
 
 		public static int CursorY {
-			get => Console.CursorTop;
-			set => Console.CursorTop = value;
+			get => Console.CursorTop + cursorRowDisplacement;
+			set => Console.CursorTop = value - cursorRowDisplacement;
 		}
 
 		public static Vec2 CursorPosition {
@@ -105,7 +107,18 @@ namespace RPGCuzWhyNot.Systems {
 		}
 
 		private static void WriteChar(char c) {
+			int consoleLeftBefore = Console.CursorLeft;
+			int consoleTopBefore = Console.CursorTop;
 			Console.Write(c);
+			int consoleLeftAfter = Console.CursorLeft;
+			int consoleTopAfter = Console.CursorTop;
+
+			if (consoleLeftAfter < consoleLeftBefore || consoleLeftBefore == 0 && c == '\n') {
+				if (consoleTopBefore == consoleTopAfter) {
+					++cursorRowDisplacement;
+				}
+			}
+
 			++charBeepCounter;
 			if (charBeepCounter >= CharsPerBeep) {
 				charBeepCounter = 0;
@@ -250,6 +263,7 @@ namespace RPGCuzWhyNot.Systems {
 
 		public static void Clear() {
 			Console.Clear();
+			cursorRowDisplacement = 0;
 		}
 
 		public static string ReadLine() {
