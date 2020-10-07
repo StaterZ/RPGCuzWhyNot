@@ -106,6 +106,32 @@ namespace RPGCuzWhyNot.Systems {
 			PopState();
 		}
 
+		public static void WriteRaw(string text) {
+			foreach (char c in text) {
+				WriteChar(c);
+			}
+		}
+
+		public static void WriteRawWithoutDelay(string text) {
+			PushState();
+			MillisPerChar = 0;
+			BeepDuration = 0;
+			foreach (char c in text) {
+				WriteChar(c);
+			}
+			PopState();
+		}
+
+		public static void WriteLineRaw(string text) {
+			WriteRaw(text);
+			WriteRaw("\n");
+		}
+
+		public static void WriteLineRawWithoutDelay(string text) {
+			WriteRawWithoutDelay(text);
+			WriteRawWithoutDelay("\n");
+		}
+
 		private static void WriteChar(char c) {
 			int consoleLeftBefore = Console.CursorLeft;
 			int consoleTopBefore = Console.CursorTop;
