@@ -12,11 +12,21 @@ namespace RPGCuzWhyNot.Systems {
 		public static ConsoleColor ForegroundColor { get => Console.ForegroundColor; set => Console.ForegroundColor = value; }
 		public static ConsoleColor BackgroundColor { get => Console.BackgroundColor; set => Console.BackgroundColor = value; }
 
+		public static int CursorX {
+			get => Console.CursorLeft;
+			set => Console.CursorLeft = value;
+		}
+
+		public static int CursorY {
+			get => Console.CursorTop;
+			set => Console.CursorTop = value;
+		}
+
 		public static Vec2 CursorPosition {
-			get => new Vec2(Console.CursorLeft, Console.CursorTop);
+			get => new Vec2(CursorX, CursorY);
 			set {
-				Console.CursorLeft = value.x;
-				Console.CursorTop = value.y;
+				CursorX = value.x;
+				CursorY = value.y;
 			}
 		}
 
