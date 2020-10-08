@@ -10,7 +10,7 @@ namespace RPGCuzWhyNot.Systems.HealthSystem {
         public int CurrentHealth { get; private set; }
         public float Percent => (float)CurrentHealth / maxHealth;
         public bool IsDamaged => CurrentHealth < maxHealth;
-        public bool IsDead => CurrentHealth <= 0;
+        public bool IsAlive => CurrentHealth > 0;
         public bool IsAtMaxHealth => CurrentHealth >= maxHealth;
 
         public event Action<HealthChangeInfo> OnDeath; //when we run out of health
@@ -52,7 +52,7 @@ namespace RPGCuzWhyNot.Systems.HealthSystem {
 			}
 			if (delta < 0) {
 				OnDamage?.Invoke(info);
-				if (IsDead) {
+				if (!IsAlive) {
 					OnDeath?.Invoke(info);
 				}
 			}
