@@ -139,9 +139,23 @@ namespace RPGCuzWhyNot.Systems {
 			int consoleLeftAfter = Console.CursorLeft;
 			int consoleTopAfter = Console.CursorTop;
 
-			if (consoleLeftAfter < consoleLeftBefore || consoleLeftBefore == 0 && c == '\n') {
-				if (consoleTopBefore == consoleTopAfter) {
-					++cursorRowDisplacement;
+			if (consoleTopBefore == consoleTopAfter) {
+				// If the cursor didn't actually move down, we may need to emulate it.
+				switch (c) {
+					case '\r': // carrige return
+					case '\b': // backspace
+						break; // never change line
+
+					case '\n': // newline/linefeed
+						++cursorRowDisplacement;
+						break; // always change line
+
+					default:
+						if (consoleLeftAfter < consoleLeftBefore) {
+							// If the cursor moved back, we assume a new line has begun.
+							++cursorRowDisplacement;
+						}
+						break;
 				}
 			}
 
