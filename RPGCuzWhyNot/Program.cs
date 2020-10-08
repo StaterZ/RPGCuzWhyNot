@@ -39,10 +39,11 @@ namespace RPGCuzWhyNot {
 			//add start items to player
 			player.Inventory.MoveItem(DataLoader.CreateItem("blue_potion"));
 			player.Inventory.MoveItem(DataLoader.CreateItem("backpack"));
+			player.Wielding.MoveItem((IWieldable)DataLoader.CreateItem("deluxeDebugDodad"));
+			player.Wielding.MoveItem((IWieldable)DataLoader.CreateItem("greatsword"));
 
 
 			//combat testing shortcut
-			player.Wielding.MoveItem((IWieldable)DataLoader.CreateItem("greatsword"));
 			Fight fight = new Fight(player, new TheMother());
 			fight.BeginCombat();
 

@@ -10,5 +10,8 @@
     <ItemGroup>
         <Content Include="GameData\**\*.*" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
+    <ItemGroup>
+      <None Remove="GameData\item\DeluxeDebugDodad.json" />
+    </ItemGroup>
 
 </Project>
