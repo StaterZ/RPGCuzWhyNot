@@ -39,7 +39,7 @@ namespace RPGCuzWhyNot {
 			//add start items to player
 			player.Inventory.MoveItem(DataLoader.CreateItem("blue_potion"));
 			player.Inventory.MoveItem(DataLoader.CreateItem("backpack"));
-			player.Wielding.MoveItem((IWieldable)DataLoader.CreateItem("deluxe_debug_dodad"));
+			player.Wielding.MoveItem((IWieldable)DataLoader.CreateItem("deluxe_debug_doodad"));
 			player.Wielding.MoveItem((IWieldable)DataLoader.CreateItem("greatsword"));
 
 

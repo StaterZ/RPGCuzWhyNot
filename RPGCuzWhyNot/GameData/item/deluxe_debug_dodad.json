@@ -1,9 +1,9 @@
 {
-  "id": "deluxe_debug_dodad",
-  "callName": "deluxe debug dodad",
-  "name": "Deluxe Debug Dodad (the mighty DDD)",
-  "inventoryDescription": "don't ask me!",
-  "groundDescription": "i'm not creative enough for this!",
+  "id": "deluxe_debug_doodad",
+  "callName": "deluxe debug doodad",
+  "name": "Deluxe Debug Doodad (the mighty DDD)",
+  "inventoryDescription": "Don't ask me!",
+  "groundDescription": "I'm not creative enough for this!",
   "wieldable": true,
   "handsRequired": 0,
   "defense": 0,
@@ -12,7 +12,7 @@
       "hasTarget": true,
       "callNames": [ "weee" ],
       "name": "Insta-Kill",
-      "description": "Instantly kill the enemies with the literal powers of god",
+      "description": "Instantly kill the enemies with the literal powers of god.",
       "executeDescription": "You slay your enemies with the mighty powers of the dev team!",
       "effects": {
         "meleeDamage": 999
