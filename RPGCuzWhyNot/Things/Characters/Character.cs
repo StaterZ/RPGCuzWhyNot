@@ -7,6 +7,7 @@ using RPGCuzWhyNot.Things.Item;
 using System.Collections;
 using System.Collections.Generic;
 using RPGCuzWhyNot.Systems.AttackSystem;
+using System;
 
 namespace RPGCuzWhyNot.Things.Characters {
 	public abstract class Character : IInflictor, IThing, ICanWear, ICanWield, IHasItemInventory {
@@ -45,6 +46,9 @@ namespace RPGCuzWhyNot.Things.Characters {
 		public virtual string ListingName => ThingExt.DefaultListingName(this);
 
 		public abstract void DoTurn(Fight fight);
+
+
+		public abstract bool WantsToHarm(Character character);
 	}
 }
 

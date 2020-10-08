@@ -29,5 +29,9 @@ namespace RPGCuzWhyNot.Things.Characters.Enemies {
 		private void Die(HealthChangeInfo ctx) {
 			Say("NOOOOOO!!!");
 		}
+
+		public override bool WantsToHarm(Character character) {
+			return true;
+		}
 	}
 }

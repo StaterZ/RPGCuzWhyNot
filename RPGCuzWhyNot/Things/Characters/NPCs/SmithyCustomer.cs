@@ -18,5 +18,9 @@ namespace RPGCuzWhyNot.Things.Characters.NPCs {
 		public override void DoTurn(Fight fight) {
 			throw new System.NotImplementedException();
 		}
+
+		public override bool WantsToHarm(Character character) {
+			return true;
+		}
 	}
 }

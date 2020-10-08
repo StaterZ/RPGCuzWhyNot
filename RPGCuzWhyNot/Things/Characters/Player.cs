@@ -156,6 +156,10 @@ namespace RPGCuzWhyNot.Things.Characters {
 		public void Handle(string message) {
 			commands.Handle(message);
 		}
+
+		public override bool WantsToHarm(Character character) {
+			return true;
+		}
 	}
 }
 

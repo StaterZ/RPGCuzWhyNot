@@ -28,6 +28,10 @@ namespace RPGCuzWhyNot.Systems.AttackSystem {
 					combatant.DoTurn(this);
 					Terminal.WriteLine();
 
+					if (!combatants.Where(c => c != Program.player && !c.health.IsAlive && c.WantsToHarm(Program.player)).Any()) { //slightly questionable check but it'll work for now...
+						EndCombat();
+					}
+
 					if (!isInCombat) {
 						break;
 					}
