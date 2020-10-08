@@ -304,13 +304,13 @@ namespace RPGCuzWhyNot.Systems.Data {
 		}
 
 		private static void LogError(string message) {
-			Terminal.WriteDirect("{red}([ERROR/Data]) ");
-			Console.WriteLine(message);
+			Terminal.WriteWithoutDelay("{red}([ERROR/Data]) ");
+			Terminal.WriteLineRawWithoutDelay(message);
 		}
 
 		private static void LogWarning(string message) {
-			Terminal.WriteDirect("{yellow}([WARN/Data]) ");
-			Console.WriteLine(message);
+			Terminal.WriteWithoutDelay("{yellow}([WARN/Data]) ");
+			Terminal.WriteLineRawWithoutDelay(message);
 		}
 	}
 }

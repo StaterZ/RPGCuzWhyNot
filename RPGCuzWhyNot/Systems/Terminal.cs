@@ -9,14 +9,26 @@ namespace RPGCuzWhyNot.Systems {
 	public static class Terminal {
 		private static readonly Stack<State> stateStack = new Stack<State>();
 
+		private static int cursorRowDisplacement = 0;
+
 		public static ConsoleColor ForegroundColor { get => Console.ForegroundColor; set => Console.ForegroundColor = value; }
 		public static ConsoleColor BackgroundColor { get => Console.BackgroundColor; set => Console.BackgroundColor = value; }
 
+		public static int CursorX {
+			get => Console.CursorLeft;
+			set => Console.CursorLeft = value;
+		}
+
+		public static int CursorY {
+			get => Console.CursorTop + cursorRowDisplacement;
+			set => Console.CursorTop = value - cursorRowDisplacement;
+		}
+
 		public static Vec2 CursorPosition {
-			get => new Vec2(Console.CursorLeft, Console.CursorTop);
+			get => new Vec2(CursorX, CursorY);
 			set {
-				Console.CursorLeft = value.x;
-				Console.CursorTop = value.y;
+				CursorX = value.x;
+				CursorY = value.y;
 			}
 		}
 
@@ -61,8 +73,8 @@ namespace RPGCuzWhyNot.Systems {
 		/// <summary>
 		/// Write a line without delay or beeping.
 		/// </summary>
-		public static void WriteLineDirect(string text) {
-			WriteDirect(text);
+		public static void WriteLineWithoutDelay(string text) {
+			WriteWithoutDelay(text);
 			Write('\n');
 		}
 
@@ -86,7 +98,7 @@ namespace RPGCuzWhyNot.Systems {
 		/// <summary>
 		/// Write without delay or beeping.
 		/// </summary>
-		public static void WriteDirect(string text) {
+		public static void WriteWithoutDelay(string text) {
 			PushState();
 			MillisPerChar = 0;
 			BeepDuration = 0;
@@ -94,8 +106,59 @@ namespace RPGCuzWhyNot.Systems {
 			PopState();
 		}
 
+		public static void WriteRaw(string text) {
+			foreach (char c in text) {
+				WriteChar(c);
+			}
+		}
+
+		public static void WriteRawWithoutDelay(string text) {
+			PushState();
+			MillisPerChar = 0;
+			BeepDuration = 0;
+			foreach (char c in text) {
+				WriteChar(c);
+			}
+			PopState();
+		}
+
+		public static void WriteLineRaw(string text) {
+			WriteRaw(text);
+			WriteRaw("\n");
+		}
+
+		public static void WriteLineRawWithoutDelay(string text) {
+			WriteRawWithoutDelay(text);
+			WriteRawWithoutDelay("\n");
+		}
+
 		private static void WriteChar(char c) {
+			int consoleLeftBefore = Console.CursorLeft;
+			int consoleTopBefore = Console.CursorTop;
 			Console.Write(c);
+			int consoleLeftAfter = Console.CursorLeft;
+			int consoleTopAfter = Console.CursorTop;
+
+			if (consoleTopBefore == consoleTopAfter) {
+				// If the cursor didn't actually move down, we may need to emulate it.
+				switch (c) {
+					case '\r': // carrige return
+					case '\b': // backspace
+						break; // never change line
+
+					case '\n': // newline/linefeed
+						++cursorRowDisplacement;
+						break; // always change line
+
+					default:
+						if (consoleLeftAfter < consoleLeftBefore) {
+							// If the cursor moved back, we assume a new line has begun.
+							++cursorRowDisplacement;
+						}
+						break;
+				}
+			}
+
 			++charBeepCounter;
 			if (charBeepCounter >= CharsPerBeep) {
 				charBeepCounter = 0;
@@ -240,6 +303,7 @@ namespace RPGCuzWhyNot.Systems {
 
 		public static void Clear() {
 			Console.Clear();
+			cursorRowDisplacement = 0;
 		}
 
 		public static string ReadLine() {

@@ -11,11 +11,11 @@ namespace RPGCuzWhyNot {
 
 		private static void Main() {
 			//Load content
-			Terminal.WriteLineDirect("{fg:Yellow}(Loading Content...)");
+			Terminal.WriteLineWithoutDelay("{fg:Yellow}(Loading Content...)");
 			if (!DataLoader.LoadGameData()) {
 				Environment.Exit(1);
 			}
-			Terminal.WriteLineDirect("{fg:Green}(Done!)");
+			Terminal.WriteLineWithoutDelay("{fg:Green}(Done!)");
 			ConsoleUtils.Sleep(100);
 			Terminal.Clear();
 
