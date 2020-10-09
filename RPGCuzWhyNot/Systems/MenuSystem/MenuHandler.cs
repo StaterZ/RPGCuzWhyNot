@@ -4,109 +4,126 @@ using System.Linq;
 using RPGCuzWhyNot.Primitives;
 
 namespace RPGCuzWhyNot.Systems.MenuSystem {
-	public partial class Menu {
-		public partial class MenuHandler {
-			private readonly Stack<MenuState> stack = new Stack<MenuState>();
-			private Vec2 drawPos;
-			private bool needsRedraw;
+	public partial class MenuHandler {
+		public const string shortHands = "123456789abcdefghijklmopqrstuvwxyz";
+		private readonly Stack<MenuState> stack = new Stack<MenuState>();
+		private Vec2 drawPos;
+		private bool needsRedraw;
 
-			public void AwaitExitAsRoot() {
-				drawPos = Terminal.CursorPosition;
-				needsRedraw = true;
-				AwaitExit();
-			}
+		public void RunUntilExitAsRoot() {
+			drawPos = Terminal.CursorPosition;
+			needsRedraw = true;
+			RunUntil();
+		}
 
-			public void AwaitExit() {
-				int startStackCount = stack.Count;
-				while (stack.Count >= startStackCount) {
-					MenuState menuState = stack.Peek();
+		public void RunUntil() {
+			int startStackCount = stack.Count;
+			while (stack.Count >= startStackCount) {
+				MenuState menuState = stack.Peek();
 
-					//draw
-					if (needsRedraw) {
-						Terminal.CursorPosition = drawPos;
-						menuState.Draw(stack.Select(instance => instance.menu).Reverse());
-						needsRedraw = false;
-					}
+				DrawIfNeeded(menuState);
 
-					//get input
-					ConsoleKeyInfo keyPress = Console.ReadKey(true);
+				//get input
+				ConsoleKeyInfo keyPress = Console.ReadKey(true);
 
-					//try finding and using a short hand
-					int shortHandIndex = shortHands.IndexOf(keyPress.KeyChar);
-					if (shortHandIndex != -1 && shortHandIndex < menuState.menu.items.Count) {
-						Terminal.Beep(200, 50);
-						menuState.Index = shortHandIndex;
-						menuState.Selected.effect(this);
-					} else {
-						//else, update the arrow key system
-						switch (keyPress.Key) {
-							//go up
-							case ConsoleKey.UpArrow:
-								Terminal.Beep(100, 50);
-								menuState.Index--;
-								Terminal.CursorPosition = drawPos;
-								menuState.ClearDescription();
-								needsRedraw = true;
-								break;
-
-							//go down
-							case ConsoleKey.DownArrow:
-								Terminal.Beep(100, 50);
-								menuState.Index++;
-								Terminal.CursorPosition = drawPos;
-								menuState.ClearDescription();
-								needsRedraw = true;
-								break;
-
-							//go back
-							case ConsoleKey.LeftArrow:
-							case ConsoleKey.Escape:
-							case ConsoleKey.Backspace:
-								if (stack.Count > 1) {
-									Terminal.Beep(200, 50);
-									ExitMenu();
-								} else {
-									Terminal.Beep(50, 100);
-								}
-								break;
-
-							//execute selected menu item
-							case ConsoleKey.RightArrow:
-							case ConsoleKey.Enter:
-								Terminal.Beep(200, 50);
-								if (menuState.Index < menuState.menu.items.Count) {
-									menuState.Selected.effect(this);
-								}
-								break;
-						}
-					}
+				//try finding and using a short hand
+				int shortHandIndex = shortHands.IndexOf(keyPress.KeyChar);
+				if (shortHandIndex != -1 && shortHandIndex < menuState.menu.items.Count) {
+					Terminal.Beep(200, 50);
+					menuState.SelectedIndex = shortHandIndex;
+					menuState.Selected.effect(this);
+				} else {
+					UpdateArrowNavigation(menuState, keyPress);
 				}
-
-				Terminal.CursorPosition = drawPos;
 			}
 
-			public void EnterMenu(Menu menu) {
-				//clear last menu
-				if (stack.Count > 0) {
+			Terminal.CursorPosition = drawPos;
+		}
+
+		private bool TryRunShortHand(MenuState menuState, ConsoleKeyInfo keyPress) {
+			int shortHandIndex = shortHands.IndexOf(keyPress.KeyChar);
+			if (shortHandIndex == -1) return false;
+			if (shortHandIndex >= menuState.menu.items.Count) return false;
+
+			Terminal.Beep(200, 50);
+			menuState.SelectedIndex = shortHandIndex;
+			menuState.Selected.effect(this);
+
+			return true;
+		}
+
+		private void DrawIfNeeded(MenuState menuState) {
+			if (!needsRedraw) return;
+
+			Terminal.CursorPosition = drawPos;
+			menuState.Draw(stack.Select(instance => instance.menu).Reverse());
+			needsRedraw = false;
+		}
+
+		private void UpdateArrowNavigation(MenuState menuState, ConsoleKeyInfo keyPress) {
+			switch (keyPress.Key) {
+				//go up
+				case ConsoleKey.UpArrow:
+					Terminal.Beep(100, 50);
+					menuState.SelectedIndex--;
 					Terminal.CursorPosition = drawPos;
-					stack.Peek().Clear();
+					menuState.ClearDescription();
 					needsRedraw = true;
-				}
+					break;
 
-				//draw new menu
-				stack.Push(new MenuState(menu));
+				//go down
+				case ConsoleKey.DownArrow:
+					Terminal.Beep(100, 50);
+					menuState.SelectedIndex++;
+					Terminal.CursorPosition = drawPos;
+					menuState.ClearDescription();
+					needsRedraw = true;
+					break;
+
+				//go back
+				case ConsoleKey.LeftArrow:
+				case ConsoleKey.Escape:
+				case ConsoleKey.Backspace:
+					if (stack.Count > 1) {
+						Terminal.Beep(200, 50);
+						ExitMenu();
+					} else {
+						Terminal.Beep(50, 100);
+					}
+					break;
+
+				//execute selected menu item
+				case ConsoleKey.RightArrow:
+				case ConsoleKey.Enter:
+					Terminal.Beep(200, 50);
+					if (menuState.SelectedIndex < menuState.menu.items.Count) {
+						menuState.Selected.effect(this);
+					}
+					break;
 			}
+		}
 
-			public void ExitMenu() {
+		public void EnterMenu(Menu menu) {
+			//clear last menu
+			if (stack.Count > 0) {
 				Terminal.CursorPosition = drawPos;
-				stack.Pop().Clear();
+				stack.Peek().Clear();
 				needsRedraw = true;
 			}
 
-			public void ExitEntireMenuStack() {
-				while (stack.Count > 0) {
-					ExitMenu();
-				}
+			//draw new menu
+			stack.Push(new MenuState(menu));
+		}
+
+		public void ExitMenu() {
+			Terminal.CursorPosition = drawPos;
+			stack.Pop().Clear();
+			needsRedraw = true;
+		}
+
+		public void ExitEntireMenuStack() {
+			while (stack.Count > 0) {
+				ExitMenu();
 			}
 		}
 	}

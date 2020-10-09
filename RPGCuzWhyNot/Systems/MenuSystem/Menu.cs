@@ -6,7 +6,6 @@ using RPGCuzWhyNot.Utilities;
 
 namespace RPGCuzWhyNot.Systems.MenuSystem {
 	public partial class Menu {
-		private const string shortHands = "123456789abcdefghijklmopqrstuvwxyz";
 		private const string unselectedBegin = "  ";
 		private const string unselectedEnd = "  ";
 		private const string selectedBegin = "> ";
@@ -48,13 +47,13 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 			this.items = items.ToList();
 		}
 
-		private void Draw(int selectedIndex, IEnumerable<Menu> path) {
+		public void Draw(int selectedIndex, IEnumerable<Menu> path) {
 			Terminal.WriteLineWithoutDelay(Stringification.StringifyArray(pathBegin, pathSeparator, pathEnd, path.Select(menu => menu.name).ToArray()));
 			Terminal.WriteLineWithoutDelay(new string('#', Width));
 			if (items.Count > 0) {
 				for (int i = 0; i < ItemCount; i++) {
 					bool isSelected = i == selectedIndex; //if selectedIndex is null isSelected will go false, hiding the arrows
-					char shortHand = i < shortHands.Length ? shortHands[i] : '!';
+					char shortHand = i < MenuHandler.shortHands.Length ? MenuHandler.shortHands[i] : '!';
 
 					Terminal.WriteWithoutDelay(isSelected ? selectedBegin : unselectedBegin);
 					Terminal.WriteWithoutDelay(shortHandPattern.Replace('?', shortHand));
@@ -72,7 +71,7 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 			}
 		}
 
-		private void Clear(int selectedIndex) {
+		public void Clear(int selectedIndex) {
 			for (int i = 0; i < BaseHeight; i++) {
 				Terminal.ClearLine();
 			}
@@ -80,7 +79,7 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 			ClearDescription(selectedIndex, false);
 		}
 
-		private void ClearDescription(int selectedIndex, bool offsetToLocation = true) {
+		public void ClearDescription(int selectedIndex, bool offsetToLocation = true) {
 			if (offsetToLocation) {
 				Terminal.CursorPosition += Vec2.Down * BaseHeight;
 			}
@@ -97,7 +96,7 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 		public void EnterAsRoot() {
 			MenuHandler handler = new MenuHandler();
 			handler.EnterMenu(this);
-			handler.AwaitExitAsRoot();
+			handler.RunUntilExitAsRoot();
 		}
 	}
 }
