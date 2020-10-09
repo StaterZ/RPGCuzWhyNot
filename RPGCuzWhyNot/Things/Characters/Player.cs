@@ -133,7 +133,6 @@ namespace RPGCuzWhyNot.Things.Characters {
 					new SubMenu(items, "Use an item"),
 					new SubMenu(equipment, "Manage equippment"),
 					new MenuItem("Flee", "Run away from the fight.", ctx => {
-						//fight.combatants.Remove(this);
 						fight.EndCombat();
 
 						isDonePlanningTurn = true;
