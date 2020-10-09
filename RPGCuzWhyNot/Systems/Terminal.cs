@@ -106,6 +106,22 @@ namespace RPGCuzWhyNot.Systems {
 			PopState();
 		}
 
+		/// <summary>
+		/// Write without delay or beeping.
+		/// </summary>
+		public static void WriteWithoutDelay(char c) {
+			PushState();
+			MillisPerChar = 0;
+			BeepDuration = 0;
+			Write(c);
+			PopState();
+		}
+
+		/// <summary>
+		/// Write without delay or beeping.
+		/// </summary>
+		public static void WriteLineWithoutDelay() => WriteWithoutDelay('\n');
+
 		public static void WriteRaw(string text) {
 			foreach (char c in text) {
 				WriteChar(c);
