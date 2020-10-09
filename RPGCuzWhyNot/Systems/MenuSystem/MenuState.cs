@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using RPGCuzWhyNot.Utilities;
 
@@ -12,7 +12,7 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 				public int Index {
 					get => _index;
 					set {
-						value = ExtraMath.Mod(value, menu.items.Count);
+						value = MathUtils.Mod(value, menu.items.Count);
 						_index = value;
 					}
 				}
