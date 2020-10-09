@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using RPGCuzWhyNot.Primitives;
+using RPGCuzWhyNot.Utilities;
 
 namespace RPGCuzWhyNot.Systems.MenuSystem {
-	public partial class MenuHandler {
+	public class MenuHandler {
 		public const string shortHands = "123456789abcdefghijklmopqrstuvwxyz";
 		private readonly Stack<MenuState> stack = new Stack<MenuState>();
 		private Vec2 drawPos;
@@ -13,26 +14,20 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 		public void RunUntilExitAsRoot() {
 			drawPos = Terminal.CursorPosition;
 			needsRedraw = true;
-			RunUntil();
+			RunUntilExit();
 		}
 
-		public void RunUntil() {
+		public void RunUntilExit() {
 			int startStackCount = stack.Count;
 			while (stack.Count >= startStackCount) {
 				MenuState menuState = stack.Peek();
 
+				//update
 				DrawIfNeeded(menuState);
 
-				//get input
+				//navigate
 				ConsoleKeyInfo keyPress = Console.ReadKey(true);
-
-				//try finding and using a short hand
-				int shortHandIndex = shortHands.IndexOf(keyPress.KeyChar);
-				if (shortHandIndex != -1 && shortHandIndex < menuState.menu.items.Count) {
-					Terminal.Beep(200, 50);
-					menuState.SelectedIndex = shortHandIndex;
-					menuState.Selected.effect(this);
-				} else {
+				if (TryRunShortHand(menuState, keyPress)) {
 					UpdateArrowNavigation(menuState, keyPress);
 				}
 			}
@@ -124,6 +119,37 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 		public void ExitEntireMenuStack() {
 			while (stack.Count > 0) {
 				ExitMenu();
+			}
+		}
+
+		private class MenuState {
+			public readonly Menu menu;
+
+			private int selectedIndex;
+			public int SelectedIndex {
+				get => selectedIndex;
+				set {
+					value = MathUtils.Mod(value, menu.items.Count);
+					selectedIndex = value;
+				}
+			}
+
+			public MenuItem Selected => menu.items[SelectedIndex];
+
+			public MenuState(Menu menu) {
+				this.menu = menu;
+			}
+
+			public void Clear() {
+				menu.Clear(SelectedIndex);
+			}
+
+			public void ClearDescription() {
+				menu.ClearDescription(SelectedIndex);
+			}
+
+			public void Draw(IEnumerable<Menu> path) {
+				menu.Draw(SelectedIndex, path);
 			}
 		}
 	}
