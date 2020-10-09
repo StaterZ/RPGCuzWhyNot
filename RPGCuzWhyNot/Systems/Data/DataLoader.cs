@@ -19,6 +19,7 @@ namespace RPGCuzWhyNot.Systems.Data {
 		private static readonly string locationsPath = dataPath + "location";
 		private static readonly string itemsPath = dataPath + "item";
 		private static readonly string npcsPath = dataPath + "npc";
+		private static readonly string lootTablesPath = dataPath + "loot";
 
 		private static readonly JsonSerializerSettings serializerSettings = new JsonSerializerSettings {
 			MissingMemberHandling = MissingMemberHandling.Error
@@ -63,6 +64,7 @@ namespace RPGCuzWhyNot.Systems.Data {
 			LoadPrototypesFromPath<ItemPrototype>(itemsPath);
 			LoadPrototypesFromPath<LocationPrototype>(locationsPath);
 			LoadPrototypesFromPath<NpcPrototype>(npcsPath);
+			LoadPrototypesFromPath<LootTablePrototype>(lootTablesPath);
 			ValidatePrototypes();
 
 			ConstructLocations();
@@ -106,6 +108,11 @@ namespace RPGCuzWhyNot.Systems.Data {
 		}
 
 		private static void LoadPrototypesFromPath<TProto>(string path) where TProto : Prototype {
+			if (!Directory.Exists(path)) {
+				Warning($"Missing data directory \"{path}\".");
+				return;
+			}
+
 			string[] dataFiles = Directory.GetFiles(path, "*.json", SearchOption.AllDirectories);
 
 			foreach (string filePath in dataFiles) {
