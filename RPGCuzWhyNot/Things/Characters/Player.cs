@@ -145,7 +145,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 					})
 				);
 
-				Terminal.WriteLineDirect($"Points Left: {turnActions.BudgetLeft.Listing}");
+				Terminal.WriteLineWithoutDelay($"Points Left: {turnActions.BudgetLeft.Listing}");
 				root.Enter();
 				Terminal.CursorPosition += Vec2.Up;
 				Terminal.ClearLine();
