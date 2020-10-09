@@ -41,8 +41,8 @@ namespace RPGCuzWhyNot {
 
 
 			//combat testing shortcut
-			Fight fight = new Fight(player, new TheMother());
-			fight.BeginCombat();
+			//Fight fight = new Fight(player, new TheMother());
+			//fight.BeginCombat();
 
 
 			//some basic event loop
