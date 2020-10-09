@@ -259,6 +259,12 @@ namespace RPGCuzWhyNot.Systems.Data {
 			}
 		}
 
+		private static Prototype GetPrototype(string id) {
+			if (prototypes.TryGetValue(id, out Prototype proto))
+				return proto;
+			return null;
+		}
+
 		#region Validation
 
 		private static void ValidatePrototypes() {
@@ -274,6 +280,10 @@ namespace RPGCuzWhyNot.Systems.Data {
 
 					case NpcPrototype npcPrototype:
 						ValidateNpcPrototype(npcPrototype);
+						break;
+
+					case LootTablePrototype lootTablePrototype:
+						ValidateLootTablePrototype(lootTablePrototype);
 						break;
 				}
 			}
@@ -298,6 +308,13 @@ namespace RPGCuzWhyNot.Systems.Data {
 
 			if (!npcTypeMap.ContainsKey(proto.Id))
 				Error($"Unknown NPC '{proto.Id}' in file \"{proto.DataFilePath}\".");
+		}
+
+		private static void ValidateLootTablePrototype(LootTablePrototype proto) {
+			foreach (string id in proto.Items.Keys) {
+				if (!(GetPrototype(id) is ItemPrototype))
+					Error($"Item '{id}' not found. Referenced by loot table '{proto.Id}' in file \"{proto.DataFilePath}\".");
+			}
 		}
 
 		#endregion
