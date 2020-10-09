@@ -9,15 +9,9 @@ namespace RPGCuzWhyNot {
 	public static class Program {
 		public static Player player;
 
-		private static void Main() {
-			//Load content
-			Terminal.WriteLineWithoutDelay("{fg:Yellow}(Loading Content...)");
-			if (!DataLoader.LoadGameData()) {
-				Environment.Exit(1);
-			}
-			Terminal.WriteLineWithoutDelay("{fg:Green}(Done!)");
-			ConsoleUtils.Sleep(100);
-			Terminal.Clear();
+		private static int Main() {
+			if (!LoadContent())
+				return 1;
 
 			//construct player
 			player = new Player {
@@ -40,6 +34,21 @@ namespace RPGCuzWhyNot {
 				Terminal.WriteLine();
 				player.Handle(commandText);
 			}
+		}
+
+		private static bool LoadContent() { //Load content
+			Terminal.WriteLineWithoutDelay("{fg:Yellow}(Loading Content...)");
+			var errorLevel = DataLoader.LoadGameData();
+			if (errorLevel == DataLoader.ErrorLevel.Error)
+				return false;
+			Terminal.WriteLineWithoutDelay("{fg:Green}(Done!)");
+
+			if (errorLevel == DataLoader.ErrorLevel.Success) {
+				ConsoleUtils.Sleep(100);
+				Terminal.Clear();
+			}
+
+			return true;
 		}
 	}
 }

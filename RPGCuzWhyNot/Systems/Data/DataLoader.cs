@@ -13,6 +13,8 @@ using RPGCuzWhyNot.Things.Item;
 
 namespace RPGCuzWhyNot.Systems.Data {
 	public static class DataLoader {
+		public enum ErrorLevel { Success, Warning, Error, }
+
 		private static readonly string dataPath = "GameData" + Path.DirectorySeparatorChar;
 		private static readonly string locationsPath = dataPath + "location";
 		private static readonly string itemsPath = dataPath + "item";
@@ -29,7 +31,7 @@ namespace RPGCuzWhyNot.Systems.Data {
 		private static Dictionary<string, NPC> npcs;
 		private static Dictionary<string, Type> npcTypeMap = new Dictionary<string, Type>();
 
-		private static bool loadError;
+		private static ErrorLevel loadErrorLevel;
 
 		/// <summary>
 		/// All of the loaded prototypes.
@@ -53,8 +55,8 @@ namespace RPGCuzWhyNot.Systems.Data {
 		/// <summary>
 		/// Load all the game data files into the registry.
 		/// </summary>
-		public static bool LoadGameData() {
-			loadError = false;
+		public static ErrorLevel LoadGameData() {
+			loadErrorLevel = ErrorLevel.Success;
 
 			prototypes = new Dictionary<string, Prototype>();
 			Prototypes = new ReadOnlyDictionary<string, Prototype>(prototypes);
@@ -67,7 +69,7 @@ namespace RPGCuzWhyNot.Systems.Data {
 			InitializeLocations();
 			ConstructNPCs();
 
-			return !loadError;
+			return loadErrorLevel;
 		}
 
 		/// <summary>
@@ -272,7 +274,7 @@ namespace RPGCuzWhyNot.Systems.Data {
 
 		private static void ValidateLocationPrototype(LocationPrototype proto) {
 			if (proto.Paths.Count == 0)
-				LogWarning($"Location '{proto.Id}' has no paths.");
+				Warning($"Location '{proto.Id}' has no paths.");
 
 			if (proto.Paths.ContainsKey(proto.Id))
 				Error($"Location '{proto.Id}' contains a path to itself.");
@@ -299,16 +301,14 @@ namespace RPGCuzWhyNot.Systems.Data {
 		}
 
 		private static void Error(string message) {
-			loadError = true;
-			LogError(message);
-		}
-
-		private static void LogError(string message) {
+			loadErrorLevel = ErrorLevel.Error;
 			Terminal.WriteWithoutDelay("{red}([ERROR/Data]) ");
 			Terminal.WriteLineRawWithoutDelay(message);
 		}
 
-		private static void LogWarning(string message) {
+		private static void Warning(string message) {
+			if (loadErrorLevel < ErrorLevel.Warning)
+				loadErrorLevel = ErrorLevel.Warning;
 			Terminal.WriteWithoutDelay("{yellow}([WARN/Data]) ");
 			Terminal.WriteLineRawWithoutDelay(message);
 		}
