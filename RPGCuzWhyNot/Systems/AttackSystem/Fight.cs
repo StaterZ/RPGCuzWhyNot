@@ -25,7 +25,9 @@ namespace RPGCuzWhyNot.Systems.AttackSystem {
 			while (isInCombat) {
 				foreach (Character combatant in combatants) {
 					Terminal.WriteLine($"{{fg:Cyan}}({combatant.Name}s Turn)");
-					combatant.DoTurn(this);
+					if (combatant.health.IsAlive) {
+						combatant.DoTurn(this);
+					}
 					Terminal.WriteLine();
 
 					if (!combatants.Any(c => c != Program.player && c.health.IsAlive && c.WantsToHarm(Program.player))) { //slightly questionable check but it'll work for now...
