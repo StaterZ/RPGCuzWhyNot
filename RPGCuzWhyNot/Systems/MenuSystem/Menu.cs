@@ -97,7 +97,7 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 		public void EnterAsRoot() {
 			MenuHandler handler = new MenuHandler();
 			handler.EnterMenu(this);
-			handler.Run();
+			handler.AwaitExitAsRoot();
 		}
 	}
 }

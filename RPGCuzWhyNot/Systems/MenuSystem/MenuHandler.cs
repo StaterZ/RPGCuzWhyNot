@@ -10,11 +10,15 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 			private Vec2 drawPos;
 			private bool needsRedraw;
 
-			public void Run() {
+			public void AwaitExitAsRoot() {
 				drawPos = Terminal.CursorPosition;
 				needsRedraw = true;
+				AwaitExit();
+			}
 
-				while (stack.Count > 0) {
+			public void AwaitExit() {
+				int startStackCount = stack.Count;
+				while (stack.Count >= startStackCount) {
 					MenuState menuState = stack.Peek();
 
 					//draw
@@ -77,6 +81,8 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 						}
 					}
 				}
+
+				Terminal.CursorPosition = drawPos;
 			}
 
 			public void EnterMenu(Menu menu) {

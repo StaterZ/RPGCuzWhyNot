@@ -59,6 +59,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 								fight.combatants.Where(combatant => combatant != this),
 								combatant => target = combatant)
 							);
+							handler.AwaitExit();
 
 							//if target is null then we didn't select any combatant in CreateCombatantSelectMenu and the only way to do that is to back out of the menu
 							//if we backed out, return so to not execute the action with null
