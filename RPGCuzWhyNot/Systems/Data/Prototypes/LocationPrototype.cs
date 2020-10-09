@@ -5,7 +5,7 @@ using RPGCuzWhyNot.Things;
 
 namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 	[Serializable]
-	public class LocationPrototype : Prototype {
+	public class LocationPrototype : ThingPrototype {
 		[JsonProperty("description", Required = Required.Always)]
 		public string Description { get; set; }
 
