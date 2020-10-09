@@ -1,6 +1,7 @@
 using System;
 using Newtonsoft.Json;
 using RPGCuzWhyNot.Primitives;
+using RPGCuzWhyNot.Systems.Data.JsonConverters;
 using RPGCuzWhyNot.Things.Item;
 
 namespace RPGCuzWhyNot.Systems.Data.Prototypes {
@@ -18,37 +19,9 @@ namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 		[JsonProperty("wearable")]
 		public WearableProps Wearable { get; set; }
 
-		[JsonPropertyName("handsRequired")]
-		public int? HandsRequired { get; set; }
-
-		[JsonPropertyName("requirements")]
-		public Requirements UsageRequirements { get; set; }
-
-		[JsonPropertyName("actions")]
+		[JsonProperty("actions")]
 		public ItemAction[] ItemActions { get; set; }
 
-		// Wearable
-
-		[JsonPropertyName("wearable")]
-		public bool IsWearable { get; set; }
-
-		[JsonPropertyName("defense")]
-		public int? Defense { get; set; }
-
-		[JsonPropertyName("coveredParts"), JsonConverter(typeof(JsonEnumConverter))]
-		public WearableSlots CoveredParts { get; set; }
-
-		[JsonPropertyName("coveredLayers"), JsonConverter(typeof(JsonEnumConverter))]
-		public WearableLayers CoveredLayers { get; set; }
-
-		// Inventory
-
-		[JsonPropertyName("hasInventory")]
-		public bool HasInventory { get; set; }
-
-		[JsonPropertyName("weightFraction"), JsonConverter(typeof(JsonFractionConverter))]
-		public Fraction WeightFraction { get; set; }
-		
 		[JsonProperty("inventory")]
 		public InventoryProps Inventory { get; set; }
 
@@ -80,8 +53,7 @@ namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 
 			if (Wieldable != null) {
 				IWieldable wieldable = (IWieldable)item;
-				wieldable.HandsRequired = HandsRequired ?? 0;
-				wieldable.UsageRequirements = UsageRequirements ?? new Requirements();
+				wieldable.HandsRequired = Wieldable.HandsRequired;
 			}
 
 			if (Inventory != null) {
@@ -104,9 +76,6 @@ namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 		public class WieldableProps {
 			[JsonProperty("handsRequired")]
 			public int HandsRequired { get; set; }
-
-			[JsonProperty("meleeDamage")]
-			public int MeleeDamage { get; set; }
 		}
 
 		[JsonObject(ItemRequired = Required.Always)]

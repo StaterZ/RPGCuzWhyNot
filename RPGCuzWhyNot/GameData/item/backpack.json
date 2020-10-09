@@ -13,7 +13,6 @@
     "weightFraction": "3/4",
   },
   "wieldable": {
-    "handsRequired": 1,
-    "meleeDamage": 0
+    "handsRequired": 1
   }
 }

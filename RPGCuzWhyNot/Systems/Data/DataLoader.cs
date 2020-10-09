@@ -24,10 +24,10 @@ namespace RPGCuzWhyNot.Systems.Data {
 
 		private static readonly JsonSerializer serializer = JsonSerializer.CreateDefault(serializerSettings);
 
-		private static Dictionary<string, Prototype> prototypes;
-		private static Dictionary<string, Location> locations;
-		private static Dictionary<string, NPC> npcs;
-		private static Dictionary<string, Type> npcTypeMap = new Dictionary<string, Type>();
+		private static readonly Dictionary<string, Prototype> prototypes = new Dictionary<string, Prototype>();
+		private static readonly Dictionary<string, Location> locations = new Dictionary<string, Location>();
+		private static readonly Dictionary<string, NPC> npcs = new Dictionary<string, NPC>();
+		private static readonly Dictionary<string, Type> npcTypeMap = new Dictionary<string, Type>();
 
 		private static bool loadError;
 
@@ -56,7 +56,6 @@ namespace RPGCuzWhyNot.Systems.Data {
 		public static bool LoadGameData() {
 			loadError = false;
 
-			prototypes = new Dictionary<string, Prototype>();
 			Prototypes = new ReadOnlyDictionary<string, Prototype>(prototypes);
 			LoadPrototypesFromPath<ItemPrototype>(itemsPath);
 			LoadPrototypesFromPath<LocationPrototype>(locationsPath);
@@ -186,7 +185,6 @@ namespace RPGCuzWhyNot.Systems.Data {
 		}
 
 		private static void ConstructLocations() {
-			locations = new Dictionary<string, Location>();
 			Locations = new ReadOnlyDictionary<string, Location>(locations);
 
 			// Create the locations.
@@ -197,7 +195,6 @@ namespace RPGCuzWhyNot.Systems.Data {
 		}
 
 		private static void ConstructNPCs() {
-			npcs = new Dictionary<string, NPC>();
 			NPCs = new ReadOnlyDictionary<string, NPC>(npcs);
 
 			// Create the NPCs.
@@ -279,23 +276,8 @@ namespace RPGCuzWhyNot.Systems.Data {
 		}
 
 		private static void ValidateItemPrototype(ItemPrototype proto) {
-			if (proto.DescriptionInInventory == null) MissingPropertyError(proto, "inventoryDescription");
-			if (proto.DescriptionOnGround == null) MissingPropertyError(proto, "groundDescription");
-
-			if (proto.IsWieldable) {
-				if (proto.HandsRequired == null) MissingPropertyError(proto, "handsRequired");
-			}
-
-			if (proto.IsWearable) {
-				if (proto.Defense == null) MissingPropertyError(proto, "defense");
-				if (proto.CoveredParts == 0) MissingPropertyError(proto, "coveredParts");
-				if (proto.CoveredLayers == 0) MissingPropertyError(proto, "coveredLayers");
-			}
-
-			if (proto.HasInventory) {
-				if (proto.WeightFraction.numerator == 0 && proto.WeightFraction.denominator == 0)
-					MissingPropertyError(proto, "weightFraction");
-			}
+			if (proto.Inventory != null && proto.Wieldable == null)
+				Error($"Item with inventory '{proto.Id}' must be wieldable, in file \"{proto.DataFilePath}\".");
 		}
 
 		private static void ValidateNpcPrototype(NpcPrototype proto) {
