@@ -13,6 +13,8 @@ namespace RPGCuzWhyNot.Systems.MapSystem.TileAnimators {
 		}
 
 		public override char Animate(char[] symbols, Vec2 pos, int frame) {
+			//interactive version at: https://www.desmos.com/calculator/cwbgsjekjd
+
 			int lowFrames1 = lowFrames - 1;
 			int highFrames1 = highFrames - 1;
 
