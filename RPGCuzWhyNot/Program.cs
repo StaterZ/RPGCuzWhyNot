@@ -2,11 +2,8 @@ using System;
 using RPGCuzWhyNot.Systems;
 using RPGCuzWhyNot.Systems.AttackSystem;
 using RPGCuzWhyNot.Systems.Data;
-using RPGCuzWhyNot.Systems.MenuSystem;
-using RPGCuzWhyNot.Things;
 using RPGCuzWhyNot.Things.Characters;
 using RPGCuzWhyNot.Things.Characters.Enemies;
-using RPGCuzWhyNot.Things.Characters.NPCs;
 using RPGCuzWhyNot.Things.Characters.Races.Humanoids;
 using RPGCuzWhyNot.Things.Item;
 using RPGCuzWhyNot.Utilities;
@@ -20,11 +17,11 @@ namespace RPGCuzWhyNot {
 
 
 			//Load content
-			Terminal.WriteLineDirect("{fg:Yellow}(Loading Content...)");
+			Terminal.WriteLineWithoutDelay("{fg:Yellow}(Loading Content...)");
 			if (!DataLoader.LoadGameData()) {
 				Environment.Exit(1);
 			}
-			Terminal.WriteLineDirect("{fg:Green}(Done!)");
+			Terminal.WriteLineWithoutDelay("{fg:Green}(Done!)");
 			ConsoleUtils.Sleep(100);
 			Terminal.Clear();
 

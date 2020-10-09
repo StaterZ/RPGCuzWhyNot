@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using RPGCuzWhyNot.Things.Item;
 
 namespace RPGCuzWhyNot.Systems.Inventory {
-	public abstract class InventoryBase<ItemT, OwnerT> : IInventory, IEnumerable<ItemT> where ItemT : IItem where OwnerT : IHasInventory {
-		protected List<ItemT> items = new List<ItemT>();
-		public OwnerT Owner { get; }
+	public abstract class InventoryBase<TItem, TOwner> : IInventory, IEnumerable<TItem> where TItem : IItem where TOwner : IHasInventory {
+		protected List<TItem> items = new List<TItem>();
+		public TOwner Owner { get; }
 		IHasInventory IInventory.Owner => Owner;
-		protected InventoryBase(OwnerT owner) => Owner = owner;
+		protected InventoryBase(TOwner owner) => Owner = owner;
 
-		protected abstract bool CheckMove(ItemT item, bool silent);
+		protected abstract bool CheckMove(TItem item, bool silent);
 
-		private bool CheckRecursion(ItemT item, bool silent) {
+		private bool CheckRecursion(TItem item, bool silent) {
 			for (IItemWithInventory i = item as IItemWithInventory; i != null; i = i.ContainedInventory.Owner as IItemWithInventory) {
 				if (i.Equals(Owner)) {
 					if (!silent) {
@@ -23,7 +23,7 @@ namespace RPGCuzWhyNot.Systems.Inventory {
 			return true;
 		}
 
-		public bool MoveItem(ItemT item, bool silent = false) {
+		public bool MoveItem(TItem item, bool silent = false) {
 			if (item.ContainedInventory == null || (CheckRecursion(item, silent) && CheckMove(item, silent))) {
 				IInventory inv = item.ContainedInventory;
 				if (inv != null && !inv.Remove(item))
@@ -36,7 +36,7 @@ namespace RPGCuzWhyNot.Systems.Inventory {
 		}
 
 		public bool ContainsCallName<T>(string callName, out T item) {
-			foreach (ItemT i in items) {
+			foreach (TItem i in items) {
 				if (i.CallName == callName && i is T ti) {
 					item = ti;
 					return true;
@@ -47,20 +47,20 @@ namespace RPGCuzWhyNot.Systems.Inventory {
 		}
 
 		bool IInventory.Remove(IItem item) {
-			if (item is ItemT i)
+			if (item is TItem i)
 				return Remove(i);
 			return false;
 		}
 
-		public bool Remove(ItemT item) {
+		public bool Remove(TItem item) {
 			return items.Remove(item);
 		}
 
 		public int Count => items.Count;
-		public ItemT this[int index] => items[index];
+		public TItem this[int index] => items[index];
 
 		public void Clear() => items.Clear();
-		public IEnumerator<ItemT> GetEnumerator() => items.GetEnumerator();
+		public IEnumerator<TItem> GetEnumerator() => items.GetEnumerator();
 		IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)items).GetEnumerator();
 	}
 }

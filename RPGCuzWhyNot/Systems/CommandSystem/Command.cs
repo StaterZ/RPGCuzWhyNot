@@ -1,5 +1,4 @@
-﻿using System;
-using RPGCuzWhyNot.Things.Characters;
+using System;
 
 namespace RPGCuzWhyNot.Systems.CommandSystem {
 	public abstract class Command {

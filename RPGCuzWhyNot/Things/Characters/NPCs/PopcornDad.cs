@@ -1,6 +1,5 @@
 using RPGCuzWhyNot.Systems.AttackSystem;
 using RPGCuzWhyNot.Systems.Data;
-using RPGCuzWhyNot.Things.Characters.Races;
 using RPGCuzWhyNot.Things.Characters.Races.Humanoids;
 
 namespace RPGCuzWhyNot.Things.Characters.NPCs {
