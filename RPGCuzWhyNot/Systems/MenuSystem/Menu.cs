@@ -5,7 +5,7 @@ using RPGCuzWhyNot.Primitives;
 using RPGCuzWhyNot.Utilities;
 
 namespace RPGCuzWhyNot.Systems.MenuSystem {
-	public partial class Menu {
+	public class Menu {
 		private const string unselectedBegin = "  ";
 		private const string unselectedEnd = "  ";
 		private const string selectedBegin = "> ";
