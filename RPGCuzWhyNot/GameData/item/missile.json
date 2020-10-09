@@ -1,14 +1,32 @@
 {
   "id": "missile",
-	"callName": "missile",
-	"name": "{Red}(Large Cruise Missile)",
-	"inventoryDescription": "A strange large object shaped like a pole",
-	"groundDescription": "There is a strange large pole-shaped object on the ground.",
-	"wieldable": true,
-	"wearable": true,
-	"meleeDamage": 999,
-	"handsRequired": 2,
-	"defense": -999,
-	"coveredParts": "back",
-	"coveredLayers": "outer"
+  "callName": "missile",
+  "name": "{Red}(Large Cruise Missile)",
+  "inventoryDescription": "A strange large object shaped like a pole",
+  "groundDescription": "There is a strange large pole-shaped object on the ground.",
+  "wieldable": {
+    "handsRequired": 2
+  },
+  "wearable": {
+    "defense": -999,
+    "coveredParts": "back",
+    "coveredLayers": "outer"
+  },
+  "actions": [
+    {
+      "hasTarget": false,
+      "callNames": [ "activate" ],
+      "name": "Activate",
+      "description": "Push the large red button labeld \"don't touch!\"",
+      "executeDescription": "You press the button and find yourself evaporated together with everything in a 100 mile radius.",
+      "requirements": {
+        "stats": {
+          "strength": 1
+        }
+      },
+      "effects": {
+        "meleeDamage": 999
+      }
+    }
+  ]
 }

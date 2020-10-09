@@ -4,9 +4,9 @@
   "name": "Deluxe Debug Doodad (the mighty DDD)",
   "inventoryDescription": "Don't ask me!",
   "groundDescription": "I'm not creative enough for this!",
-  "wieldable": true,
-  "handsRequired": 0,
-  "defense": 0,
+  "wieldable": {
+    "handsRequired": 0
+  },
   "actions": [
     {
       "hasTarget": true,

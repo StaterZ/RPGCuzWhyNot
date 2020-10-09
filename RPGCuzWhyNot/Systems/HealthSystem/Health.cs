@@ -31,7 +31,7 @@ namespace RPGCuzWhyNot.Systems.HealthSystem {
 
         public HealthChangeInfo SetHealth(int value, IInflictor inflictor) {
 	        int attemptedDelta = value - CurrentHealth;
-			value = ExtraMath.Clamp(value, 0, maxHealth);
+			value = MathUtils.Clamp(value, 0, maxHealth);
 			int delta = value - CurrentHealth;
 
 			HealthChangeInfo info = new HealthChangeInfo() {

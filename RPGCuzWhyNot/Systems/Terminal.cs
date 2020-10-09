@@ -4,12 +4,12 @@ using System.Threading;
 using RPGCuzWhyNot.Primitives;
 using RPGCuzWhyNot.Systems.Data;
 using RPGCuzWhyNot.Systems.Data.Prototypes;
-using RPGCuzWhyNot.Utilities;
 
 namespace RPGCuzWhyNot.Systems {
 	public static class Terminal {
 		private static readonly Stack<State> stateStack = new Stack<State>();
-		private static readonly Dictionary<char, Alias> aliases = new Dictionary<char, Alias>();
+
+		private static int cursorRowDisplacement = 0;
 
 		public static ConsoleColor ForegroundColor { get => Console.ForegroundColor; set => Console.ForegroundColor = value; }
 		public static ConsoleColor BackgroundColor { get => Console.BackgroundColor; set => Console.BackgroundColor = value; }
@@ -18,11 +18,22 @@ namespace RPGCuzWhyNot.Systems {
 			get => Console.CursorVisible;
 			set => Console.CursorVisible = value;
 		}
+
+		public static int CursorX {
+			get => Console.CursorLeft;
+			set => Console.CursorLeft = value;
+		}
+
+		public static int CursorY {
+			get => Console.CursorTop + cursorRowDisplacement;
+			set => Console.CursorTop = value - cursorRowDisplacement;
+		}
+
 		public static Vec2 CursorPosition {
-			get => new Vec2(Console.CursorLeft, Console.CursorTop);
+			get => new Vec2(CursorX, CursorY);
 			set {
-				Console.CursorLeft = value.x;
-				Console.CursorTop = value.y;
+				CursorX = value.x;
+				CursorY = value.y;
 			}
 		}
 
@@ -42,7 +53,7 @@ namespace RPGCuzWhyNot.Systems {
 		// If MillisPerChar is greater than BeepDuration then the time not spend beeping will be used for sleeping.
 		// If MillisPerChar is less than BeepDuration then there will be noticable stutters when beeping.
 
-		private static int charBeepCounter = 0;
+		private static int charBeepCounter;
 
 		public static StateScope PushState() {
 			stateStack.Push(GetState());
@@ -68,21 +79,10 @@ namespace RPGCuzWhyNot.Systems {
 			Write('\n');
 		}
 
-		/// <summary>
-		/// Write a line without delay or beeping.
-		/// </summary>
-		public static void WriteLineDirect(string text) {
-			WriteDirect(text);
-			WriteDirect('\n');
-		}
-
-		public static void WriteLineDirect() => WriteDirect('\n');
-
 		public static void ClearLine() {
 			int startLine = CursorPosition.y;
 			CursorPosition = new Vec2(0, startLine);
-			WriteDirect(new string(' ', WindowSize.x));
-			WriteLineDirect();
+			WriteLineWithoutDelay(new string(' ', WindowSize.x));
 			CursorPosition = new Vec2(0, startLine + 1);
 		}
 
@@ -106,14 +106,14 @@ namespace RPGCuzWhyNot.Systems {
 		/// <summary>
 		/// Write without delay or beeping.
 		/// </summary>
-		public static void WriteDirect(string text) {
+		public static void WriteWithoutDelay(string text) {
 			using (PushState()) {
 				MillisPerChar = 0;
 				BeepDuration = 0;
 				Write(text);
 			}
 		}
-		public static void WriteDirect(char c) {
+		public static void WriteWithoutDelay(char c) {
 			using (PushState()) {
 				MillisPerChar = 0;
 				BeepDuration = 0;
@@ -121,15 +121,73 @@ namespace RPGCuzWhyNot.Systems {
 			}
 		}
 
+
+		/// <summary>
+		/// Write a line without delay or beeping.
+		/// </summary>
+		public static void WriteLineWithoutDelay(string text) {
+			WriteWithoutDelay(text);
+			WriteWithoutDelay('\n');
+		}
+
+		/// <summary>
+		/// Write without delay or beeping.
+		/// </summary>
+		public static void WriteLineWithoutDelay() => WriteWithoutDelay('\n');
+
+		public static void WriteRaw(string text) {
+			foreach (char c in text) {
+				WriteChar(c);
+			}
+		}
+
+		public static void WriteRawWithoutDelay(string text) {
+			PushState();
+			MillisPerChar = 0;
+			BeepDuration = 0;
+			foreach (char c in text) {
+				WriteChar(c);
+			}
+			PopState();
+		}
+
+		public static void WriteLineRaw(string text) {
+			WriteRaw(text);
+			WriteRaw("\n");
+		}
+
+		public static void WriteLineRawWithoutDelay(string text) {
+			WriteRawWithoutDelay(text);
+			WriteRawWithoutDelay("\n");
+		}
+
 		private static void WriteChar(char c) {
-			bool doAlias = aliases.TryGetValue(c, out Alias alias);
-			if (doAlias) {
-				alias.preEffect?.Invoke();
-				if (!alias.showChar) {
-					goto postEffect;
+			int consoleLeftBefore = Console.CursorLeft;
+			int consoleTopBefore = Console.CursorTop;
+			Console.Write(c);
+			int consoleLeftAfter = Console.CursorLeft;
+			int consoleTopAfter = Console.CursorTop;
+
+			if (consoleTopBefore == consoleTopAfter) {
+				// If the cursor didn't actually move down, we may need to emulate it.
+				switch (c) {
+					case '\r': // carrige return
+					case '\b': // backspace
+						break; // never change line
+
+					case '\n': // newline/linefeed
+						++cursorRowDisplacement;
+						break; // always change line
+
+					default:
+						if (consoleLeftAfter < consoleLeftBefore) {
+							// If the cursor moved back, we assume a new line has begun.
+							++cursorRowDisplacement;
+						}
+						break;
 				}
 			}
-			Console.Write(c);
+
 			++charBeepCounter;
 			if (charBeepCounter >= CharsPerBeep) {
 				charBeepCounter = 0;
@@ -144,10 +202,6 @@ namespace RPGCuzWhyNot.Systems {
 				}
 			} else if (!Console.KeyAvailable) {
 				Thread.Sleep(MillisPerChar);
-			}
-		postEffect:
-			if (doAlias) {
-				alias.postEffect?.Invoke();
 			}
 		}
 
@@ -206,11 +260,11 @@ namespace RPGCuzWhyNot.Systems {
 				name = proto.Name;
 				return true;
 			} else {
-			#if DEBUG
+#if DEBUG
 				name = $"[no prototype with id '{id}']";
-			#else
+#else
 				name = id;
-			#endif
+#endif
 				return false;
 			}
 		}
@@ -227,11 +281,11 @@ namespace RPGCuzWhyNot.Systems {
 					if (GetNameFromID(arg, out string name)) {
 						Write(name);
 					} else {
-					#if DEBUG
+#if DEBUG
 						Write($"{{darkred}}({Escape(name)})");
-					#else
+#else
 						Write(Escape(name));
-					#endif
+#endif
 					}
 					break;
 				default: HandleCommandWithoutArg(cmd); break;
@@ -248,15 +302,6 @@ namespace RPGCuzWhyNot.Systems {
 				case "pop": PopState(); break;
 				default: throw new ArgumentException();
 			}
-		}
-
-		public static void AddAlias(char symbol, bool showChar, AliasEffect preEffect, AliasEffect postEffect) {
-			aliases.Add(symbol, new Alias {
-				symbol = symbol,
-				showChar = showChar,
-				preEffect = preEffect,
-				postEffect = postEffect,
-			});
 		}
 
 		public static State GetState() {
@@ -283,14 +328,6 @@ namespace RPGCuzWhyNot.Systems {
 
 		public static string Escape(string text) {
 			return text.Replace("{", "{{");
-		}
-
-		public static void Beep(int frequency, int duration) {
-			Console.Beep(frequency, duration);
-		}
-
-		public static void Clear() {
-			Console.Clear();
 		}
 
 		public static string ReadLine() {
@@ -374,13 +411,13 @@ namespace RPGCuzWhyNot.Systems {
 			public bool cursorVisible;
 		}
 
-		public delegate void AliasEffect();
+		public static void Beep(int frequency, int duration) {
+			Console.Beep(frequency, duration);
+		}
 
-		private struct Alias {
-			public char symbol;
-			public bool showChar;
-			public AliasEffect preEffect;
-			public AliasEffect postEffect;
+		public static void Clear() {
+			Console.Clear();
+			cursorRowDisplacement = 0;
 		}
 
 		public struct StateScope : IDisposable {

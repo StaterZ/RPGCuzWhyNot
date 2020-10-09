@@ -1,23 +1,17 @@
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace RPGCuzWhyNot.Systems.Data.Prototypes {
-	public abstract class Prototype : IOnDeserialized {
+	public abstract class Prototype {
 		[JsonIgnore]
 		public string DataFilePath { get; set; }
 
-		[JsonPropertyName("id")]
+		[JsonProperty("id", Required = Required.Always)]
 		public string Id { get; set; }
 
-		[JsonPropertyName("callName")]
+		[JsonProperty("callName", Required = Required.Always)]
 		public string CallName { get; set; }
 
-		[JsonPropertyName("name")]
+		[JsonProperty("name", Required = Required.Always)]
 		public string Name { get; set; }
-
-		void IOnDeserialized.OnDeserialized() {
-			OnDeserialized();
-		}
-
-		protected virtual void OnDeserialized() { }
 	}
 }

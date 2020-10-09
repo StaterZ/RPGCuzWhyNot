@@ -49,23 +49,23 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 		}
 
 		private void Draw(int selectedIndex, IEnumerable<Menu> path) {
-			Terminal.WriteLineDirect(Stringification.StringifyArray(pathBegin, pathSeparator, pathEnd, path.Select(menu => menu.name).ToArray()));
-			Terminal.WriteLineDirect(new string('#', Width));
+			Terminal.WriteLineWithoutDelay(Stringification.StringifyArray(pathBegin, pathSeparator, pathEnd, path.Select(menu => menu.name).ToArray()));
+			Terminal.WriteLineWithoutDelay(new string('#', Width));
 			if (items.Count > 0) {
 				for (int i = 0; i < ItemCount; i++) {
 					bool isSelected = i == selectedIndex; //if selectedIndex is null isSelected will go false, hiding the arrows
 					char shortHand = i < shortHands.Length ? shortHands[i] : '!';
 
-					Terminal.WriteDirect(isSelected ? selectedBegin : unselectedBegin);
-					Terminal.WriteDirect(shortHandPattern.Replace('?', shortHand));
-					Terminal.WriteDirect(items[i].name);
-					Terminal.WriteDirect(new string(' ', LongestItemLength - Terminal.GetFormattedLength(items[i].name)));
-					Terminal.WriteLineDirect(isSelected ? selectedEnd : unselectedEnd);
+					Terminal.WriteWithoutDelay(isSelected ? selectedBegin : unselectedBegin);
+					Terminal.WriteWithoutDelay(shortHandPattern.Replace('?', shortHand));
+					Terminal.WriteWithoutDelay(items[i].name);
+					Terminal.WriteWithoutDelay(new string(' ', LongestItemLength - Terminal.GetFormattedLength(items[i].name)));
+					Terminal.WriteLineWithoutDelay(isSelected ? selectedEnd : unselectedEnd);
 				}
 			} else {
-				Terminal.WriteLineDirect(emptyMenuMessage);
+				Terminal.WriteLineWithoutDelay(emptyMenuMessage);
 			}
-			Terminal.WriteLineDirect(new string('#', Width));
+			Terminal.WriteLineWithoutDelay(new string('#', Width));
 
 			if (selectedIndex < items.Count) {
 				Terminal.WriteLine(items[selectedIndex].description);

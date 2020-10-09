@@ -4,13 +4,8 @@
   "name": "Greatsword",
   "inventoryDescription": "A shining sword of the finest metal",
   "groundDescription": "There's a sword on the ground; shining brilliantly in the sunlight",
-  "wieldable": true,
-  "handsRequired": 2,
-  "defense": 0,
-  "requirements": {
-    "stats": {
-      "strength": 3
-    }
+  "wieldable": {
+    "handsRequired": 2
   },
   "actions": [
     {

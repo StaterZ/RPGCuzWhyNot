@@ -15,15 +15,14 @@ namespace RPGCuzWhyNot.Things {
 		public string Name { get; }
 		public string CallName { get; }
 		public string FormattedCallName => $"{{fg:Yellow}}([{CallName}])";
-		public readonly string description;
-		public readonly string pathDescription;
-		public readonly ReadOnlyCollection<Path> Paths;
-		public readonly ReadOnlyCollection<CharacterLocationData> Characters;
-		public readonly ItemInventory items;
-		ItemInventory IHasItemInventory.Inventory => items;
 		public string ListingName => ThingExt.DefaultListingName(this);
 		public LocationPrototype Prototype { get; set; }
+		public ReadOnlyCollection<Path> Paths { get; }
+		public ReadOnlyCollection<CharacterLocationData> Characters { get; }
+		ItemInventory IHasItemInventory.Inventory => items;
 
+		public readonly string description;
+		public readonly ItemInventory items;
 		private readonly List<Path> paths = new List<Path>();
 		private readonly List<CharacterLocationData> characters = new List<CharacterLocationData>();
 
@@ -46,9 +45,9 @@ namespace RPGCuzWhyNot.Things {
 			Characters = characters.AsReadOnly();
 		}
 
-		public void AddPathTo(Location location, string description) {
+		public void AddPathTo(Location location, string pathDescription) {
 			if (paths.Any(path => path.location == location)) throw new InvalidOperationException("A path already exists");
-			paths.Add(new Path(location, description));
+			paths.Add(new Path(location, pathDescription));
 		}
 
 		public bool GetConnectedLocationByCallName(string callName, out Location connectedLocation) {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using RPGCuzWhyNot.Things;
 using RPGCuzWhyNot.Things.Characters;
 

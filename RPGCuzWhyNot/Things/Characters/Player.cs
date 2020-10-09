@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using RPGCuzWhyNot.Primitives;
@@ -7,12 +6,10 @@ using RPGCuzWhyNot.Systems;
 using RPGCuzWhyNot.Systems.AttackSystem;
 using RPGCuzWhyNot.Systems.CommandSystem;
 using RPGCuzWhyNot.Systems.HealthSystem;
-using RPGCuzWhyNot.Systems.Inventory;
 using RPGCuzWhyNot.Systems.MenuSystem;
 using RPGCuzWhyNot.Things.Characters.Races;
 using RPGCuzWhyNot.Things.Item;
 using RPGCuzWhyNot.Utilities;
-using static RPGCuzWhyNot.Systems.MenuSystem.Menu;
 
 namespace RPGCuzWhyNot.Things.Characters {
 	public class Player : Character {
@@ -146,7 +143,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 					})
 				);
 
-				Terminal.WriteLineDirect($"Points Left: {turnActions.BudgetLeft.Listing}");
+				Terminal.WriteLineWithoutDelay($"Points Left: {turnActions.BudgetLeft.Listing}");
 				root.EnterAsRoot();
 				Terminal.CursorPosition += Vec2.Up;
 				Terminal.ClearLine();
