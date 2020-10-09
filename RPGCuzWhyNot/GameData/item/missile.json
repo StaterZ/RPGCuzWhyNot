@@ -6,11 +6,11 @@
 	"groundDescription": "There is a strange large pole-shaped object on the ground.",
 	"wieldable": {
     "handsRequired": 2,
-    "meleeDamage": 999,
+    "meleeDamage": 999
   },
 	"wearable": {
     "defense": -999,
     "coveredParts": "back",
     "coveredLayers": "outer"
-  },
+  }
 }
