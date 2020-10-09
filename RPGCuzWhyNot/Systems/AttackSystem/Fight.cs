@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using RPGCuzWhyNot.Primitives;
 using RPGCuzWhyNot.Things.Characters;
 using RPGCuzWhyNot.Things.Item;
 using RPGCuzWhyNot.Utilities;
@@ -21,14 +22,15 @@ namespace RPGCuzWhyNot.Systems.AttackSystem {
 			Terminal.WriteLine($"{{fg:Cyan}}(Combat with {Stringification.StringifyArray("[", ", ", "]", combatants.Select(combatant => combatant.Name).ToArray())} has begun!)");
 			Terminal.WriteLine();
 
+			int drawPos = Terminal.CursorY;
 			isInCombat = true;
 			while (isInCombat) {
 				foreach (Character combatant in combatants) {
-					Terminal.WriteLine($"{{fg:Cyan}}({combatant.Name}s Turn)");
-					if (combatant.health.IsAlive) {
-						combatant.DoTurn(this);
+					while (Terminal.CursorY > drawPos) {
+						Terminal.CursorY--;
+						Terminal.ClearLine();
+						Terminal.CursorY--;
 					}
-					Terminal.WriteLine();
 
 					if (!combatants.Any(c => c != Program.player && c.health.IsAlive && c.WantsToHarm(Program.player))) { //slightly questionable check but it'll work for now...
 						EndCombat();
@@ -37,6 +39,15 @@ namespace RPGCuzWhyNot.Systems.AttackSystem {
 					if (!isInCombat) {
 						break;
 					}
+
+					if (!combatant.health.IsAlive) continue;
+
+					Terminal.WriteLine($"{{fg:Cyan}}({combatant.Name}s Turn)");
+					combatant.DoTurn(this);
+					if (combatant != Program.player) {
+						ConsoleUtils.WaitForPlayer();
+					}
+					Terminal.WriteLine();
 				}
 			}
 
