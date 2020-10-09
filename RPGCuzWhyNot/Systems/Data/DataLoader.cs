@@ -26,6 +26,7 @@ namespace RPGCuzWhyNot.Systems.Data {
 		};
 
 		private static readonly JsonSerializer serializer = JsonSerializer.CreateDefault(serializerSettings);
+		private static readonly Random random = new Random();
 
 		private static Dictionary<string, Prototype> prototypes;
 		private static Dictionary<string, Location> locations;
@@ -230,16 +231,41 @@ namespace RPGCuzWhyNot.Systems.Data {
 					location.AddPathTo(destination, pathDescription);
 				}
 
-				// Create the items in the location.
 				foreach (string itemName in locationPrototype.Items) {
-					if (!prototypes.TryGetValue(itemName, out Prototype proto) || !(proto is ItemPrototype item)) {
-						Error($"Item '{itemName}' not found. Referenced by location '{id}'.");
-						continue;
-					}
-
-					location.items.MoveItem(item.Create());
+					CreateItemInLocation(location, itemName);
 				}
 			}
+		}
+
+		private static void CreateItemInLocation(Location location, string id) {
+			ItemPrototype item;
+			if (prototypes.TryGetValue(id, out Prototype proto)) {
+				switch (proto) {
+					case ItemPrototype itemPrototype:
+						item = itemPrototype;
+						break;
+					case LootTablePrototype lootTable: {
+						string lootItemName = lootTable.Evaluate(random);
+						item = GetPrototype(lootItemName) as ItemPrototype;
+
+						if (item == null) {
+							Error($"Item '{lootItemName}' not found. Referenced by loot table '{id}' used in location '{location.Prototype.Id}'.");
+							return;
+						}
+
+						break;
+					}
+					default:
+						Error($"Item '{id}' not found. Referenced by location '{location.Prototype.Id}'.");
+						return;
+				}
+			}
+			else {
+				Error($"Item '{id}' not found. Referenced by location '{location.Prototype.Id}'.");
+				return;
+			}
+
+			location.items.MoveItem(item.Create());
 		}
 
 		private static void FindRegisteredNPCs() { // Find all registered NPCs (those marked with UniqueNpcAttribute).
