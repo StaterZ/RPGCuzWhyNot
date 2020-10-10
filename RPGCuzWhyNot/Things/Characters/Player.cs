@@ -41,9 +41,9 @@ namespace RPGCuzWhyNot.Things.Characters {
 				Menu menu = new Menu(menuName);
 
 				foreach (Character combatant in combatants) {
-					menu.items.Add(new MenuItem(combatant.Name, $"Do action on {combatant.Name}", ctx => {
+					menu.items.Add(new MenuItem(combatant.Name, $"Do action on {combatant.Name}", handler => {
 						combatantSelectCallback(combatant);
-						ctx.ExitMenu();
+						handler.ExitMenu();
 					}));
 				}
 
@@ -52,15 +52,16 @@ namespace RPGCuzWhyNot.Things.Characters {
 
 			void InsertItemActions(Menu menu, IEnumerable<ItemAction> itemActions) {
 				foreach (ItemAction itemAction in itemActions) {
-					menu.items.Add(new MenuItem(itemAction.Name, itemAction.Description, ctx => {
+					menu.items.Add(new MenuItem(itemAction.Name, itemAction.Description, handler => {
 						Character target = null;
 
 						if (itemAction.HasTarget) {
-							ctx.EnterMenu(CreateCombatantSelectMenu(
+							handler.EnterMenu(CreateCombatantSelectMenu(
 								itemAction.Name,
 								fight.combatants.Where(combatant => combatant != this),
 								combatant => target = combatant)
 							);
+							handler.RunUntilExit();
 
 							//if target is null then we didn't select any combatant in CreateCombatantSelectMenu and the only way to do that is to back out of the menu
 							//if we backed out, return so to not execute the action with null
@@ -74,7 +75,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 							Terminal.WriteLine(performFailMessage);
 						}
 						ConsoleUtils.WaitForPlayer();
-						ctx.ExitEntireMenuStack();
+						handler.ExitEntireMenuStack();
 					}));
 				}
 			}
@@ -132,20 +133,20 @@ namespace RPGCuzWhyNot.Things.Characters {
 					new SubMenu(attack, "Attack something"),
 					new SubMenu(items, "Use an item"),
 					new SubMenu(equipment, "Manage equippment"),
-					new MenuItem("Flee", "Run away from the fight.", ctx => {
+					new MenuItem("Flee", "Run away from the fight.", handler => {
 						fight.EndCombat();
 
 						isDonePlanningTurn = true;
-						ctx.ExitEntireMenuStack();
+						handler.ExitEntireMenuStack();
 					}),
-					new MenuItem("EndTurn", "Confirm your actions and proceed to the next turn.", ctx => {
+					new MenuItem("EndTurn", "Confirm your actions and proceed to the next turn.", handler => {
 						isDonePlanningTurn = true;
-						ctx.ExitEntireMenuStack();
+						handler.ExitEntireMenuStack();
 					})
 				);
 
 				Terminal.WriteLineWithoutDelay($"Points Left: {turnActions.BudgetLeft.Listing}");
-				root.Enter();
+				root.EnterAsRoot();
 				Terminal.CursorPosition += Vec2.Up;
 				Terminal.ClearLine();
 				Terminal.CursorPosition += Vec2.Up;
