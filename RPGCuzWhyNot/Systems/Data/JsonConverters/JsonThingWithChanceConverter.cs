@@ -26,7 +26,7 @@ namespace RPGCuzWhyNot.Systems.Data.JsonConverters {
 				reader.Read();
 				if (reader.TokenType == JsonToken.EndArray) {
 					// [string, float]
-					float chance = Convert.ToSingle(firstNumber);
+					float chance = Math.Max(0, Convert.ToSingle(firstNumber));
 					return new ThingWithChance(itemId, chance);
 				}
 
@@ -37,8 +37,8 @@ namespace RPGCuzWhyNot.Systems.Data.JsonConverters {
 					if (reader.TokenType != JsonToken.EndArray)
 						throw CreateException(reader, "Expected end of array.");
 
-					int minCount = Convert.ToInt32(firstNumber);
-					int maxCount = Convert.ToInt32(secondNumber);
+					int minCount = Math.Max(0, Convert.ToInt32(firstNumber));
+					int maxCount = Math.Max(0, Convert.ToInt32(secondNumber));
 					return new ThingWithChance(itemId, minCount, maxCount);
 				}
 
