@@ -4,9 +4,9 @@ using RPGCuzWhyNot.Primitives;
 
 namespace RPGCuzWhyNot.Systems.Data.JsonConverters {
 	public class JsonFractionConverter : JsonConverter<Fraction> {
-		private static int ParseInt(ReadOnlySpan<char> str) {
+		private static int ParseInt(JsonReader reader, ReadOnlySpan<char> str) {
 			if (!int.TryParse(str, out int value))
-				throw new JsonException("Bad integer in fraction.");
+				throw reader.CreateException("Bad integer in fraction.");
 
 			return value;
 		}
@@ -20,11 +20,11 @@ namespace RPGCuzWhyNot.Systems.Data.JsonConverters {
 			int divIndex = str!.IndexOf('/');
 			if (divIndex != -1) {
 				return new Fraction(
-					ParseInt(str.AsSpan(0, divIndex)),
-					ParseInt(str.AsSpan(divIndex + 1)));
+					ParseInt(reader, str.AsSpan(0, divIndex)),
+					ParseInt(reader, str.AsSpan(divIndex + 1)));
 			}
 
-			return new Fraction(ParseInt(str), 1);
+			return new Fraction(ParseInt(reader, str), 1);
 		}
 
 		public override void WriteJson(JsonWriter writer, Fraction value, JsonSerializer serializer) {

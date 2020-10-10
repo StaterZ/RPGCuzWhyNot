@@ -152,24 +152,27 @@ namespace RPGCuzWhyNot.Systems.Data {
 			var reader = new JsonTextReader(new StringReader(json));
 			var list = new List<T>();
 
-			reader.Read();
+			reader.ReadChecked();
 			if (reader.TokenType == JsonToken.StartArray) {
 				// Read an array of objects.
-				reader.Read();
+				reader.ReadChecked();
 				while (reader.TokenType != JsonToken.EndArray) {
 					T value = serializer.Deserialize<T>(reader);
 					list.Add(value);
-					reader.Read();
+					reader.ReadChecked();
 				}
 			}
-			else {
+			else if (reader.TokenType == JsonToken.StartObject) {
 				// Read a single object.
 				T value = serializer.Deserialize<T>(reader);
 				list.Add(value);
 			}
+			else {
+				throw reader.CreateException("Unexpected token.");
+			}
 
 			if (reader.Read())
-				throw new JsonException("Expected end of file after array/object.");
+				throw reader.CreateException("Expected end of file after array/object.");
 
 			return list;
 		}
@@ -338,7 +341,7 @@ namespace RPGCuzWhyNot.Systems.Data {
 
 		private static void ValidateLootTablePrototype(LootTablePrototype proto) {
 			foreach (string id in proto.Items.Keys) {
-				if (!(GetPrototype(id) is ItemPrototype))
+				if (!(GetPrototypeOrNull(id) is ItemPrototype))
 					Error($"Item '{id}' not found. Referenced by loot table '{proto.Id}' in file \"{proto.DataFilePath}\".");
 			}
 		}

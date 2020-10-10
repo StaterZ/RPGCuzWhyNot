@@ -13,17 +13,17 @@ namespace RPGCuzWhyNot.Systems.Data.JsonConverters {
 			if (reader.TokenType == JsonToken.StartArray) {
 				// [string, float] or [string, int, int]
 
-				reader.Read();
+				reader.ReadChecked();
 				if (reader.TokenType != JsonToken.String)
-					throw CreateException(reader, "Expected string.");
+					throw reader.CreateException("Expected string.");
 				string itemId = (string)reader.Value;
 
-				reader.Read();
+				reader.ReadChecked();
 				if (reader.TokenType != JsonToken.Integer && reader.TokenType != JsonToken.Float)
-					throw CreateException(reader, "Expected number.");
+					throw reader.CreateException("Expected number.");
 				object firstNumber = reader.Value;
 
-				reader.Read();
+				reader.ReadChecked();
 				if (reader.TokenType == JsonToken.EndArray) {
 					// [string, float]
 					float chance = Math.Max(0, Convert.ToSingle(firstNumber));
@@ -34,31 +34,23 @@ namespace RPGCuzWhyNot.Systems.Data.JsonConverters {
 					// [string, int, int]
 					object secondNumber = reader.Value;
 
-					reader.Read();
+					reader.ReadChecked();
 					if (reader.TokenType != JsonToken.EndArray)
-						throw CreateException(reader, "Expected end of array.");
+						throw reader.CreateException("Expected end of array.");
 
 					int minCount = Math.Max(0, Convert.ToInt32(firstNumber));
 					int maxCount = Math.Max(0, Convert.ToInt32(secondNumber));
 					return new ThingWithChance(itemId, minCount, maxCount);
 				}
 
-				throw CreateException(reader, "Expected number.");
+				throw reader.CreateException("Expected number.");
 			}
 
-			throw CreateException(reader, "Expected string or array.");
+			throw reader.CreateException("Expected string or array.");
 		}
 
 		public override void WriteJson(JsonWriter writer, ThingWithChance value, JsonSerializer serializer) {
 			throw new NotSupportedException();
-		}
-
-		private static JsonReaderException CreateException(JsonReader reader, string message) {
-			var lineInfo = (IJsonLineInfo)reader;
-
-			return new JsonReaderException(
-				$"{message} Path '{reader.Path}', line {lineInfo.LineNumber}, position {lineInfo.LinePosition}.",
-				reader.Path, lineInfo.LineNumber, lineInfo.LinePosition, null);
 		}
 	}
 }
