@@ -1,15 +1,15 @@
 {
-	"id": "rusty_bucket",
-	"callName": "bucket",
-	"name": "{DarkYellow}(Rusty Bucket)",
-	"inventoryDescription": "A rusty old bucket",
-	"groundDescription": "There is an old rusty bucket on the ground.",
-	"wieldable": {
-		"handsRequired": 1
-	},
-	"wearable": {
-		"defense": 1,
-		"coveredParts": "head",
-		"coveredLayers": "outer"
-	}
+  "id": "rusty_bucket",
+  "callName": "bucket",
+  "name": "{DarkYellow}(Rusty Bucket)",
+  "inventoryDescription": "A rusty old bucket",
+  "groundDescription": "There is an old rusty bucket on the ground.",
+  "wieldable": {
+    "handsRequired": 1
+  },
+  "wearable": {
+    "defense": 1,
+    "coveredParts": "head",
+    "coveredLayers": "outer"
+  }
 }

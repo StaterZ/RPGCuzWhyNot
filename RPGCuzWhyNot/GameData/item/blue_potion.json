@@ -1,37 +1,37 @@
 {
-	"id": "blue_potion",
-	"callName": "blue",
-	"name": "{blue}(Blue potion)",
-	"inventoryDescription": "A bottle containing some blue liquid.",
-	"groundDescription": "A bottle containing some blue liquid.",
-	"actions": [
-		{
-			"hasTarget": false,
-			"callNames": [ "drink", "consume", "ingest" ],
-			"name": "Drink",
-			"description": "Consume the strange liquid inside.",
-			"executeDescription": "You uncork the potion and gulp it down hastily.",
-			"effects": {
-				"healSelf": 35,
-				"consumeSelf": true
-			}
-		},
-		{
-			"hasTarget": true,
-			"callNames": [ "throw" ],
-			"name": "Throw",
-			"description": "Throw the potion at something.",
-			"executeDescription": "You throw the potion at <target_name>. It cracks open and spills all over <target_referal_objectPronoun>.",
-			"requirements": {
-				"stats": {
-					"strength": 1,
-					"accuracy": 3
-				}
-			},
-			"effects": {
-				"healTarget": 25,
-				"consumeSelf": true
-			}
-		}
-	]
+  "id": "blue_potion",
+  "callName": "blue",
+  "name": "{blue}(Blue potion)",
+  "inventoryDescription": "A bottle containing some blue liquid.",
+  "groundDescription": "A bottle containing some blue liquid.",
+  "actions": [
+    {
+      "hasTarget": false,
+      "callNames": [ "drink", "consume", "ingest" ],
+      "name": "Drink",
+      "description": "Consume the strange liquid inside.",
+      "executeDescription": "You uncork the potion and gulp it down hastily.",
+      "effects": {
+        "healSelf": 35,
+        "consumeSelf": true
+      }
+    },
+    {
+      "hasTarget": true,
+      "callNames": [ "throw" ],
+      "name": "Throw",
+      "description": "Throw the potion at something.",
+      "executeDescription": "You throw the potion at <target_name>. It cracks open and spills all over <target_referal_objectPronoun>.",
+      "requirements": {
+        "stats": {
+          "strength": 1,
+          "accuracy": 3
+        }
+      },
+      "effects": {
+        "healTarget": 25,
+        "consumeSelf": true
+      }
+    }
+  ]
 }

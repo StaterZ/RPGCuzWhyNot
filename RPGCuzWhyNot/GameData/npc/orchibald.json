@@ -1,8 +1,8 @@
-{
-	"id": "orchibald",
-	"callName": "orchibald",
-	"name": "Orchibald (Smith)",
-	"location": "village_smithy",
-	"glanceDescription": "A smith can be seen by a large forge.",
-	"approachDescription": "You walk up to the smith. He turns around to look at you."
+﻿{
+  "id": "orchibald",
+  "callName": "orchibald",
+  "name": "Orchibald (Smith)",
+  "location": "village_smithy",
+  "glanceDescription": "A smith can be seen by a large forge.",
+  "approachDescription": "You walk up to the smith. He turns around to look at you."
 }
