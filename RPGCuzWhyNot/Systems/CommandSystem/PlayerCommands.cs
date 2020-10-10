@@ -36,6 +36,7 @@ namespace RPGCuzWhyNot.Systems.CommandSystem {
 				new ThrowCommand(),
 				new TypeCommand(),
 				new QuitCommand(),
+				new AttackCommand()
 			});
 		}
 
