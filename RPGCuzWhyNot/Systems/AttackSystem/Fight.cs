@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using RPGCuzWhyNot.Things.Characters;
@@ -16,6 +17,22 @@ namespace RPGCuzWhyNot.Systems.AttackSystem {
 			this.combatants = combatants.ToList();
 		}
 
+		private void DisplayCombatantStatuses() {
+			Terminal.WriteLine("{fg:Cyan}(Status)");
+			foreach (Character combatant in combatants) {
+				ConsoleColor healthColor;
+				if (combatant.health.Percent < 0.25) {
+					healthColor = ConsoleColor.Red;
+				} else if (combatant.health.Percent < 0.5) {
+					healthColor = ConsoleColor.Yellow;
+				} else {
+					healthColor = ConsoleColor.Green;
+				}
+				Terminal.WriteLine($"{combatant.Name}: {{fg:{healthColor}}}({combatant.health.CurrentHealth}/{combatant.health.maxHealth})");
+			}
+			Terminal.WriteLine();
+		}
+
 		public void BeginCombat() {
 			Terminal.WriteLine($"{{fg:Cyan}}(Combat with {Stringification.StringifyArray("[", ", ", "]", combatants.Select(combatant => combatant.Name).ToArray())} has begun!)");
 			Terminal.WriteLine();
@@ -29,6 +46,8 @@ namespace RPGCuzWhyNot.Systems.AttackSystem {
 						Terminal.ClearLine();
 						Terminal.CursorY--;
 					}
+
+					DisplayCombatantStatuses();
 
 					if (!combatants.Any(c => c != Program.player && c.health.IsAlive && c.WantsToHarm(Program.player))) { //slightly questionable check but it'll work for now...
 						EndCombat();
@@ -49,7 +68,7 @@ namespace RPGCuzWhyNot.Systems.AttackSystem {
 				}
 			}
 
-			Terminal.WriteLine($"{{fg:Cyan}}(Combat has ended!)");
+			Terminal.WriteLine("{fg:Cyan}(Combat has ended!)");
 			Terminal.WriteLine();
 		}
 
