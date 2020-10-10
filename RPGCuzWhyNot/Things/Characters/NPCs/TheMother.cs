@@ -3,7 +3,7 @@ using RPGCuzWhyNot.Systems.AttackSystem;
 using RPGCuzWhyNot.Systems.HealthSystem;
 using RPGCuzWhyNot.Things.Characters.Races.Humanoids;
 
-namespace RPGCuzWhyNot.Things.Characters.Enemies {
+namespace RPGCuzWhyNot.Things.Characters.NPCs {
 	public class TheMother : Character {
 		public TheMother() : base(new Human(Humanoid.Gender.Female)) {
 			Name = "Din Mamma";
