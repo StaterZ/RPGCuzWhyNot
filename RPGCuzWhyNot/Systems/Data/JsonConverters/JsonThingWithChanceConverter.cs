@@ -31,6 +31,7 @@ namespace RPGCuzWhyNot.Systems.Data.JsonConverters {
 				}
 
 				if (reader.TokenType == JsonToken.Integer || reader.TokenType == JsonToken.Float) {
+					// [string, int, int]
 					object secondNumber = reader.Value;
 
 					reader.Read();

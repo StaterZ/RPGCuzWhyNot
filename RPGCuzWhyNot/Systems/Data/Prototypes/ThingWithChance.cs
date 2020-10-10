@@ -36,7 +36,5 @@ namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 
 			return count;
 		}
-
-		//private static bool IsWholeNumber()
 	}
 }
