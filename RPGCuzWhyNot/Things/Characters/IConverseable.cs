@@ -1,5 +1,5 @@
 namespace RPGCuzWhyNot.Things.Characters {
-	internal interface IConverseable {
+	public interface IConverseable {
 		void Converse(Character character, string response);
 	}
 }
