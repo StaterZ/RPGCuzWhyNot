@@ -4,8 +4,6 @@
         <OutputType>Exe</OutputType>
         <TargetFramework>netcoreapp3.1</TargetFramework>
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-        <Authors>StaterZ, Smeas, Sallad</Authors>
-        <ApplicationIcon>Icon.ico</ApplicationIcon>
     </PropertyGroup>
 
     <!-- Copy the game data to the output directory -->
