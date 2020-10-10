@@ -25,6 +25,8 @@ namespace RPGCuzWhyNot.Things.Characters {
 			};
 			health.OnDeath += ctx => {
 				Terminal.WriteLine($"{ctx.inflictor} killed you!");
+				ConsoleUtils.WaitForPlayer();
+				Environment.Exit(0);
 			};
 
 			commands = new PlayerCommands();
