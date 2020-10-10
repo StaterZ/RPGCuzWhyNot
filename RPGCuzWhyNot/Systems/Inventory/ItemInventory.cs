@@ -1,5 +1,4 @@
 using RPGCuzWhyNot.Things.Item;
-using System;
 
 namespace RPGCuzWhyNot.Systems.Inventory {
 	public class ItemInventory : InventoryBase<IItem, IHasInventory> {

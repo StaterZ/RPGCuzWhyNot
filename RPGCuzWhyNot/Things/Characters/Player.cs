@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using RPGCuzWhyNot.Primitives;
@@ -7,7 +6,6 @@ using RPGCuzWhyNot.Systems;
 using RPGCuzWhyNot.Systems.AttackSystem;
 using RPGCuzWhyNot.Systems.CommandSystem;
 using RPGCuzWhyNot.Systems.HealthSystem;
-using RPGCuzWhyNot.Systems.Inventory;
 using RPGCuzWhyNot.Systems.MenuSystem;
 using RPGCuzWhyNot.Things.Characters.Races;
 using RPGCuzWhyNot.Things.Item;

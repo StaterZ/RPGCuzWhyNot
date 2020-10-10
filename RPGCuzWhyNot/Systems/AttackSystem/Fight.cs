@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using RPGCuzWhyNot.Primitives;
 using RPGCuzWhyNot.Things.Characters;
-using RPGCuzWhyNot.Things.Item;
 using RPGCuzWhyNot.Utilities;
 
 namespace RPGCuzWhyNot.Systems.AttackSystem {

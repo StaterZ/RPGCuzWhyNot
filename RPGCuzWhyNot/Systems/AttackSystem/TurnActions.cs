@@ -1,7 +1,7 @@
-using RPGCuzWhyNot.Things.Item;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using RPGCuzWhyNot.Things.Item;
 
 namespace RPGCuzWhyNot.Systems.AttackSystem {
 	public class TurnActions {

@@ -1,9 +1,7 @@
 using System;
 using RPGCuzWhyNot.Systems;
-using RPGCuzWhyNot.Systems.AttackSystem;
 using RPGCuzWhyNot.Systems.Data;
 using RPGCuzWhyNot.Things.Characters;
-using RPGCuzWhyNot.Things.Characters.Enemies;
 using RPGCuzWhyNot.Things.Characters.Races.Humanoids;
 using RPGCuzWhyNot.Things.Item;
 using RPGCuzWhyNot.Utilities;
