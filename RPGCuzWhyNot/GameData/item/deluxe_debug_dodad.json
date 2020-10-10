@@ -1,22 +1,22 @@
 {
-  "id": "deluxe_debug_doodad",
-  "callName": "deluxe debug doodad",
-  "name": "Deluxe Debug Doodad (the mighty DDD)",
-  "inventoryDescription": "Don't ask me!",
-  "groundDescription": "I'm not creative enough for this!",
-  "wieldable": {
-    "handsRequired": 0
-  },
-  "actions": [
-    {
-      "hasTarget": true,
-      "callNames": [ "weee" ],
-      "name": "Insta-Kill",
-      "description": "Instantly kill the enemies with the literal powers of god.",
-      "executeDescription": "You slay your enemies with the mighty powers of the dev team!",
-      "effects": {
-        "meleeDamage": 999
-      }
-    }
-  ]
+	"id": "deluxe_debug_doodad",
+	"callName": "deluxe debug doodad",
+	"name": "Deluxe Debug Doodad (the mighty DDD)",
+	"inventoryDescription": "Don't ask me!",
+	"groundDescription": "I'm not creative enough for this!",
+	"wieldable": {
+		"handsRequired": 0
+	},
+	"actions": [
+		{
+			"hasTarget": true,
+			"callNames": [ "weee" ],
+			"name": "Insta-Kill",
+			"description": "Instantly kill the enemies with the literal powers of god.",
+			"executeDescription": "You slay your enemies with the mighty powers of the dev team!",
+			"effects": {
+				"meleeDamage": 999
+			}
+		}
+	]
 }

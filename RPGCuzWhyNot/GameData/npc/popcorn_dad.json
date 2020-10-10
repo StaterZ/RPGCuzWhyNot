@@ -1,8 +1,8 @@
-﻿{
-  "id": "popcorn_dad",
-  "callName": "dad",
-  "name": "Popcorn Wielding Dad",
-  "location": "village_smithy_garden",
-  "glanceDescription": "Your dad stands before you, wielding a large bucket of popcorn.",
-  "approachDescription": "You walk up to your dad. He glares at you. He looks down at the popcorn, then back at you. 'Mine' he exclaims and walks away."
+{
+	"id": "popcorn_dad",
+	"callName": "dad",
+	"name": "Popcorn Wielding Dad",
+	"location": "village_smithy_garden",
+	"glanceDescription": "Your dad stands before you, wielding a large bucket of popcorn.",
+	"approachDescription": "You walk up to your dad. He glares at you. He looks down at the popcorn, then back at you. 'Mine' he exclaims and walks away."
 }

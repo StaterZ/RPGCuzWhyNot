@@ -1,0 +1,47 @@
+{
+	"id": "norse_sword",
+	"callName": "sword",
+	"name": "{green}(Norse sword)",
+	"inventoryDescription": "An old viking sword light but deadly.",
+	"groundDescription": "An old viking sword is lying on the ground.",
+	"wieldable": {    
+		"handsRequired": 1	
+
+	},
+	"actions": [
+		{
+			"hasTarget": true,
+			"callNames": [ "slash" ],
+			"name": "Slash",
+			"description": "Slash your enemy.",
+			"executeDescription": "You quickly slash <target_referal_objectPronoun> on the stomach.",
+			"requirements": {
+				"stats": {
+					"strength": 1,
+					"speed": 1
+				}
+			},
+			"effects": {
+				"meleeDamage": 23,
+				"armorPiercing": 0.1
+			}
+		},
+		{
+			"hasTarget": true,
+			"callNames": [ "stab" ],
+			"name": "Stab",
+			"description": "Stab your enemy.",
+			"executeDescription": "You quickly stab <target_referal_objectPronoun> in the stomach.",
+			"requirements": {
+				"stats": {
+					"strength": 2,
+					"speed": 1
+				}
+			},
+			"effects": {
+				"meleeDamage": 17,
+				"armorPiercing": 0.3
+			}
+		}
+	]
+}

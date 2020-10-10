@@ -1,0 +1,31 @@
+{
+	"id": "viking_helmet",
+	"callName": "helmet",
+	"name": "{green}(Viking helmet)",
+	"inventoryDescription": "An old viking helmet with a spike on the top.",
+	"groundDescription": "A vikings helmet is lying on the ground.",
+	"wearable": {    
+		"defense": 18,
+		"coveredParts": "head",
+		"coveredLayers": "outer"
+	},
+	"actions": [
+		{
+			"hasTarget": true,
+			"callNames": [ "headbutt" ],
+			"name": "Headbutt",
+			"description": "Headbutt your foe.",
+			"executeDescription": "You run torwards your enemy with your head first and bonk <target_referal_objectPronoun> on the head with your spike.",
+			"requirements": {
+				"stats": {
+					"strength": 2,
+					"speed": 3
+				}
+			},
+			"effects": {
+				"meleeDamage": 20,
+				"armorPiercing": 0.3
+			}
+		}
+	]
+}
