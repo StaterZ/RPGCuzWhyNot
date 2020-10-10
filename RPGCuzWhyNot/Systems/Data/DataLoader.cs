@@ -250,7 +250,7 @@ namespace RPGCuzWhyNot.Systems.Data {
 					case LootTablePrototype lootTable: {
 						for (int i = 0; i < itemCount; i++) {
 							string lootItemName = lootTable.Evaluate(random);
-							var item = GetPrototype(lootItemName) as ItemPrototype;
+							var item = GetPrototypeOrNull(lootItemName) as ItemPrototype;
 
 							if (item == null) {
 								Error($"Item '{lootItemName}' not found. Referenced by loot table '{itemDeclaration.Id}' used in location '{location.Prototype.Id}'.");
@@ -285,7 +285,7 @@ namespace RPGCuzWhyNot.Systems.Data {
 			}
 		}
 
-		private static Prototype GetPrototype(string id) {
+		private static Prototype GetPrototypeOrNull(string id) {
 			if (prototypes.TryGetValue(id, out Prototype proto))
 				return proto;
 			return null;
