@@ -53,14 +53,14 @@ namespace RPGCuzWhyNot.Things.Item {
 			Effects = effects;
 		}
 
-		public void Execute(TurnAction plannedAction) {
+		public void Execute(TurnAction turnAction) {
 			//consume
 			if (Effects.ConsumeSelf) {
 				Item.Destroy();
 			}
 			foreach (KeyValuePair<string, int> item in Effects.ConsumeItems) {
 				for (int i = 0; i < item.Value; i++) {
-					plannedAction.performer.Inventory.GetItemById(item.Key)?.Destroy();
+					turnAction.performer.Inventory.GetItemById(item.Key)?.Destroy();
 				}
 			}
 
@@ -68,9 +68,9 @@ namespace RPGCuzWhyNot.Things.Item {
 			ItemInventory GetTransferTarget(TransferLocation transferLocation) {
 				switch (transferLocation) {
 					case TransferLocation.Ground:
-						return plannedAction.performer.location.items;
+						return turnAction.performer.location.items;
 					case TransferLocation.Target:
-						return plannedAction.target.Inventory;
+						return turnAction.target.Inventory;
 					default:
 						throw new InvalidOperationException();
 				}
@@ -81,7 +81,7 @@ namespace RPGCuzWhyNot.Things.Item {
 			}
 			foreach (KeyValuePair<string, (TransferLocation location, int amount)> pair in Effects.TransferItems) { 
 				for (int i = 0; i < pair.Value.amount; i++) {
-					IItem item = plannedAction.performer.Inventory.GetItemById(pair.Key);
+					IItem item = turnAction.performer.Inventory.GetItemById(pair.Key);
 					if (item != null) {
 						GetTransferTarget(pair.Value.location).MoveItem(item);
 					}
@@ -89,26 +89,33 @@ namespace RPGCuzWhyNot.Things.Item {
 			}
 
 			//heal
-			plannedAction.performer.health.Heal(Effects.HealSelf, plannedAction.performer);
-			plannedAction.target?.health.Heal(Effects.HealTarget, plannedAction.performer);
+			turnAction.performer.health.Heal(Effects.HealSelf, turnAction.performer);
+			turnAction.target?.health.Heal(Effects.HealTarget, turnAction.performer);
 
-			string formattedExecuteDescription = ExecuteDescription;
-			if (plannedAction.performer.race is Humanoid humanoidPerformer) {
-				formattedExecuteDescription = formattedExecuteDescription.Replace("performer_referal_subjectPronoun", humanoidPerformer.gender.referral.subjectPronoun);
-				formattedExecuteDescription = formattedExecuteDescription.Replace("performer_referal_objectPronon", humanoidPerformer.gender.referral.objectPronoun);
-				formattedExecuteDescription = formattedExecuteDescription.Replace("performer_referal_possessiveAdjective", humanoidPerformer.gender.referral.possessiveAdjective);
-				formattedExecuteDescription = formattedExecuteDescription.Replace("performer_referal_possessivePronoun", humanoidPerformer.gender.referral.possessivePronoun);
-				formattedExecuteDescription = formattedExecuteDescription.Replace("performer_referal_reflexivePronoun", humanoidPerformer.gender.referral.reflexivePronoun);
-			}
-			if (plannedAction.target.race is Humanoid humanoidTarget) {
-				formattedExecuteDescription = formattedExecuteDescription.Replace("target_referal_subjectPronoun", humanoidTarget.gender.referral.subjectPronoun);
-				formattedExecuteDescription = formattedExecuteDescription.Replace("target_referal_objectPronon", humanoidTarget.gender.referral.objectPronoun);
-				formattedExecuteDescription = formattedExecuteDescription.Replace("target_referal_possessiveAdjective", humanoidTarget.gender.referral.possessiveAdjective);
-				formattedExecuteDescription = formattedExecuteDescription.Replace("target_referal_possessivePronoun", humanoidTarget.gender.referral.possessivePronoun);
-				formattedExecuteDescription = formattedExecuteDescription.Replace("target_referal_reflexivePronoun", humanoidTarget.gender.referral.reflexivePronoun);
-			}
+			string formattedExecuteDescription = FormatExecuteDescription(turnAction, ExecuteDescription);
+			
 
 			Terminal.WriteLine($"[{ListingName}] {formattedExecuteDescription}");
+		}
+
+		private static string FormatExecuteDescription(TurnAction turnAction, string executeDescription) {
+			if (turnAction.performer.race is Humanoid humanoidPerformer) {
+				executeDescription = executeDescription.Replace("performer_referal_subjectPronoun", humanoidPerformer.gender.referral.subjectPronoun);
+				executeDescription = executeDescription.Replace("performer_referal_objectPronoun", humanoidPerformer.gender.referral.objectPronoun);
+				executeDescription = executeDescription.Replace("performer_referal_possessiveAdjective", humanoidPerformer.gender.referral.possessiveAdjective);
+				executeDescription = executeDescription.Replace("performer_referal_possessivePronoun", humanoidPerformer.gender.referral.possessivePronoun);
+				executeDescription = executeDescription.Replace("performer_referal_reflexivePronoun", humanoidPerformer.gender.referral.reflexivePronoun);
+			}
+
+			if (turnAction.target?.race is Humanoid humanoidTarget) {
+				executeDescription = executeDescription.Replace("target_referal_subjectPronoun", humanoidTarget.gender.referral.subjectPronoun);
+				executeDescription = executeDescription.Replace("target_referal_objectPronoun", humanoidTarget.gender.referral.objectPronoun);
+				executeDescription = executeDescription.Replace("target_referal_possessiveAdjective", humanoidTarget.gender.referral.possessiveAdjective);
+				executeDescription = executeDescription.Replace("target_referal_possessivePronoun", humanoidTarget.gender.referral.possessivePronoun);
+				executeDescription = executeDescription.Replace("target_referal_reflexivePronoun", humanoidTarget.gender.referral.reflexivePronoun);
+			}
+
+			return executeDescription;
 		}
 	}
 }

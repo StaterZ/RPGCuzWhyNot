@@ -8,6 +8,6 @@ namespace RPGCuzWhyNot.Systems.AttackSystem {
 		string ExecuteDescription { get; }
 		Requirements Requirements { get; }
 
-		void Execute(TurnAction ctx);
+		void Execute(TurnAction turnAction);
 	}
 }
