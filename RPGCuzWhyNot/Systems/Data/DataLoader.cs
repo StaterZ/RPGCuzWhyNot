@@ -124,11 +124,11 @@ namespace RPGCuzWhyNot.Systems.Data {
 					prototypeList = DeserializeOneOrMore<TProto>(fileContent);
 				}
 				catch (IOException e) {
-					Error($"Failed to read file \"{filePath}\":\n{e.Message}");
+					Error($"Failed to read file \"{filePath}\": {e.Message}");
 					continue;
 				}
 				catch (JsonException e) {
-					Error($"Failed to deserialize file \"{filePath}\":\n{e.Message}");
+					Error($"Failed to deserialize file \"{filePath}\": {e.Message}");
 					continue;
 				}
 
