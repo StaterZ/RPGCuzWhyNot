@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 using RPGCuzWhyNot.Systems;
 using RPGCuzWhyNot.Systems.AttackSystem;
 using RPGCuzWhyNot.Systems.Inventory;
+using RPGCuzWhyNot.Things.Characters.Races.Humanoids;
 
 namespace RPGCuzWhyNot.Things.Item {
 	[Serializable]
@@ -91,7 +92,23 @@ namespace RPGCuzWhyNot.Things.Item {
 			plannedAction.performer.health.Heal(Effects.HealSelf, plannedAction.performer);
 			plannedAction.target?.health.Heal(Effects.HealTarget, plannedAction.performer);
 
-			Terminal.WriteLine($"[{ListingName}] {ExecuteDescription}");
+			string formattedExecuteDescription = ExecuteDescription;
+			if (plannedAction.performer.race is Humanoid humanoidPerformer) {
+				formattedExecuteDescription = formattedExecuteDescription.Replace("performer_referal_subjectPronoun", humanoidPerformer.gender.referral.subjectPronoun);
+				formattedExecuteDescription = formattedExecuteDescription.Replace("performer_referal_objectPronon", humanoidPerformer.gender.referral.objectPronoun);
+				formattedExecuteDescription = formattedExecuteDescription.Replace("performer_referal_possessiveAdjective", humanoidPerformer.gender.referral.possessiveAdjective);
+				formattedExecuteDescription = formattedExecuteDescription.Replace("performer_referal_possessivePronoun", humanoidPerformer.gender.referral.possessivePronoun);
+				formattedExecuteDescription = formattedExecuteDescription.Replace("performer_referal_reflexivePronoun", humanoidPerformer.gender.referral.reflexivePronoun);
+			}
+			if (plannedAction.target.race is Humanoid humanoidTarget) {
+				formattedExecuteDescription = formattedExecuteDescription.Replace("target_referal_subjectPronoun", humanoidTarget.gender.referral.subjectPronoun);
+				formattedExecuteDescription = formattedExecuteDescription.Replace("target_referal_objectPronon", humanoidTarget.gender.referral.objectPronoun);
+				formattedExecuteDescription = formattedExecuteDescription.Replace("target_referal_possessiveAdjective", humanoidTarget.gender.referral.possessiveAdjective);
+				formattedExecuteDescription = formattedExecuteDescription.Replace("target_referal_possessivePronoun", humanoidTarget.gender.referral.possessivePronoun);
+				formattedExecuteDescription = formattedExecuteDescription.Replace("target_referal_reflexivePronoun", humanoidTarget.gender.referral.reflexivePronoun);
+			}
+
+			Terminal.WriteLine($"[{ListingName}] {formattedExecuteDescription}");
 		}
 	}
 }
