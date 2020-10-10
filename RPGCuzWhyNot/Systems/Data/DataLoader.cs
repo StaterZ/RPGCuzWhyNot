@@ -19,12 +19,14 @@ namespace RPGCuzWhyNot.Systems.Data {
 		private static readonly string locationsPath = dataPath + "location";
 		private static readonly string itemsPath = dataPath + "item";
 		private static readonly string npcsPath = dataPath + "npc";
+		private static readonly string lootTablesPath = dataPath + "loot";
 
 		private static readonly JsonSerializerSettings serializerSettings = new JsonSerializerSettings {
 			MissingMemberHandling = MissingMemberHandling.Error
 		};
 
 		private static readonly JsonSerializer serializer = JsonSerializer.CreateDefault(serializerSettings);
+		private static readonly Random random = new Random();
 
 		private static Dictionary<string, Prototype> prototypes;
 		private static Dictionary<string, Location> locations;
@@ -63,6 +65,7 @@ namespace RPGCuzWhyNot.Systems.Data {
 			LoadPrototypesFromPath<ItemPrototype>(itemsPath);
 			LoadPrototypesFromPath<LocationPrototype>(locationsPath);
 			LoadPrototypesFromPath<NpcPrototype>(npcsPath);
+			LoadPrototypesFromPath<LootTablePrototype>(lootTablesPath);
 			ValidatePrototypes();
 
 			ConstructLocations();
@@ -106,6 +109,11 @@ namespace RPGCuzWhyNot.Systems.Data {
 		}
 
 		private static void LoadPrototypesFromPath<TProto>(string path) where TProto : Prototype {
+			if (!Directory.Exists(path)) {
+				Warning($"Missing data directory \"{path}\".");
+				return;
+			}
+
 			string[] dataFiles = Directory.GetFiles(path, "*.json", SearchOption.AllDirectories);
 
 			foreach (string filePath in dataFiles) {
@@ -223,16 +231,41 @@ namespace RPGCuzWhyNot.Systems.Data {
 					location.AddPathTo(destination, pathDescription);
 				}
 
-				// Create the items in the location.
-				foreach (string itemName in locationPrototype.Items) {
-					if (!prototypes.TryGetValue(itemName, out Prototype proto) || !(proto is ItemPrototype item)) {
-						Error($"Item '{itemName}' not found. Referenced by location '{id}'.");
-						continue;
-					}
-
-					location.items.MoveItem(item.Create());
+				foreach (ThingWithChance item in locationPrototype.Items) {
+					CreateItemInLocation(location, item);
 				}
 			}
+		}
+
+		private static void CreateItemInLocation(Location location, ThingWithChance itemDeclaration) {
+			int itemCount = itemDeclaration.EvaluateChance(random);
+
+			if (prototypes.TryGetValue(itemDeclaration.Id, out Prototype proto)) {
+				switch (proto) {
+					case ItemPrototype itemPrototype:
+						for (int i = 0; i < itemCount; i++)
+							location.items.MoveItem(itemPrototype.Create());
+						return;
+
+					case LootTablePrototype lootTable: {
+						for (int i = 0; i < itemCount; i++) {
+							string lootItemName = lootTable.Evaluate(random);
+							var item = GetPrototype(lootItemName) as ItemPrototype;
+
+							if (item == null) {
+								Error($"Item '{lootItemName}' not found. Referenced by loot table '{itemDeclaration.Id}' used in location '{location.Prototype.Id}'.");
+								continue;
+							}
+
+							location.items.MoveItem(item.Create());
+						}
+
+						return;
+					}
+				}
+			}
+
+			Error($"Item '{itemDeclaration.Id}' not found. Referenced by location '{location.Prototype.Id}'.");
 		}
 
 		private static void FindRegisteredNPCs() { // Find all registered NPCs (those marked with UniqueNpcAttribute).
@@ -252,6 +285,12 @@ namespace RPGCuzWhyNot.Systems.Data {
 			}
 		}
 
+		private static Prototype GetPrototype(string id) {
+			if (prototypes.TryGetValue(id, out Prototype proto))
+				return proto;
+			return null;
+		}
+
 		#region Validation
 
 		private static void ValidatePrototypes() {
@@ -267,6 +306,10 @@ namespace RPGCuzWhyNot.Systems.Data {
 
 					case NpcPrototype npcPrototype:
 						ValidateNpcPrototype(npcPrototype);
+						break;
+
+					case LootTablePrototype lootTablePrototype:
+						ValidateLootTablePrototype(lootTablePrototype);
 						break;
 				}
 			}
@@ -291,6 +334,13 @@ namespace RPGCuzWhyNot.Systems.Data {
 
 			if (!npcTypeMap.ContainsKey(proto.Id))
 				Error($"Unknown NPC '{proto.Id}' in file \"{proto.DataFilePath}\".");
+		}
+
+		private static void ValidateLootTablePrototype(LootTablePrototype proto) {
+			foreach (string id in proto.Items.Keys) {
+				if (!(GetPrototype(id) is ItemPrototype))
+					Error($"Item '{id}' not found. Referenced by loot table '{proto.Id}' in file \"{proto.DataFilePath}\".");
+			}
 		}
 
 		#endregion
