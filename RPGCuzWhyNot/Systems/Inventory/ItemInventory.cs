@@ -6,8 +6,7 @@ namespace RPGCuzWhyNot.Systems.Inventory {
 
 		protected override bool CheckMove(IItem item, bool silent) => true;
 
-		public IItem GetItemById(string id)
-		{
+		public IItem GetItemById(string id) {
 			foreach (IItem item in items) {
 				if (item.Prototype.Id == id) {
 					return item;
@@ -18,4 +17,3 @@ namespace RPGCuzWhyNot.Systems.Inventory {
 		}
 	}
 }
-
