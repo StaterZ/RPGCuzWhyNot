@@ -30,7 +30,7 @@ namespace RPGCuzWhyNot.Things {
 			public readonly Location location;
 			public readonly string description;
 
-			protected internal Path(Location location, string description) {
+			public Path(Location location, string description) {
 				this.location = location;
 				this.description = description;
 			}

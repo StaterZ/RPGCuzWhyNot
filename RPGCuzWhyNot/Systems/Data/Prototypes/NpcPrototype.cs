@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 	[Serializable]
-	public class NpcPrototype : Prototype {
+	public class NpcPrototype : ThingPrototype {
 		[JsonProperty("location", Required = Required.Always)]
 		public string Location { get; set; }
 

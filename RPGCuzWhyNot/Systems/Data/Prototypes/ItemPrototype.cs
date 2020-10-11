@@ -5,7 +5,7 @@ using RPGCuzWhyNot.Things.Item;
 
 namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 	[Serializable]
-	public sealed class ItemPrototype : Prototype {
+	public sealed class ItemPrototype : ThingPrototype {
 		[JsonProperty("inventoryDescription", Required = Required.Always)]
 		public string DescriptionInInventory { get; set; }
 

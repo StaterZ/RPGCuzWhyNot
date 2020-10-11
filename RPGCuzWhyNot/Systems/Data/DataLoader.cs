@@ -13,23 +13,27 @@ using RPGCuzWhyNot.Things.Item;
 
 namespace RPGCuzWhyNot.Systems.Data {
 	public static class DataLoader {
+		public enum ErrorLevel { Success, Warning, Error, }
+
 		private static readonly string dataPath = "GameData" + Path.DirectorySeparatorChar;
 		private static readonly string locationsPath = dataPath + "location";
 		private static readonly string itemsPath = dataPath + "item";
 		private static readonly string npcsPath = dataPath + "npc";
+		private static readonly string lootTablesPath = dataPath + "loot";
 
 		private static readonly JsonSerializerSettings serializerSettings = new JsonSerializerSettings {
 			MissingMemberHandling = MissingMemberHandling.Error
 		};
 
 		private static readonly JsonSerializer serializer = JsonSerializer.CreateDefault(serializerSettings);
+		private static readonly Random random = new Random();
 
 		private static readonly Dictionary<string, Prototype> prototypes = new Dictionary<string, Prototype>();
 		private static readonly Dictionary<string, Location> locations = new Dictionary<string, Location>();
 		private static readonly Dictionary<string, NPC> npcs = new Dictionary<string, NPC>();
 		private static readonly Dictionary<string, Type> npcTypeMap = new Dictionary<string, Type>();
 
-		private static bool loadError;
+		private static ErrorLevel loadErrorLevel;
 
 		/// <summary>
 		/// All of the loaded prototypes.
@@ -53,8 +57,8 @@ namespace RPGCuzWhyNot.Systems.Data {
 		/// <summary>
 		/// Load all the game data files into the registry.
 		/// </summary>
-		public static bool LoadGameData() {
-			loadError = false;
+		public static ErrorLevel LoadGameData() {
+			loadErrorLevel = ErrorLevel.Success;
 
 			prototypes.Clear();
 			locations.Clear();
@@ -63,13 +67,14 @@ namespace RPGCuzWhyNot.Systems.Data {
 			LoadPrototypesFromPath<ItemPrototype>(itemsPath);
 			LoadPrototypesFromPath<LocationPrototype>(locationsPath);
 			LoadPrototypesFromPath<NpcPrototype>(npcsPath);
+			LoadPrototypesFromPath<LootTablePrototype>(lootTablesPath);
 			ValidatePrototypes();
 
 			ConstructLocations();
 			InitializeLocations();
 			ConstructNPCs();
 
-			return !loadError;
+			return loadErrorLevel;
 		}
 
 		/// <summary>
@@ -106,6 +111,11 @@ namespace RPGCuzWhyNot.Systems.Data {
 		}
 
 		private static void LoadPrototypesFromPath<TProto>(string path) where TProto : Prototype {
+			if (!Directory.Exists(path)) {
+				Warning($"Missing data directory \"{path}\".");
+				return;
+			}
+
 			string[] dataFiles = Directory.GetFiles(path, "*.json", SearchOption.AllDirectories);
 
 			foreach (string filePath in dataFiles) {
@@ -116,11 +126,11 @@ namespace RPGCuzWhyNot.Systems.Data {
 					prototypeList = DeserializeOneOrMore<TProto>(fileContent);
 				}
 				catch (IOException e) {
-					Error($"Failed to read file \"{filePath}\":\n{e.Message}");
+					Error($"Failed to read file \"{filePath}\": {e.Message}");
 					continue;
 				}
 				catch (JsonException e) {
-					Error($"Failed to deserialize file \"{filePath}\":\n{e.Message}");
+					Error($"Failed to deserialize file \"{filePath}\": {e.Message}");
 					continue;
 				}
 
@@ -144,24 +154,27 @@ namespace RPGCuzWhyNot.Systems.Data {
 			var reader = new JsonTextReader(new StringReader(json));
 			var list = new List<T>();
 
-			reader.Read();
+			reader.ReadChecked();
 			if (reader.TokenType == JsonToken.StartArray) {
 				// Read an array of objects.
-				reader.Read();
+				reader.ReadChecked();
 				while (reader.TokenType != JsonToken.EndArray) {
 					T value = serializer.Deserialize<T>(reader);
 					list.Add(value);
-					reader.Read();
+					reader.ReadChecked();
 				}
 			}
-			else {
+			else if (reader.TokenType == JsonToken.StartObject) {
 				// Read a single object.
 				T value = serializer.Deserialize<T>(reader);
 				list.Add(value);
 			}
+			else {
+				throw reader.CreateException("Unexpected token.");
+			}
 
 			if (reader.Read())
-				throw new JsonException("Expected end of file after array/object.");
+				throw reader.CreateException("Expected end of file after array/object.");
 
 			return list;
 		}
@@ -217,16 +230,41 @@ namespace RPGCuzWhyNot.Systems.Data {
 					location.AddPathTo(destination, pathDescription);
 				}
 
-				// Create the items in the location.
-				foreach (string itemName in locationPrototype.Items) {
-					if (!prototypes.TryGetValue(itemName, out Prototype proto) || !(proto is ItemPrototype item)) {
-						Error($"Item '{itemName}' not found. Referenced by location '{id}'.");
-						continue;
-					}
-
-					location.items.MoveItem(item.Create());
+				foreach (ThingWithChance item in locationPrototype.Items) {
+					CreateItemInLocation(location, item);
 				}
 			}
+		}
+
+		private static void CreateItemInLocation(Location location, ThingWithChance itemDeclaration) {
+			int itemCount = itemDeclaration.EvaluateChance(random);
+
+			if (prototypes.TryGetValue(itemDeclaration.Id, out Prototype proto)) {
+				switch (proto) {
+					case ItemPrototype itemPrototype:
+						for (int i = 0; i < itemCount; i++)
+							location.items.MoveItem(itemPrototype.Create());
+						return;
+
+					case LootTablePrototype lootTable: {
+						for (int i = 0; i < itemCount; i++) {
+							string lootItemName = lootTable.Evaluate(random);
+							var item = GetPrototypeOrNull(lootItemName) as ItemPrototype;
+
+							if (item == null) {
+								Error($"Item '{lootItemName}' not found. Referenced by loot table '{itemDeclaration.Id}' used in location '{location.Prototype.Id}'.");
+								continue;
+							}
+
+							location.items.MoveItem(item.Create());
+						}
+
+						return;
+					}
+				}
+			}
+
+			Error($"Item '{itemDeclaration.Id}' not found. Referenced by location '{location.Prototype.Id}'.");
 		}
 
 		private static void FindRegisteredNPCs() { // Find all registered NPCs (those marked with UniqueNpcAttribute).
@@ -246,6 +284,12 @@ namespace RPGCuzWhyNot.Systems.Data {
 			}
 		}
 
+		private static Prototype GetPrototypeOrNull(string id) {
+			if (prototypes.TryGetValue(id, out Prototype proto))
+				return proto;
+			return null;
+		}
+
 		#region Validation
 
 		private static void ValidatePrototypes() {
@@ -262,13 +306,17 @@ namespace RPGCuzWhyNot.Systems.Data {
 					case NpcPrototype npcPrototype:
 						ValidateNpcPrototype(npcPrototype);
 						break;
+
+					case LootTablePrototype lootTablePrototype:
+						ValidateLootTablePrototype(lootTablePrototype);
+						break;
 				}
 			}
 		}
 
 		private static void ValidateLocationPrototype(LocationPrototype proto) {
 			if (proto.Paths.Count == 0)
-				LogWarning($"Location '{proto.Id}' has no paths.");
+				Warning($"Location '{proto.Id}' has no paths.");
 
 			if (proto.Paths.ContainsKey(proto.Id))
 				Error($"Location '{proto.Id}' contains a path to itself.");
@@ -287,6 +335,13 @@ namespace RPGCuzWhyNot.Systems.Data {
 				Error($"Unknown NPC '{proto.Id}' in file \"{proto.DataFilePath}\".");
 		}
 
+		private static void ValidateLootTablePrototype(LootTablePrototype proto) {
+			foreach (string id in proto.Items.Keys) {
+				if (!(GetPrototypeOrNull(id) is ItemPrototype))
+					Error($"Item '{id}' not found. Referenced by loot table '{proto.Id}' in file \"{proto.DataFilePath}\".");
+			}
+		}
+
 		#endregion
 
 
@@ -295,16 +350,14 @@ namespace RPGCuzWhyNot.Systems.Data {
 		}
 
 		private static void Error(string message) {
-			loadError = true;
-			LogError(message);
-		}
-
-		private static void LogError(string message) {
+			loadErrorLevel = ErrorLevel.Error;
 			Terminal.WriteWithoutDelay("{red}([ERROR/Data]) ");
 			Terminal.WriteLineRawWithoutDelay(message);
 		}
 
-		private static void LogWarning(string message) {
+		private static void Warning(string message) {
+			if (loadErrorLevel < ErrorLevel.Warning)
+				loadErrorLevel = ErrorLevel.Warning;
 			Terminal.WriteWithoutDelay("{yellow}([WARN/Data]) ");
 			Terminal.WriteLineRawWithoutDelay(message);
 		}

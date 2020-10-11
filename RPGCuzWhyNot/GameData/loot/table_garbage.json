@@ -1,0 +1,8 @@
+{
+  "id": "table_garbage",
+  "name": "Garbage",
+  "items": {
+    "worthless_garbage": 100,
+    "rusty_flower": 50
+  }
+}
