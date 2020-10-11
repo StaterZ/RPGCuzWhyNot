@@ -46,8 +46,6 @@ namespace RPGCuzWhyNot.Things.Characters {
 
 		public abstract void DoTurn(Fight fight);
 
-
 		public abstract bool WantsToHarm(Character character);
 	}
 }
-
