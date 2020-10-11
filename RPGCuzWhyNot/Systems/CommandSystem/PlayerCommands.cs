@@ -103,13 +103,13 @@ namespace RPGCuzWhyNot.Systems.CommandSystem {
 				}
 			}
 
-			foreach (IItem item in Player.Wielding) {
+			foreach (IWieldable item in Player.Wielding) {
 				if (item is IItemWithInventory inv) {
 					ListItemWithInventory("Wielded ", "", inv);
 				}
 			}
 
-			foreach (IItem item in Player.Wearing) {
+			foreach (IWearable item in Player.Wearing) {
 				if (item is IItemWithInventory inv) {
 					ListItemWithInventory("Worn ", "", inv);
 				}
