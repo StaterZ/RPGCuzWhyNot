@@ -23,7 +23,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 			};
 			health.OnDeath += ctx => {
 				Terminal.WriteLine($"{ctx.inflictor} killed you!");
-				ConsoleUtils.WaitForPlayer();
+				Utils.WaitForPlayer();
 				Environment.Exit(0);
 			};
 
@@ -74,7 +74,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 						if (!turnActions.TryPerform(new TurnAction(itemAction, this, target))) {
 							Terminal.WriteLine(performFailMessage);
 						}
-						ConsoleUtils.WaitForPlayer();
+						Utils.WaitForPlayer();
 						handler.ExitEntireMenuStack();
 					}));
 				}

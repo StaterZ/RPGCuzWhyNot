@@ -34,7 +34,7 @@ namespace RPGCuzWhyNot.Systems.AttackSystem {
 		}
 
 		public void BeginCombat() {
-			Terminal.WriteLine($"{{fg:Cyan}}(Combat with {Stringification.StringifyArray("[", ", ", "]", combatants.Select(combatant => combatant.Name).ToArray())} has begun!)");
+			Terminal.WriteLine($"{{fg:Cyan}}(Combat with {Utils.StringifyArray("[", ", ", "]", combatants.Select(combatant => combatant.Name).ToArray())} has begun!)");
 			Terminal.WriteLine();
 
 			int drawPos = Terminal.CursorY;
@@ -62,7 +62,7 @@ namespace RPGCuzWhyNot.Systems.AttackSystem {
 					Terminal.WriteLine($"{{fg:Cyan}}({combatant.Name}s Turn)");
 					combatant.DoTurn(this);
 					if (combatant != Program.player) {
-						ConsoleUtils.WaitForPlayer();
+						Utils.WaitForPlayer();
 					}
 					Terminal.WriteLine();
 				}

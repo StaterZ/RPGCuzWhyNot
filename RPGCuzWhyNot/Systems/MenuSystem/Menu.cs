@@ -48,7 +48,7 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 		}
 
 		public void Draw(int selectedIndex, IEnumerable<Menu> path) {
-			Terminal.WriteLineWithoutDelay(Stringification.StringifyArray(pathBegin, pathSeparator, pathEnd, path.Select(menu => menu.name).ToArray()));
+			Terminal.WriteLineWithoutDelay(Utils.StringifyArray(pathBegin, pathSeparator, pathEnd, path.Select(menu => menu.name).ToArray()));
 			Terminal.WriteLineWithoutDelay(new string('#', Width));
 			if (items.Count > 0) {
 				for (int i = 0; i < ItemCount; i++) {

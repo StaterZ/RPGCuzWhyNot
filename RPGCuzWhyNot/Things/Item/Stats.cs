@@ -17,7 +17,7 @@ namespace RPGCuzWhyNot.Things.Item {
 		[JsonPropertyName("fortitude")]
 		public int Fortitude { get; set; }
 
-		public string Listing => $"SPD:{ConsoleUtils.FormatInt(Speed)}, STR:{ConsoleUtils.FormatInt(Strength)}, ACC:{ConsoleUtils.FormatInt(Accuracy)}, FRT:{ConsoleUtils.FormatInt(Fortitude)}";
+		public string Listing => $"SPD:{Utils.FormatInt(Speed)}, STR:{Utils.FormatInt(Strength)}, ACC:{Utils.FormatInt(Accuracy)}, FRT:{Utils.FormatInt(Fortitude)}";
 
 		public Stats() { }
 

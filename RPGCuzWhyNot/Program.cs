@@ -15,7 +15,7 @@ namespace RPGCuzWhyNot {
 				Run();
 			} catch (Exception e) {
 				Console.WriteLine(e);
-				ConsoleUtils.WaitForPlayer();
+				Utils.WaitForPlayer();
 			}
 		}
 
@@ -29,7 +29,7 @@ namespace RPGCuzWhyNot {
 				Environment.Exit(1);
 			}
 			Terminal.WriteLineWithoutDelay("{fg:Green}(Done!)");
-			ConsoleUtils.Sleep(100);
+			Utils.Sleep(100);
 			Terminal.Clear();
 
 			//construct player
@@ -56,7 +56,7 @@ namespace RPGCuzWhyNot {
 			player.location.PrintEnterInformation();
 			while (true) {
 				Terminal.WriteLine();
-				string commandText = ConsoleUtils.Ask("|> ").ToLower();
+				string commandText = Utils.Ask("|> ").ToLower();
 				Terminal.WriteLine();
 				player.Handle(commandText);
 			}

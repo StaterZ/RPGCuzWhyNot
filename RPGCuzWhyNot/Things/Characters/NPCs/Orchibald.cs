@@ -18,9 +18,9 @@ namespace RPGCuzWhyNot.Things.Characters.NPCs
 		public override void Converse(Character character, string response) {
 			Terminal.Write("Hello", voiceFrequency, 50);
 			Terminal.WriteLine(".....", voiceFrequency, 10);
-			ConsoleUtils.Sleep(1000);
+			Utils.Sleep(1000);
 			Terminal.WriteLine("Anyways, i wasn't being suspicious at all just now...", voiceFrequency);
-			ConsoleUtils.Sleep(200);
+			Utils.Sleep(200);
 			Terminal.WriteLine("Just so you know *cough*", voiceFrequency);
 		}
 

@@ -8,7 +8,7 @@ namespace RPGCuzWhyNot.Things.Item {
 
 		public static string DefaultListingWithStats(IWearable self) {
 			string name = self.ListingName;
-			return self.Defense != 0 ? $"{name}  {ConsoleUtils.FormatInt(self.Defense)} Defense" : name;
+			return self.Defense != 0 ? $"{name}  {Utils.FormatInt(self.Defense)} Defense" : name;
 		}
 	}
 }

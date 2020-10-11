@@ -29,12 +29,12 @@ namespace RPGCuzWhyNot.Systems.CommandSystem {
 				for (int i = 1; i < parts.Length; ++i) {
 					string part = parts[i];
 					if (command.Keywords.Contains(part)) {
-						args[paramName] = Stringification.StringifyArray("", " ", "", parts, argStart..i);
+						args[paramName] = Utils.StringifyArray("", " ", "", parts, argStart..i);
 						argStart = i + 1;
 						paramName = part;
 					}
 				}
-				args[paramName] = Stringification.StringifyArray("", " ", "", parts, argStart..);
+				args[paramName] = Utils.StringifyArray("", " ", "", parts, argStart..);
 				command.Execute(new CommandArguments(args));
 				return true;
 			}
@@ -47,7 +47,7 @@ namespace RPGCuzWhyNot.Systems.CommandSystem {
 			string[] formattedCommandCallNames = new string[commands.Count];
 			int longestFormattedCommandCallName = 0;
 			for (int i = 0; i < commands.Count; i++) {
-				string formattedCommandCallName = Stringification.StringifyArray("[", ", ", "]", commands[i].CallNames);
+				string formattedCommandCallName = Utils.StringifyArray("[", ", ", "]", commands[i].CallNames);
 				formattedCommandCallNames[i] = formattedCommandCallName;
 
 				if (formattedCommandCallName.Length > longestFormattedCommandCallName) {
