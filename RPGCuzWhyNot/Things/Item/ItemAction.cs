@@ -100,20 +100,20 @@ namespace RPGCuzWhyNot.Things.Item {
 		}
 
 		private static string FormatExecuteDescription(TurnAction turnAction, string executeDescription) {
-			if (turnAction.performer.race is Humanoid humanoidPerformer) {
-				executeDescription = executeDescription.Replace("performer_referal_subjectPronoun", humanoidPerformer.gender.referral.subjectPronoun);
-				executeDescription = executeDescription.Replace("performer_referal_objectPronoun", humanoidPerformer.gender.referral.objectPronoun);
-				executeDescription = executeDescription.Replace("performer_referal_possessiveAdjective", humanoidPerformer.gender.referral.possessiveAdjective);
-				executeDescription = executeDescription.Replace("performer_referal_possessivePronoun", humanoidPerformer.gender.referral.possessivePronoun);
-				executeDescription = executeDescription.Replace("performer_referal_reflexivePronoun", humanoidPerformer.gender.referral.reflexivePronoun);
+			if (turnAction.performer != null) {
+				executeDescription = executeDescription.Replace("performer_referal_subjectPronoun", turnAction.performer.Name);
+				executeDescription = executeDescription.Replace("performer_referal_objectPronoun", turnAction.performer.Referral.objectPronoun);
+				executeDescription = executeDescription.Replace("performer_referal_possessiveAdjective", turnAction.performer.Referral.possessiveAdjective);
+				executeDescription = executeDescription.Replace("performer_referal_possessivePronoun", turnAction.performer.Referral.possessivePronoun);
+				executeDescription = executeDescription.Replace("performer_referal_reflexivePronoun", turnAction.performer.Referral.reflexivePronoun);
 			}
 
-			if (turnAction.target?.race is Humanoid humanoidTarget) {
-				executeDescription = executeDescription.Replace("target_referal_subjectPronoun", humanoidTarget.gender.referral.subjectPronoun);
-				executeDescription = executeDescription.Replace("target_referal_objectPronoun", humanoidTarget.gender.referral.objectPronoun);
-				executeDescription = executeDescription.Replace("target_referal_possessiveAdjective", humanoidTarget.gender.referral.possessiveAdjective);
-				executeDescription = executeDescription.Replace("target_referal_possessivePronoun", humanoidTarget.gender.referral.possessivePronoun);
-				executeDescription = executeDescription.Replace("target_referal_reflexivePronoun", humanoidTarget.gender.referral.reflexivePronoun);
+			if (turnAction.target != null) {
+				executeDescription = executeDescription.Replace("target_referal_subjectPronoun", turnAction.target.Referral.subjectPronoun);
+				executeDescription = executeDescription.Replace("target_referal_objectPronoun", turnAction.target.Referral.objectPronoun);
+				executeDescription = executeDescription.Replace("target_referal_possessiveAdjective", turnAction.target.Referral.possessiveAdjective);
+				executeDescription = executeDescription.Replace("target_referal_possessivePronoun", turnAction.target.Referral.possessivePronoun);
+				executeDescription = executeDescription.Replace("target_referal_reflexivePronoun", turnAction.target.Referral.reflexivePronoun);
 			}
 
 			return executeDescription;

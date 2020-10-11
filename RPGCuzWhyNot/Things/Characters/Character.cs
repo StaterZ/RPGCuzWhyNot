@@ -19,6 +19,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 		public WieldablesInventory Wielding { get; }
 
 		public Race race;
+		public Referral Referral => race.Referral;
 		public Location location;
 		public Health health;
 		public IAlignment Alignment { get; set; }
