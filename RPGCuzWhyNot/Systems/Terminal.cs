@@ -260,11 +260,11 @@ namespace RPGCuzWhyNot.Systems {
 				name = proto.Name;
 				return true;
 			} else {
-#if DEBUG
+			#if DEBUG
 				name = $"[no prototype with id '{id}']";
-#else
+			#else
 				name = id;
-#endif
+			#endif
 				return false;
 			}
 		}
