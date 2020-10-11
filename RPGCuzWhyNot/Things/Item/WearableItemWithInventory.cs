@@ -1,9 +1,9 @@
 namespace RPGCuzWhyNot.Things.Item {
 	public class WearableItemWithInventory : ItemWithInventory, IWearable {
-		public float FractionalProtection { get; set; }
-		public int ConstProtection { get; set; }
-		public float FractionalBuff { get; set; }
-		public int ConstBuff { get; set; }
+		public float MultiplicativeProtection { get; set; }
+		public int AdditiveProtection { get; set; }
+		public float MultiplicativeBuff { get; set; }
+		public int AdditiveBuff { get; set; }
 		public WearableSlots CoveredParts { get; set; }
 		public WearableLayers CoveredLayers { get; set; }
 

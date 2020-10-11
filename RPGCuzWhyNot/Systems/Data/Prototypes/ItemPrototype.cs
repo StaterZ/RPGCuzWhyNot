@@ -45,10 +45,10 @@ namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 
 			if (Wearable != null) {
 				IWearable wearable = (IWearable)item;
-				wearable.ConstProtection = Wearable.ConstProtection ?? 0;
-				wearable.FractionalProtection = Wearable.FractionalProtection ?? 0;
-				wearable.ConstBuff = Wearable.ConstBuff ?? 0;
-				wearable.FractionalBuff = Wearable.FractionalBuff ?? 0;
+				wearable.AdditiveProtection = Wearable.AdditiveProtection ?? 0;
+				wearable.MultiplicativeProtection = Wearable.MultiplicativeProtection ?? 0;
+				wearable.AdditiveBuff = Wearable.AdditiveBuff ?? 0;
+				wearable.MultiplicativeBuff = Wearable.MultiplicativeBuff ?? 0;
 				wearable.CoveredParts = Wearable.CoveredParts;
 				wearable.CoveredLayers = Wearable.CoveredLayers;
 			}
@@ -83,16 +83,16 @@ namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 		[JsonObject]
 		public class WearableProps {
 			[JsonProperty("fractionalProtection")]
-			public float? FractionalProtection { get; set; }
+			public float? MultiplicativeProtection { get; set; }
 
 			[JsonProperty("constProtection")]
-			public int? ConstProtection { get; set; }
+			public int? AdditiveProtection { get; set; }
 
 			[JsonProperty("fractionalBuff")]
-			public float? FractionalBuff { get; set; }
+			public float? MultiplicativeBuff { get; set; }
 
 			[JsonProperty("constBuff")]
-			public int? ConstBuff { get; set; }
+			public int? AdditiveBuff { get; set; }
 
 			[JsonProperty("coveredParts"), JsonRequired]
 			public WearableSlots CoveredParts { get; set; }
