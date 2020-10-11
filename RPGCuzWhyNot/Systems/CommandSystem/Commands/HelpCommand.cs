@@ -6,7 +6,7 @@ namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
 		public override string[] CallNames { get; } = {"help", "commands"};
 		public override string HelpText { get; } = "Show this list";
 
-		private CommandHandler commandHandler;
+		private readonly CommandHandler commandHandler;
 
 		public HelpCommand(CommandHandler commandHandler) {
 			this.commandHandler = commandHandler;
