@@ -13,6 +13,7 @@ using RPGCuzWhyNot.Utilities;
 
 namespace RPGCuzWhyNot.Things.Characters {
 	public class Player : Character {
+		private const string performActionFailMessage = "{fg:Red}(You can't afford this action right now.)";
 		private readonly PlayerCommands commands;
 
 		public Player(Race race) : base(race) {
@@ -31,54 +32,52 @@ namespace RPGCuzWhyNot.Things.Characters {
 			commands.LoadCommands();
 		}
 
-		public override void DoTurn(Fight fight) {
-			const string performFailMessage = "{fg:Red}(You can't afford this action right now.)";
+		private static Menu CreateCombatantSelectMenu(string menuName, IEnumerable<Character> combatants, Action<Character> combatantSelectCallback) {
+			Menu menu = new Menu(menuName);
 
+			foreach (Character combatant in combatants) {
+				menu.items.Add(new MenuItem(combatant.Name, $"Do action on {combatant.Name}", handler => {
+					combatantSelectCallback(combatant);
+					handler.ExitMenu();
+				}));
+			}
+
+			return menu;
+		}
+
+		private void InsertItemActions(Menu menu, IEnumerable<ItemAction> itemActions, IEnumerable<Character> combatants, Turn turn) {
+			foreach (ItemAction itemAction in itemActions) {
+				menu.items.Add(new MenuItem(itemAction.Name, itemAction.Description, handler => {
+					Character target = null;
+
+					if (itemAction.HasTarget) {
+						handler.EnterMenu(CreateCombatantSelectMenu(
+							itemAction.Name,
+							combatants.Where(combatant => combatant != this),
+							combatant => target = combatant)
+						);
+						handler.RunUntilExit();
+
+						//if target is null then we didn't select any combatant in CreateCombatantSelectMenu and the only way to do that is to back out of the menu
+						//if we backed out, return so to not execute the action with null
+						if (target == null) {
+							return;
+						}
+					}
+
+
+					if (!turn.TryPerform(new TurnAction(itemAction, this, target))) {
+						Terminal.WriteLine(performActionFailMessage);
+					}
+					Utils.WaitForPlayer();
+					handler.ExitEntireMenuStack();
+				}));
+			}
+		}
+
+		public override void DoTurn(Fight fight) {
 			bool isDonePlanningTurn = false;
 			Turn turn = new Turn(stats);
-
-			Menu CreateCombatantSelectMenu(string menuName, IEnumerable<Character> combatants, Action<Character> combatantSelectCallback) {
-				Menu menu = new Menu(menuName);
-
-				foreach (Character combatant in combatants) {
-					menu.items.Add(new MenuItem(combatant.Name, $"Do action on {combatant.Name}", handler => {
-						combatantSelectCallback(combatant);
-						handler.ExitMenu();
-					}));
-				}
-
-				return menu;
-			}
-
-			void InsertItemActions(Menu menu, IEnumerable<ItemAction> itemActions) {
-				foreach (ItemAction itemAction in itemActions) {
-					menu.items.Add(new MenuItem(itemAction.Name, itemAction.Description, handler => {
-						Character target = null;
-
-						if (itemAction.HasTarget) {
-							handler.EnterMenu(CreateCombatantSelectMenu(
-								itemAction.Name,
-								fight.combatants.Where(combatant => combatant != this),
-								combatant => target = combatant)
-							);
-							handler.RunUntilExit();
-
-							//if target is null then we didn't select any combatant in CreateCombatantSelectMenu and the only way to do that is to back out of the menu
-							//if we backed out, return so to not execute the action with null
-							if (target == null) {
-								return;
-							}
-						}
-
-
-						if (!turn.TryPerform(new TurnAction(itemAction, this, target))) {
-							Terminal.WriteLine(performFailMessage);
-						}
-						Utils.WaitForPlayer();
-						handler.ExitEntireMenuStack();
-					}));
-				}
-			}
 
 			while (!isDonePlanningTurn) {
 				Menu attack = new Menu("{fg:Red}(Attack)");
@@ -86,7 +85,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 					Menu menu = new Menu(wieldable.Name);
 					attack.items.Add(new SubMenu(menu, "Do something with this item. (Temp Desc)"));
 
-					InsertItemActions(menu, wieldable.ItemActions);
+					InsertItemActions(menu, wieldable.ItemActions, fight.combatants, turn);
 				}
 
 				Menu allItems = new Menu("{fg:White}(All)");
@@ -111,7 +110,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 						consumableItems.items.Add(new SubMenu(menu, "Do something with this item. (Temp Desc)"));
 					}
 
-					InsertItemActions(menu, item.ItemActions);
+					InsertItemActions(menu, item.ItemActions, fight.combatants, turn);
 				}
 
 				Menu items = new Menu("{fg:Green}(Items)",
@@ -126,7 +125,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 					Menu menu = new Menu(wearable.Name);
 					equipment.items.Add(new SubMenu(menu, "Do something with this item. (Temp Desc)"));
 
-					InsertItemActions(menu, wearable.ItemActions);
+					InsertItemActions(menu, wearable.ItemActions, fight.combatants, turn);
 				}
 
 				Menu root = new Menu("Root",
