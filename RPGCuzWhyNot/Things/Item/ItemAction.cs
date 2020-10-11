@@ -104,8 +104,12 @@ namespace RPGCuzWhyNot.Things.Item {
 			}
 
 			//heal
-			turnAction.performer.health.Heal(Effects.HealSelf, turnAction.performer);
-			turnAction.target?.health.Heal(Effects.HealTarget, turnAction.performer);
+			if (Effects.HealSelf != 0) {
+				turnAction.performer.health.Heal(Effects.HealSelf, turnAction.performer);
+			}
+			if (Effects.HealTarget != 0) {
+				turnAction.target?.health.Heal(Effects.HealTarget, turnAction.performer);
+			}
 
 			//tell player what happend
 			string formattedExecuteDescription = FormatExecuteDescription(turnAction, ExecuteDescription);
