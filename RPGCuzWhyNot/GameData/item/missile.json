@@ -8,7 +8,7 @@
     "handsRequired": 2
   },
   "wearable": {
-    "constProtection": -999,
+    "additiveProtection": -999,
     "coveredParts": "back",
     "coveredLayers": "outer"
   },

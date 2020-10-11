@@ -82,16 +82,16 @@ namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 
 		[JsonObject]
 		public class WearableProps {
-			[JsonProperty("fractionalProtection")]
+			[JsonProperty("multiplicativeProtection")]
 			public float? MultiplicativeProtection { get; set; }
 
-			[JsonProperty("constProtection")]
+			[JsonProperty("additiveProtection")]
 			public int? AdditiveProtection { get; set; }
 
-			[JsonProperty("fractionalBuff")]
+			[JsonProperty("multiplicativeBuff")]
 			public float? MultiplicativeBuff { get; set; }
 
-			[JsonProperty("constBuff")]
+			[JsonProperty("additiveBuff")]
 			public int? AdditiveBuff { get; set; }
 
 			[JsonProperty("coveredParts"), JsonRequired]
