@@ -34,17 +34,17 @@ namespace RPGCuzWhyNot.Systems.Data {
 		/// <summary>
 		/// All of the loaded prototypes.
 		/// </summary>
-		public static ReadOnlyDictionary<string, Prototype> Prototypes { get; private set; }
+		public static ReadOnlyDictionary<string, Prototype> Prototypes { get; } = new ReadOnlyDictionary<string, Prototype>(prototypes);
 
 		/// <summary>
 		/// All of the loaded locations.
 		/// </summary>
-		public static ReadOnlyDictionary<string, Location> Locations { get; private set; }
+		public static ReadOnlyDictionary<string, Location> Locations { get; } = new ReadOnlyDictionary<string, Location>(locations);
 
 		/// <summary>
 		/// All of the loaded NPCs.
 		/// </summary>
-		public static ReadOnlyDictionary<string, NPC> NPCs { get; private set; }
+		public static ReadOnlyDictionary<string, NPC> NPCs { get; } = new ReadOnlyDictionary<string, NPC>(npcs);
 
 		static DataLoader() {
 			FindRegisteredNPCs();
@@ -56,7 +56,10 @@ namespace RPGCuzWhyNot.Systems.Data {
 		public static bool LoadGameData() {
 			loadError = false;
 
-			Prototypes = new ReadOnlyDictionary<string, Prototype>(prototypes);
+			prototypes.Clear();
+			locations.Clear();
+			npcs.Clear();
+
 			LoadPrototypesFromPath<ItemPrototype>(itemsPath);
 			LoadPrototypesFromPath<LocationPrototype>(locationsPath);
 			LoadPrototypesFromPath<NpcPrototype>(npcsPath);
@@ -185,8 +188,6 @@ namespace RPGCuzWhyNot.Systems.Data {
 		}
 
 		private static void ConstructLocations() {
-			Locations = new ReadOnlyDictionary<string, Location>(locations);
-
 			// Create the locations.
 			foreach (LocationPrototype prototype in prototypes.Values.OfType<LocationPrototype>()) {
 				Location location = prototype.Create();
@@ -195,8 +196,6 @@ namespace RPGCuzWhyNot.Systems.Data {
 		}
 
 		private static void ConstructNPCs() {
-			NPCs = new ReadOnlyDictionary<string, NPC>(npcs);
-
 			// Create the NPCs.
 			foreach (NpcPrototype proto in prototypes.Values.OfType<NpcPrototype>()) {
 				NPC npc = CreateNpc(proto);
