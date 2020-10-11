@@ -11,6 +11,15 @@ namespace RPGCuzWhyNot {
 		public static Player player;
 
 		private static void Main() {
+			try {
+				Run();
+			} catch (Exception e) {
+				Console.WriteLine(e);
+				ConsoleUtils.WaitForPlayer();
+			}
+		}
+
+		private static void Run() {
 			Terminal.IsCursorVisible = false; //default to not showing cursor
 
 
