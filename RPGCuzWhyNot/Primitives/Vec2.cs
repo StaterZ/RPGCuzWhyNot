@@ -1,3 +1,5 @@
+using System;
+
 namespace RPGCuzWhyNot.Primitives {
 	public struct Vec2 {
 		public static Vec2 Zero => new Vec2(0, 0);
@@ -19,13 +21,11 @@ namespace RPGCuzWhyNot.Primitives {
 		}
 
 		public override bool Equals(object obj) {
-			return obj is Vec2 vec2 && x.Equals(vec2.x) && y.Equals(vec2.y);
+			return obj is Vec2 other && this == other;
 		}
 
 		public override int GetHashCode() {
-			int h1 = x.GetHashCode();
-			int h2 = y.GetHashCode();
-			return ((h1 << 5) + h1) ^ h2;
+			return HashCode.Combine(x, y);
 		}
 
 		public static bool operator ==(Vec2 a, Vec2 b) {
