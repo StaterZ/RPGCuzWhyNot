@@ -66,14 +66,11 @@ namespace RPGCuzWhyNot.Things.Item {
 
 			//transfer
 			ItemInventory GetTransferTarget(TransferLocation transferLocation) {
-				switch (transferLocation) {
-					case TransferLocation.Ground:
-						return turnAction.performer.location.items;
-					case TransferLocation.Target:
-						return turnAction.target.Inventory;
-					default:
-						throw new InvalidOperationException();
-				}
+				return transferLocation switch {
+					TransferLocation.Ground => turnAction.performer.location.items,
+					TransferLocation.Target => turnAction.target.Inventory,
+					_ => throw new InvalidOperationException()
+				};
 			}
 
 			if (Effects.TransferSelf.HasValue) {
