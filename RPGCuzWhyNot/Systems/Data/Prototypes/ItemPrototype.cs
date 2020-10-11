@@ -18,11 +18,11 @@ namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 		[JsonProperty("wearable")]
 		public WearableProps Wearable { get; set; }
 
-		[JsonProperty("actions")]
-		public ItemAction[] ItemActions { get; set; }
-
 		[JsonProperty("inventory")]
 		public InventoryProps Inventory { get; set; }
+
+		[JsonProperty("actions")]
+		public ItemAction[] ItemActions { get; set; }
 
 
 		/// <summary>
