@@ -281,11 +281,11 @@ namespace RPGCuzWhyNot.Systems {
 					if (GetNameFromID(arg, out string name)) {
 						Write(name);
 					} else {
-#if DEBUG
+					#if DEBUG
 						Write($"{{darkred}}({Escape(name)})");
-#else
+					#else
 						Write(Escape(name));
-#endif
+					#endif
 					}
 					break;
 				default: HandleCommandWithoutArg(cmd); break;
