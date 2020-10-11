@@ -45,10 +45,10 @@ namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 
 			if (Wearable != null) {
 				IWearable wearable = (IWearable)item;
-				wearable.AdditiveProtection = Wearable.AdditiveProtection ?? 0;
-				wearable.MultiplicativeProtection = Wearable.MultiplicativeProtection ?? 0;
-				wearable.AdditiveBuff = Wearable.AdditiveBuff ?? 0;
-				wearable.MultiplicativeBuff = Wearable.MultiplicativeBuff ?? 0;
+				wearable.AdditiveProtection = Wearable.AdditiveProtection;
+				wearable.MultiplicativeProtection = Wearable.MultiplicativeProtection;
+				wearable.AdditiveBuff = Wearable.AdditiveBuff;
+				wearable.MultiplicativeBuff = Wearable.MultiplicativeBuff;
 				wearable.CoveredParts = Wearable.CoveredParts;
 				wearable.CoveredLayers = Wearable.CoveredLayers;
 			}
@@ -83,21 +83,21 @@ namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 		[JsonObject]
 		public class WearableProps {
 			[JsonProperty("multiplicativeProtection")]
-			public float? MultiplicativeProtection { get; set; }
+			public float MultiplicativeProtection { get; set; }
 
 			[JsonProperty("additiveProtection")]
-			public int? AdditiveProtection { get; set; }
+			public int AdditiveProtection { get; set; }
 
 			[JsonProperty("multiplicativeBuff")]
-			public float? MultiplicativeBuff { get; set; }
+			public float MultiplicativeBuff { get; set; }
 
 			[JsonProperty("additiveBuff")]
-			public int? AdditiveBuff { get; set; }
+			public int AdditiveBuff { get; set; }
 
-			[JsonProperty("coveredParts"), JsonRequired]
+			[JsonProperty("coveredParts", Required = Required.Always)]
 			public WearableSlots CoveredParts { get; set; }
 
-			[JsonProperty("coveredLayers"), JsonRequired]
+			[JsonProperty("coveredLayers", Required = Required.Always)]
 			public WearableLayers CoveredLayers { get; set; }
 		}
 
