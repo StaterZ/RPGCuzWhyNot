@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using RPGCuzWhyNot.Primitives;
 using RPGCuzWhyNot.Systems.Data;
@@ -398,6 +399,90 @@ namespace RPGCuzWhyNot.Systems {
 			} else {
 				return formatBegin + additionalLengthFromCommands
 					+ (formatEnd + 1 < formattedText.Length ? GetFormattedLength(formattedText[(formatEnd + 1)..]) : 0);
+			}
+		}
+
+		/// <summary>
+		/// Remove all formatting from the string by expanding any formats that produce text and removing any that don't.
+		/// </summary>
+		/// <param name="formattedText">The string containing formats to remove.</param>
+		/// <returns>Returns the expanded string.</returns>
+		public static string ExpandFormatString(string formattedText) {
+			StringBuilder sb = new StringBuilder();
+			ExpandFormatString(formattedText, sb);
+			return sb.ToString();
+		}
+
+		/// <summary>
+		/// Remove all formatting from the string by expanding any formats that produce text and removing any that don't.
+		/// </summary>
+		/// <param name="formattedText">The string containing formats to remove.</param>
+		/// <param name="builder">The string builder to place the resulting expanded string into.</param>
+		public static void ExpandFormatString(string formattedText, StringBuilder builder) {
+			int formatBegin = formattedText.IndexOf('{');
+			if (formatBegin == -1) {
+				builder.Append(formattedText);
+				return;
+			}
+
+			int formatEnd = formattedText.IndexOf('}', formatBegin + 1);
+			if (formatEnd == -1) {
+				throw new TerminalFormatException("Missing closing brace in terminal format string.");
+			}
+
+			int cmdBegin = formatBegin + 1;
+			while (cmdBegin < formatEnd) {
+				int cmdEnd = formattedText.IndexOf(';', cmdBegin, formatEnd - cmdBegin);
+				if (cmdEnd == -1) {
+					cmdEnd = formatEnd;
+				}
+				if (cmdBegin == cmdEnd) {
+					break;
+				}
+				int cmdArg = formattedText.IndexOf(':', cmdBegin, cmdEnd - cmdBegin);
+				if (cmdArg == -1) {
+					// Formatting command doesn't have an argument.
+					// None of these currently add any text to the printed string,
+					// so I will ignore them.
+				} else {
+					string cmdName = formattedText[cmdBegin..cmdArg];
+					switch (cmdName) {
+						case "name":
+							string id = formattedText[(cmdArg + 1)..cmdEnd];
+							GetNameFromID(id, out string name);
+							ExpandFormatString(name, builder);
+							break;
+					}
+				}
+				cmdBegin = cmdEnd + 1;
+			}
+
+			if (formatEnd + 1 < formattedText.Length && formattedText[formatEnd + 1] == '(') {
+				int depth = 1;
+				int parenBegin = formatEnd + 2;
+				int remainder = parenBegin;
+
+				for (; depth > 0; ++remainder) {
+					if (remainder >= formattedText.Length) {
+						throw new TerminalFormatException("Unbalanced parentheses in terminal format string.");
+					}
+
+					switch (formattedText[remainder]) {
+						case '(': ++depth; break;
+						case ')': --depth; break;
+					}
+				}
+
+				int parenEnd = remainder - 1;
+
+				ExpandFormatString(formattedText[parenBegin..parenEnd], builder);
+				if (remainder < formattedText.Length) {
+					ExpandFormatString(formattedText[remainder..], builder);
+				}
+			} else {
+				if (formatEnd + 1 < formattedText.Length) {
+					ExpandFormatString(formattedText[(formatEnd + 1)..], builder);
+				}
 			}
 		}
 
