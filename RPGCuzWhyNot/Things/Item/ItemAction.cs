@@ -60,7 +60,9 @@ namespace RPGCuzWhyNot.Things.Item {
 			}
 			foreach (KeyValuePair<string, int> item in Effects.ConsumeItems) {
 				for (int i = 0; i < item.Value; i++) {
-					turnAction.performer.Inventory.GetItemById(item.Key)?.Destroy();
+					if (turnAction.performer.Inventory.TryGetItemById(item.Key, out IItem result)) {
+						result.Destroy();
+					}
 				}
 			}
 
@@ -81,8 +83,7 @@ namespace RPGCuzWhyNot.Things.Item {
 			}
 			foreach (KeyValuePair<string, (TransferLocation location, int amount)> pair in Effects.TransferItems) { 
 				for (int i = 0; i < pair.Value.amount; i++) {
-					IItem item = turnAction.performer.Inventory.GetItemById(pair.Key);
-					if (item != null) {
+					if (turnAction.performer.Inventory.TryGetItemById(pair.Key, out IItem item)) {
 						GetTransferTarget(pair.Value.location).MoveItem(item);
 					}
 				}
