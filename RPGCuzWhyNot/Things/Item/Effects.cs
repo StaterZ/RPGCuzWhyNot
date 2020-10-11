@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace RPGCuzWhyNot.Things.Item {
 	[Serializable]
@@ -27,7 +28,7 @@ namespace RPGCuzWhyNot.Things.Item {
 		public TransferLocation? TransferSelf { get; set; }
 
 		[JsonPropertyName("transferItems")]
-		public Dictionary<string, (TransferLocation location, int amount)> TransferItems { get; set; }
+		public Dictionary<string, ItemTransferEntry> TransferItems { get; set; }
 
 		[JsonPropertyName("healSelf")]
 		public int HealSelf { get; set; }
@@ -38,10 +39,10 @@ namespace RPGCuzWhyNot.Things.Item {
 		public Effects() {
 			Stats = new Stats();
 			ConsumeItems = new Dictionary<string, int>();
-			TransferItems = new Dictionary<string, (TransferLocation location, int amount)>();
+			TransferItems = new Dictionary<string, ItemTransferEntry>();
 		}
 
-		public Effects(Stats stats, int meleeDamage, int projectileDamage, float armorPiercing, bool consumeSelf, Dictionary<string, int> consumeItems, TransferLocation? transferSelf, Dictionary<string, (TransferLocation location, int amount)> transferItems, int healSelf, int healTarget) {
+		public Effects(Stats stats, int meleeDamage, int projectileDamage, float armorPiercing, bool consumeSelf, Dictionary<string, int> consumeItems, TransferLocation? transferSelf, Dictionary<string, ItemTransferEntry> transferItems, int healSelf, int healTarget) {
 			Stats = stats;
 			MeleeDamage = meleeDamage;
 			ProjectileDamage = projectileDamage;
@@ -52,6 +53,15 @@ namespace RPGCuzWhyNot.Things.Item {
 			TransferItems = transferItems;
 			HealSelf = healSelf;
 			HealTarget = healTarget;
+		}
+
+		[JsonObject(ItemRequired = Required.Always)]
+		public struct ItemTransferEntry {
+			[JsonPropertyName("location")]
+			public TransferLocation Location { get; set; }
+
+			[JsonPropertyName("amount")]
+			public int Amount { get; set; }
 		}
 	}
 }

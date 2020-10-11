@@ -92,10 +92,10 @@ namespace RPGCuzWhyNot.Things.Item {
 				GetTransferTarget(Effects.TransferSelf.Value).MoveItem(Item);
 			}
 
-			foreach (KeyValuePair<string, (TransferLocation location, int amount)> pair in Effects.TransferItems) { 
-				for (int i = 0; i < pair.Value.amount; i++) {
-					if (turnAction.performer.Inventory.TryGetItemById(pair.Key, out IItem item)) {
-						GetTransferTarget(pair.Value.location).MoveItem(item);
+			foreach ((string id, Effects.ItemTransferEntry itemTransferEntry) in Effects.TransferItems) { 
+				for (int i = 0; i < itemTransferEntry.Amount; i++) {
+					if (turnAction.performer.Inventory.TryGetItemById(id, out IItem item)) {
+						GetTransferTarget(itemTransferEntry.Location).MoveItem(item);
 					}
 				}
 			}
