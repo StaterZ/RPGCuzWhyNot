@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using RPGCuzWhyNot.Systems;
 using RPGCuzWhyNot.Systems.AttackSystem;
 using RPGCuzWhyNot.Systems.Inventory;
@@ -12,28 +12,28 @@ namespace RPGCuzWhyNot.Things.Item {
 		[JsonIgnore]
 		public IItem Item { get; set; }
 
-		[JsonPropertyName("hasTarget")]
+		[JsonProperty("hasTarget")]
 		public bool HasTarget { get; set; }
 
-		[JsonPropertyName("callNames")]
+		[JsonProperty("callNames")]
 		public string[] CallNames { get; set; }
 
-		[JsonPropertyName("name")]
+		[JsonProperty("name")]
 		public string Name { get; set; }
 
 		[JsonIgnore]
 		public string ListingName => $"{Item.Name}->{Name}";
 
-		[JsonPropertyName("description")]
+		[JsonProperty("description")]
 		public string Description { get; set; }
 
-		[JsonPropertyName("executeDescription")]
+		[JsonProperty("executeDescription")]
 		public string ExecuteDescription { get; set; }
 
-		[JsonPropertyName("requirements")]
+		[JsonProperty("requirements")]
 		public Requirements Requirements { get; set; }
 
-		[JsonPropertyName("effects")]
+		[JsonProperty("effects")]
 		public Effects Effects { get; set; }
 
 		public ItemAction() {
@@ -92,7 +92,7 @@ namespace RPGCuzWhyNot.Things.Item {
 				GetTransferTarget(Effects.TransferSelf.Value).MoveItem(Item);
 			}
 
-			foreach ((string id, Effects.ItemTransferEntry itemTransferEntry) in Effects.TransferItems) { 
+			foreach ((string id, Effects.ItemTransferEntry itemTransferEntry) in Effects.TransferItems) {
 				for (int i = 0; i < itemTransferEntry.Amount; i++) {
 					if (turnAction.performer.Inventory.TryGetItemById(id, out IItem item)) {
 						GetTransferTarget(itemTransferEntry.Location).MoveItem(item);

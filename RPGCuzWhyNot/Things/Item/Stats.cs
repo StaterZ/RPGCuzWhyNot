@@ -1,20 +1,20 @@
 using System;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using RPGCuzWhyNot.Utilities;
 
 namespace RPGCuzWhyNot.Things.Item {
 	[Serializable]
 	public class Stats {
-		[JsonPropertyName("speed")]
+		[JsonProperty("speed")]
 		public int Speed { get; set; }
 
-		[JsonPropertyName("strength")]
+		[JsonProperty("strength")]
 		public int Strength { get; set; }
 
-		[JsonPropertyName("accuracy")]
+		[JsonProperty("accuracy")]
 		public int Accuracy { get; set; }
 
-		[JsonPropertyName("fortitude")]
+		[JsonProperty("fortitude")]
 		public int Fortitude { get; set; }
 
 		public string Listing => $"SPD:{Utils.FormatInt(Speed)}, STR:{Utils.FormatInt(Strength)}, ACC:{Utils.FormatInt(Accuracy)}, FRT:{Utils.FormatInt(Fortitude)}";

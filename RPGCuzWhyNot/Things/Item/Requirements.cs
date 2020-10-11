@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace RPGCuzWhyNot.Things.Item {
 	[Serializable]
 	public class Requirements {
-		[JsonPropertyName("stats")]
+		[JsonProperty("stats")]
 		public Stats Stats { get; set; }
 
-		[JsonPropertyName("items")]
+		[JsonProperty("items")]
 		public Dictionary<string, int> Items { get; set; }
 
 		public Requirements() {
