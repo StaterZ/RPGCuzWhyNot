@@ -5,7 +5,6 @@
   "inventoryDescription": "A backpack, for carrying things more efficiently.",
   "groundDescription": "A backpack is sitting on the ground.",
   "wearable": {
-    "defense": 0,
     "coveredParts": "back",
     "coveredLayers": "outer"
   },
