@@ -35,7 +35,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 			const string performFailMessage = "{fg:Red}(You can't afford this action right now.)";
 
 			bool isDonePlanningTurn = false;
-			TurnActions turnActions = new TurnActions(stats);
+			Turn turn = new Turn(stats);
 
 			Menu CreateCombatantSelectMenu(string menuName, IEnumerable<Character> combatants, Action<Character> combatantSelectCallback) {
 				Menu menu = new Menu(menuName);
@@ -71,7 +71,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 						}
 
 
-						if (!turnActions.TryPerform(new TurnAction(itemAction, this, target))) {
+						if (!turn.TryPerform(new TurnAction(itemAction, this, target))) {
 							Terminal.WriteLine(performFailMessage);
 						}
 						Utils.WaitForPlayer();
@@ -145,7 +145,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 					})
 				);
 
-				Terminal.WriteLineWithoutDelay($"Points Left: {turnActions.BudgetLeft.Listing}");
+				Terminal.WriteLineWithoutDelay($"Points Left: {turn.BudgetLeft.Listing}");
 				root.EnterAsRoot();
 				Terminal.CursorPosition += Vec2.Up;
 				Terminal.ClearLine();

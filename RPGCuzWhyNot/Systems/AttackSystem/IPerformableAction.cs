@@ -5,6 +5,7 @@ namespace RPGCuzWhyNot.Systems.AttackSystem {
 		string Name { get; }
 		Requirements Requirements { get; }
 
+		bool CanAfford(TurnAction turnAction);
 		void Execute(TurnAction turnAction);
 	}
 }

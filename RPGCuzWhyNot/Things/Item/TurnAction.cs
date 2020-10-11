@@ -13,6 +13,10 @@ namespace RPGCuzWhyNot.Things.Item {
 			this.target = target;
 		}
 
+		public bool CanAfford() {
+			return action.CanAfford(this);
+		}
+
 		public void Execute() {
 			action.Execute(this);
 		}

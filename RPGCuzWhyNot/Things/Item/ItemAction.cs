@@ -53,6 +53,18 @@ namespace RPGCuzWhyNot.Things.Item {
 			Effects = effects;
 		}
 
+		public bool CanAfford(TurnAction turnAction) {
+			foreach ((string id, int amount) in Requirements.Items) {
+				for (int i = 0; i < amount; i++) {
+					if (turnAction.performer.Inventory.GetItemCountById(id) < amount) {
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
+
 		public void Execute(TurnAction turnAction) {
 			//consume
 			if (Effects.ConsumeSelf) {
