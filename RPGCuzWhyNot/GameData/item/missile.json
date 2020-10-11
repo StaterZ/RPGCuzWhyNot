@@ -17,8 +17,8 @@
       "hasTarget": false,
       "callNames": [ "activate" ],
       "name": "Activate",
-      "description": "Push the large red button labeld \"don't touch!\"",
-      "executeDescription": "You press the button and find yourself evaporated together with everything in a 100 mile radius.",
+      "description": "Push the large red button labeled \"don't touch!\"",
+      "executeDescription": "You press the button and find yourself evaporated together with everything within a 100 mile radius.",
       "requirements": {
         "stats": {
           "strength": 1
