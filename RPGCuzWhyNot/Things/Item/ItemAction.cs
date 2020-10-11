@@ -66,10 +66,11 @@ namespace RPGCuzWhyNot.Things.Item {
 		}
 
 		public void Execute(TurnAction turnAction) {
-			//consume
+			//consume items
 			if (Effects.ConsumeSelf) {
 				Item.Destroy();
 			}
+
 			foreach (KeyValuePair<string, int> item in Effects.ConsumeItems) {
 				for (int i = 0; i < item.Value; i++) {
 					if (turnAction.performer.Inventory.TryGetItemById(item.Key, out IItem result)) {
@@ -78,7 +79,7 @@ namespace RPGCuzWhyNot.Things.Item {
 				}
 			}
 
-			//transfer
+			//transfer items
 			ItemInventory GetTransferTarget(TransferLocation transferLocation) {
 				switch (transferLocation) {
 					case TransferLocation.Ground:
@@ -93,6 +94,7 @@ namespace RPGCuzWhyNot.Things.Item {
 			if (Effects.TransferSelf.HasValue) {
 				GetTransferTarget(Effects.TransferSelf.Value).MoveItem(Item);
 			}
+
 			foreach (KeyValuePair<string, (TransferLocation location, int amount)> pair in Effects.TransferItems) { 
 				for (int i = 0; i < pair.Value.amount; i++) {
 					if (turnAction.performer.Inventory.TryGetItemById(pair.Key, out IItem item)) {
@@ -105,9 +107,8 @@ namespace RPGCuzWhyNot.Things.Item {
 			turnAction.performer.health.Heal(Effects.HealSelf, turnAction.performer);
 			turnAction.target?.health.Heal(Effects.HealTarget, turnAction.performer);
 
+			//tell player what happend
 			string formattedExecuteDescription = FormatExecuteDescription(turnAction, ExecuteDescription);
-			
-
 			Terminal.WriteLine($"[{ListingName}] {formattedExecuteDescription}");
 		}
 
