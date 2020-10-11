@@ -62,7 +62,7 @@ namespace RPGCuzWhyNot.Utilities {
 
 		public static void WaitForPlayer() {
 			Terminal.WriteWithoutDelay("{fg:Blue}(Press Enter)");
-			Console.ReadKey(true);
+			Terminal.ReadKey(true);
 		}
 	}
 }

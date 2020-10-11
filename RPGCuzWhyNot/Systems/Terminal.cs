@@ -330,9 +330,9 @@ namespace RPGCuzWhyNot.Systems {
 			return text.Replace("{", "{{");
 		}
 
-		public static string ReadLine() {
-			return Console.ReadLine();
-		}
+		public static string ReadLine() => Console.ReadLine();
+
+		public static ConsoleKeyInfo ReadKey(bool intercept = false) => Console.ReadKey(intercept);
 
 		public static int GetFormattedLength(string formattedText) {
 			int formatBegin = formattedText.IndexOf('{');

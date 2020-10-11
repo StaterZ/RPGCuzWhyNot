@@ -26,7 +26,7 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 				DrawIfNeeded(menuState);
 
 				//navigate
-				ConsoleKeyInfo keyPress = Console.ReadKey(true);
+				ConsoleKeyInfo keyPress = Terminal.ReadKey(true);
 				if (!TryRunShortHand(menuState, keyPress)) {
 					UpdateArrowNavigation(menuState, keyPress);
 				}
