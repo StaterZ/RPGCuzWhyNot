@@ -41,34 +41,6 @@ namespace RPGCuzWhyNot.Systems.CommandSystem {
 
 			return false;
 		}
-
-
-		public void DisplayHelp() {
-			string[] formattedCommandCallNames = new string[commands.Count];
-			int longestFormattedCommandCallName = 0;
-			for (int i = 0; i < commands.Count; i++) {
-				string formattedCommandCallName = Utils.StringifyArray("[", ", ", "]", commands[i].CallNames);
-				formattedCommandCallNames[i] = formattedCommandCallName;
-
-				if (formattedCommandCallName.Length > longestFormattedCommandCallName) {
-					longestFormattedCommandCallName = formattedCommandCallName.Length;
-				}
-			}
-			using (Terminal.PushState()) {
-				Terminal.MillisPerChar = 1000 / 300;
-				for (int i = 0; i < commands.Count; i++) {
-					Terminal.ForegroundColor = ConsoleColor.Magenta;
-					Terminal.Write(formattedCommandCallNames[i].PadRight(longestFormattedCommandCallName));
-					Terminal.ForegroundColor = ConsoleColor.White;
-					Terminal.Write(" - ");
-					Terminal.WriteLine(commands[i].HelpText);
-				}
-			}
-		}
-
-		internal bool TryHandle(object trailingCommand) {
-			throw new NotImplementedException();
-		}
 	}
 }
 
