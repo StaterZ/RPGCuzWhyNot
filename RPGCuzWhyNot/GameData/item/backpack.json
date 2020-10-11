@@ -7,10 +7,10 @@
   "wearable": {
     "defense": 0,
     "coveredParts": "back",
-    "coveredLayers": "outer",
+    "coveredLayers": "outer"
   },
   "inventory": {
-    "weightFraction": "3/4",
+    "weightFraction": "3/4"
   },
   "wieldable": {
     "handsRequired": 1
