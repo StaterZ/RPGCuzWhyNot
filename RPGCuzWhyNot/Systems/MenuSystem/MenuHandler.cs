@@ -129,7 +129,7 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 			public int SelectedIndex {
 				get => selectedIndex;
 				set {
-					value = MathUtils.Mod(value, menu.items.Count);
+					value = Utils.Mod(value, menu.items.Count);
 					selectedIndex = value;
 				}
 			}
