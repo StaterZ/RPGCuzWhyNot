@@ -52,7 +52,7 @@ namespace RPGCuzWhyNot.Systems.MenuSystem {
 			Terminal.WriteLineWithoutDelay(new string('#', Width));
 			if (items.Count > 0) {
 				for (int i = 0; i < ItemCount; i++) {
-					bool isSelected = i == selectedIndex; //if selectedIndex is null isSelected will go false, hiding the arrows
+					bool isSelected = i == selectedIndex;
 					char shortHand = i < MenuHandler.shortHands.Length ? MenuHandler.shortHands[i] : '!';
 
 					Terminal.WriteWithoutDelay(isSelected ? selectedBegin : unselectedBegin);
