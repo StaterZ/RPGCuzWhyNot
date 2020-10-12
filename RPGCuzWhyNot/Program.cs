@@ -44,11 +44,6 @@ namespace RPGCuzWhyNot {
 			player.Wielding.MoveItem((IWieldable)DataLoader.CreateItem("greatsword"));
 
 
-			//combat testing shortcut
-			Systems.AttackSystem.Fight fight = new Systems.AttackSystem.Fight(player, new Things.Characters.NPCs.TheMother());
-			fight.BeginCombat();
-
-
 			//some basic event loop
 			player.location.PrintEnterInformation();
 			while (true) {
