@@ -55,10 +55,8 @@ namespace RPGCuzWhyNot.Things.Item {
 
 		public bool CanAfford(TurnAction turnAction) {
 			foreach ((string id, int amount) in Requirements.Items) {
-				for (int i = 0; i < amount; i++) {
-					if (turnAction.performer.Inventory.GetItemCountById(id) < amount) {
-						return false;
-					}
+				if (turnAction.performer.Inventory.GetItemCountById(id) < amount) {
+					return false;
 				}
 			}
 
