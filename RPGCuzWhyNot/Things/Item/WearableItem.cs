@@ -2,8 +2,8 @@ namespace RPGCuzWhyNot.Things.Item {
 	public class WearableItem : SimpleItem, IWearable {
 		public float MultiplicativeProtection { get; set; }
 		public int AdditiveProtection { get; set; }
-		public float MultiplicativeBuff { get; set; }
-		public int AdditiveBuff { get; set; }
+		public float MultiplicativeHealModifier { get; set; }
+		public int AdditiveHealModifier { get; set; }
 		public WearableSlots CoveredParts { get; set; }
 		public WearableLayers CoveredLayers { get; set; }
 

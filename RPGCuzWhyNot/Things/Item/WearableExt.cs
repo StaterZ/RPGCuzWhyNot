@@ -8,7 +8,7 @@ namespace RPGCuzWhyNot.Things.Item {
 		}
 
 		public static string DefaultListingWithStats(this IWearable self) {
-			return $"{self.ListingName} (Def: {Utils.FormatInt(self.AdditiveProtection)}A, {Utils.FormatFloat(self.MultiplicativeProtection)}M) (Buf: {Utils.FormatInt(self.AdditiveBuff)}A, {Utils.FormatFloat(self.MultiplicativeBuff)}M)";
+			return $"{self.ListingName} (Def: {Utils.AddSignAndColor(self.AdditiveProtection)}A, {Utils.AddSignAndColor(self.MultiplicativeProtection)}M) (Buf: {Utils.AddSignAndColor(self.AdditiveHealModifier)}A, {Utils.AddSignAndColor(self.MultiplicativeHealModifier)}M)";
 		}
 
 		public static int DefaultOnDamageModify(this IWearable self, int amount) {
@@ -16,7 +16,7 @@ namespace RPGCuzWhyNot.Things.Item {
 		}
 
 		public static int DefaultOnHealModify(this IWearable self, int amount) {
-			return (int)Math.Ceiling(Math.Max(amount + self.AdditiveBuff, 0) * (self.MultiplicativeBuff - 1));
+			return (int)Math.Ceiling(Math.Max(amount + self.AdditiveHealModifier, 0) * (self.MultiplicativeHealModifier + 1));
 		}
 	}
 }

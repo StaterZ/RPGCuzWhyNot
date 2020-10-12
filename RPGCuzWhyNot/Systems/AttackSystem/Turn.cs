@@ -8,13 +8,9 @@ using RPGCuzWhyNot.Things.Item;
 namespace RPGCuzWhyNot.Systems.AttackSystem {
 	public class Turn {
 		public readonly Stats budget;
-		private readonly List<TurnAction> actions = new List<TurnAction>();
-		public ReadOnlyCollection<TurnAction> Actions { get; }
 
 		public Turn(Stats budget) {
 			this.budget = budget;
-
-			Actions = actions.AsReadOnly();
 		}
 
 		public Stats BudgetLeft { get; private set; }
@@ -35,7 +31,6 @@ namespace RPGCuzWhyNot.Systems.AttackSystem {
 
 			BudgetLeft -= turnAction.action.Requirements.Stats;
 
-			actions.Add(turnAction);
 			turnAction.Execute();
 
 			return true;

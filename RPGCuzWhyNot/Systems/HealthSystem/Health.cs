@@ -64,12 +64,12 @@ namespace RPGCuzWhyNot.Systems.HealthSystem {
 			SetHealth(maxHealth, inflictor);
 		}
 
-		public HealthChangeInfo TakeDamage(int damage, IInflictor inflictor) {
-			if (damage < 0) throw new ArgumentException("can't deal negative damage");
-
+		public HealthChangeInfo DealDamage(int damage, IInflictor inflictor) {
 			foreach (IHealthChangeModifier a in armor) {
 				damage = a.OnDamageModify(damage);
 			}
+
+			if (damage < 0) throw new ArgumentException("can't deal negative damage");
 
 			HealthChangeInfo info = ChangeHealth(-damage, inflictor);
 
@@ -77,11 +77,11 @@ namespace RPGCuzWhyNot.Systems.HealthSystem {
 		}
 
 		public HealthChangeInfo Heal(int damage, IInflictor inflictor) {
-			if (damage < 0) throw new ArgumentException("can't heal negative damage");
-
 			foreach (IHealthChangeModifier a in armor) {
 				damage = a.OnHealModify(damage);
 			}
+
+			if (damage < 0) throw new ArgumentException("can't heal negative damage");
 
 			HealthChangeInfo info = ChangeHealth(damage, inflictor);
 

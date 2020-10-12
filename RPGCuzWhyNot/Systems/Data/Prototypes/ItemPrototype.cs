@@ -47,8 +47,8 @@ namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 				IWearable wearable = (IWearable)item;
 				wearable.AdditiveProtection = Wearable.AdditiveProtection;
 				wearable.MultiplicativeProtection = Wearable.MultiplicativeProtection;
-				wearable.AdditiveBuff = Wearable.AdditiveBuff;
-				wearable.MultiplicativeBuff = Wearable.MultiplicativeBuff;
+				wearable.AdditiveHealModifier = Wearable.AdditiveHealModifier;
+				wearable.MultiplicativeHealModifier = Wearable.MultiplicativeHealModifier;
 				wearable.CoveredParts = Wearable.CoveredParts;
 				wearable.CoveredLayers = Wearable.CoveredLayers;
 			}
@@ -88,11 +88,11 @@ namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 			[JsonProperty("additiveProtection")]
 			public int AdditiveProtection { get; set; }
 
-			[JsonProperty("multiplicativeBuff")]
-			public float MultiplicativeBuff { get; set; }
+			[JsonProperty("multiplicativeHealModifier")]
+			public float MultiplicativeHealModifier { get; set; }
 
-			[JsonProperty("additiveBuff")]
-			public int AdditiveBuff { get; set; }
+			[JsonProperty("additiveHealModifier")]
+			public int AdditiveHealModifier { get; set; }
 
 			[JsonProperty("coveredParts", Required = Required.Always)]
 			public WearableSlots CoveredParts { get; set; }

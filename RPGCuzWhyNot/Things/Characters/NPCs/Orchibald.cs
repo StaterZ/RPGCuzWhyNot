@@ -28,7 +28,7 @@ namespace RPGCuzWhyNot.Things.Characters.NPCs
 			foreach (Character combatant in fight.combatants) {
 				if (combatant == this) continue;
 
-				combatant.health.TakeDamage(20, this); //temp
+				combatant.health.DealDamage(20, this); //temp
 			}
 		}
 

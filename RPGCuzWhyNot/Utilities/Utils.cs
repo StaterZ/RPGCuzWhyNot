@@ -53,7 +53,7 @@ namespace RPGCuzWhyNot.Utilities {
 			Thread.Sleep(millis);
 		}
 
-		public static string FormatInt(int value, bool showPositiveSign = true) {
+		public static string AddSignAndColor(int value, bool showPositiveSign = true) {
 			if (value > 0) {
 				string sign = showPositiveSign ? "+" : string.Empty;
 				return $"{{fg:Green}}({sign}{value})";
@@ -66,7 +66,7 @@ namespace RPGCuzWhyNot.Utilities {
 			return $"{{fg:Yellow}}({value})";
 		}
 
-		public static string FormatFloat(float value, bool showPositiveSign = true) {
+		public static string AddSignAndColor(float value, bool showPositiveSign = true) {
 			if (value > 0) {
 				string sign = showPositiveSign ? "+" : string.Empty;
 				return $"{{fg:Green}}({sign}{value})";

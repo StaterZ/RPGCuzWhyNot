@@ -13,7 +13,7 @@ namespace RPGCuzWhyNot.Things.Characters.NPCs {
 
 		//todo: make this an item instead
 		private void AttackWithDuster(Character target) {
-			target.health.TakeDamage((int)Math.Ceiling(target.health.CurrentHealth / 2f), this);
+			target.health.DealDamage((int)Math.Ceiling(target.health.CurrentHealth / 2f), this);
 		}
 
 		public override void DoTurn(Fight fight) {
