@@ -25,7 +25,7 @@ namespace RPGCuzWhyNot.Things.Characters.NPCs
 		}
 
 		public override void DoTurn(Fight fight) {
-			foreach (Character combatant in fight.combatants) {
+			foreach (Character combatant in fight.Combatants) {
 				if (combatant == this) continue;
 
 				combatant.health.DealDamage(20, this); //temp

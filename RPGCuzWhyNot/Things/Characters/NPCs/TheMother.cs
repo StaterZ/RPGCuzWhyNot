@@ -19,7 +19,7 @@ namespace RPGCuzWhyNot.Things.Characters.NPCs {
 		public override void DoTurn(Fight fight) {
 			//TurnActions planOfAction = new TurnActions(stats); //use later to ensure we're within budget
 
-			foreach (Character combatant in fight.combatants) {
+			foreach (Character combatant in fight.Combatants) {
 				if (combatant == this) continue;
 
 				AttackWithDuster(combatant); //temp

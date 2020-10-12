@@ -30,23 +30,25 @@ namespace RPGCuzWhyNot.Things.Item {
 						}
 					}
 					if (mp) {
-						builder.Append(Utils.AddSignAndColor(self.MultiplicativeProtection, false));
+						builder.Append(Utils.AddSignAndColor(self.MultiplicativeProtection * 100, false));
 						builder.Append("%");
 					}
+					builder.Append(")");
 				}
-				if (p) {
+				if (h) {
 					builder.Append(" ");
 					builder.Append("(Heal: ");
-					if (ap) {
+					if (ah) {
 						builder.Append(Utils.AddSignAndColor(self.AdditiveHealModifier));
-						if (mp) {
+						if (mh) {
 							builder.Append(", ");
 						}
 					}
-					if (mp) {
-						builder.Append(Utils.AddSignAndColor(self.MultiplicativeHealModifier, false));
+					if (mh) {
+						builder.Append(Utils.AddSignAndColor(self.MultiplicativeHealModifier * 100, false));
 						builder.Append("%");
 					}
+					builder.Append(")");
 				}
 			}
 

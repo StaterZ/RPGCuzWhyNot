@@ -99,12 +99,12 @@ namespace RPGCuzWhyNot.Things.Item {
 
 			//heal
 			turnAction.performer.health.Heal(Effects.HealSelf, turnAction.performer);
-			turnAction.target?.health.Heal(Effects.HealTarget, turnAction.target);
+			turnAction.target?.health.Heal(Effects.HealTarget, turnAction.performer);
 
 			//damage
 			//TODO: handle damage types...
-			turnAction.performer.health.DealDamage(Effects.MeleeDamage, turnAction.target);
-			turnAction.target?.health.DealDamage(Effects.ProjectileDamage, turnAction.target);
+			turnAction.target?.health.DealDamage(Effects.MeleeDamage, turnAction.performer);
+			turnAction.target?.health.DealDamage(Effects.ProjectileDamage, turnAction.performer);
 
 			//tell the player what happend
 			string formattedExecuteDescription = FormatExecuteDescription(turnAction, ExecuteDescription);

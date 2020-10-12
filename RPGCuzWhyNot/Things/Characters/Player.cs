@@ -85,7 +85,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 					Menu menu = new Menu(wieldable.Name);
 					attack.items.Add(new SubMenu(menu, "Do something with this item. (Temp Desc)"));
 
-					InsertItemActions(menu, wieldable.ItemActions, fight.combatants, turn);
+					InsertItemActions(menu, wieldable.ItemActions, fight.Combatants, turn);
 				}
 
 				Menu allItems = new Menu("{fg:White}(All)");
@@ -110,7 +110,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 						consumableItems.items.Add(new SubMenu(menu, "Do something with this item. (Temp Desc)"));
 					}
 
-					InsertItemActions(menu, item.ItemActions, fight.combatants, turn);
+					InsertItemActions(menu, item.ItemActions, fight.Combatants, turn);
 				}
 
 				Menu items = new Menu("{fg:Green}(Items)",
@@ -125,7 +125,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 					Menu menu = new Menu(wearable.Name);
 					equipment.items.Add(new SubMenu(menu, "Do something with this item. (Temp Desc)"));
 
-					InsertItemActions(menu, wearable.ItemActions, fight.combatants, turn);
+					InsertItemActions(menu, wearable.ItemActions, fight.Combatants, turn);
 				}
 
 				Menu root = new Menu("Root",
