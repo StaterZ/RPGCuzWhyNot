@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using RPGCuzWhyNot.Systems;
 using RPGCuzWhyNot.Systems.AttackSystem;
 using RPGCuzWhyNot.Systems.Inventory;
-using RPGCuzWhyNot.Things.Characters.Races.Humanoids;
 
 namespace RPGCuzWhyNot.Things.Item {
 	[Serializable]
