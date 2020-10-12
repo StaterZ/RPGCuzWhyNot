@@ -7,6 +7,14 @@ namespace RPGCuzWhyNot.Systems.HealthSystem {
 		public IInflictor inflictor;
 		public float Delta => newHealth - oldHealth;
 
+		public HealthChangeInfo(Health health, float oldHealth, float newHealth, float attemptedDelta, IInflictor inflictor) {
+			this.health = health;
+			this.oldHealth = oldHealth;
+			this.newHealth = newHealth;
+			this.attemptedDelta = attemptedDelta;
+			this.inflictor = inflictor;
+		}
+
 		public HealthChangeInfoSuccess Success {
 			get {
 				if (attemptedDelta != Delta) return HealthChangeInfoSuccess.PartialDelivery;

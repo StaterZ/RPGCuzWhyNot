@@ -34,13 +34,7 @@ namespace RPGCuzWhyNot.Systems.HealthSystem {
 			value = Utils.Clamp(value, 0, maxHealth);
 			int delta = value - CurrentHealth;
 
-			HealthChangeInfo info = new HealthChangeInfo() {
-				health = this,
-				oldHealth = CurrentHealth,
-				newHealth = value,
-				attemptedDelta = attemptedDelta,
-				inflictor = inflictor
-			};
+			HealthChangeInfo info = new HealthChangeInfo(this, CurrentHealth, value, attemptedDelta, inflictor);
 
 			CurrentHealth = value;
 			OnChange?.Invoke(info);
@@ -69,6 +63,7 @@ namespace RPGCuzWhyNot.Systems.HealthSystem {
 				damage = a.OnDamageModify(damage);
 			}
 
+			if (damage == 0) return new HealthChangeInfo(this, CurrentHealth, CurrentHealth, 0, inflictor);
 			if (damage < 0) throw new ArgumentException("can't deal negative damage");
 
 			HealthChangeInfo info = ChangeHealth(-damage, inflictor);
@@ -81,6 +76,7 @@ namespace RPGCuzWhyNot.Systems.HealthSystem {
 				damage = a.OnHealModify(damage);
 			}
 
+			if (damage == 0) return new HealthChangeInfo(this, CurrentHealth, CurrentHealth, 0, inflictor);
 			if (damage < 0) throw new ArgumentException("can't heal negative damage");
 
 			HealthChangeInfo info = ChangeHealth(damage, inflictor);

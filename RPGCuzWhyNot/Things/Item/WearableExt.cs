@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using RPGCuzWhyNot.Utilities;
 
 namespace RPGCuzWhyNot.Things.Item {
@@ -8,7 +9,48 @@ namespace RPGCuzWhyNot.Things.Item {
 		}
 
 		public static string DefaultListingWithStats(this IWearable self) {
-			return $"{self.ListingName} (Def: {Utils.AddSignAndColor(self.AdditiveProtection)}A, {Utils.AddSignAndColor(self.MultiplicativeProtection)}M) (Buf: {Utils.AddSignAndColor(self.AdditiveHealModifier)}A, {Utils.AddSignAndColor(self.MultiplicativeHealModifier)}M)";
+			StringBuilder builder = new StringBuilder();
+			builder.Append(self.ListingName);
+
+			bool ap = self.AdditiveProtection != 0;
+			bool mp = self.MultiplicativeProtection != 0;
+			bool ah = self.AdditiveHealModifier != 0;
+			bool mh = self.MultiplicativeHealModifier != 0;
+			bool p = ap || mp;
+			bool h = ah || mh;
+
+			if (p || h) {
+				if (p) {
+					builder.Append(" ");
+					builder.Append("(Def: ");
+					if (ap) {
+						builder.Append(Utils.AddSignAndColor(self.AdditiveProtection));
+						if (mp) {
+							builder.Append(", ");
+						}
+					}
+					if (mp) {
+						builder.Append(Utils.AddSignAndColor(self.MultiplicativeProtection, false));
+						builder.Append("%");
+					}
+				}
+				if (p) {
+					builder.Append(" ");
+					builder.Append("(Heal: ");
+					if (ap) {
+						builder.Append(Utils.AddSignAndColor(self.AdditiveHealModifier));
+						if (mp) {
+							builder.Append(", ");
+						}
+					}
+					if (mp) {
+						builder.Append(Utils.AddSignAndColor(self.MultiplicativeHealModifier, false));
+						builder.Append("%");
+					}
+				}
+			}
+
+			return builder.ToString();
 		}
 
 		public static int DefaultOnDamageModify(this IWearable self, int amount) {

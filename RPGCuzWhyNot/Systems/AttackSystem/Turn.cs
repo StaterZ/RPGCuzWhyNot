@@ -1,19 +1,15 @@
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using RPGCuzWhyNot.Systems.Inventory;
-using RPGCuzWhyNot.Things.Characters;
 using RPGCuzWhyNot.Things.Item;
 
 namespace RPGCuzWhyNot.Systems.AttackSystem {
 	public class Turn {
 		public readonly Stats budget;
 
+		public Stats BudgetLeft { get; private set; }
+
 		public Turn(Stats budget) {
 			this.budget = budget;
+			BudgetLeft = budget;
 		}
-
-		public Stats BudgetLeft { get; private set; }
 
 		private bool CanAffordStats(TurnAction turnAction) {
 			Stats budgetLeftAfterAction = BudgetLeft - turnAction.action.Requirements.Stats;
