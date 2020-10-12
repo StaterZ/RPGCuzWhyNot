@@ -22,23 +22,6 @@ namespace RPGCuzWhyNot.Systems.AttackSystem {
 			Combatants = this.combatants.AsReadOnly();
 		}
 
-		private void UpdateCombatantStatuses() {
-			foreach (Character combatant in combatants) {
-				ConsoleColor healthColor;
-				if (combatant.health.Percent < 0.25) {
-					healthColor = ConsoleColor.Red;
-				} else if (combatant.health.Percent < 0.5) {
-					healthColor = ConsoleColor.Yellow;
-				} else {
-					healthColor = ConsoleColor.Green;
-				}
-				Terminal.ClearLine();
-				Terminal.CursorY--;
-				Terminal.WriteLineWithoutDelay($"{combatant.Name}: {{fg:{healthColor}}}({combatant.health.CurrentHealth}/{combatant.health.maxHealth})");
-			}
-			Terminal.WriteLineWithoutDelay();
-		}
-
 		public void BeginCombat() {
 			Terminal.WriteLine($"{{fg:Cyan}}(Combat with {Utils.StringifyArray("[", ", ", "]", combatants.Select(combatant => combatant.Name).ToArray())} has begun!)");
 			Terminal.WriteLine();
@@ -80,6 +63,10 @@ namespace RPGCuzWhyNot.Systems.AttackSystem {
 				combatant.health.OnChange += UpdateCombatantStatus;
 			}
 
+			foreach ((Character combatant, Action<HealthChangeInfo> healthStatusDisplay) healthStatusDisplayData in healthStatusDisplayDatas) {
+				healthStatusDisplayData.healthStatusDisplay(default);
+			}
+
 			isInCombat = true;
 			while (isInCombat) {
 				foreach (Character combatant in combatants) {
@@ -88,8 +75,6 @@ namespace RPGCuzWhyNot.Systems.AttackSystem {
 						Terminal.ClearLine();
 						Terminal.CursorY--;
 					}
-
-					UpdateCombatantStatuses();
 
 					if (!combatants.Any(c => c != Program.player && c.health.IsAlive && c.WantsToHarm(Program.player))) { //slightly questionable check but it'll work for now...
 						EndCombat();
