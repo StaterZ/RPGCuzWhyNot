@@ -36,18 +36,21 @@ namespace RPGCuzWhyNot.Systems.HealthSystem {
 
 			HealthChangeInfo info = new HealthChangeInfo(this, CurrentHealth, value, attemptedDelta, inflictor);
 
-			CurrentHealth = value;
-			OnChange?.Invoke(info);
-			if (delta > 0) {
-				OnHeal?.Invoke(info);
-				if (IsAtMaxHealth) {
-					OnFullRecovery?.Invoke(info);
+			if (attemptedDelta != 0) {
+				CurrentHealth = value;
+				OnChange?.Invoke(info);
+				if (delta > 0) {
+					OnHeal?.Invoke(info);
+					if (IsAtMaxHealth) {
+						OnFullRecovery?.Invoke(info);
+					}
 				}
-			}
-			if (delta < 0) {
-				OnDamage?.Invoke(info);
-				if (!IsAlive) {
-					OnDeath?.Invoke(info);
+
+				if (delta < 0) {
+					OnDamage?.Invoke(info);
+					if (!IsAlive) {
+						OnDeath?.Invoke(info);
+					}
 				}
 			}
 
@@ -63,7 +66,6 @@ namespace RPGCuzWhyNot.Systems.HealthSystem {
 				damage = healthChangeModifier.OnDamageModify(damage);
 			}
 
-			if (damage == 0) return new HealthChangeInfo(this, CurrentHealth, CurrentHealth, 0, inflictor);
 			if (damage < 0) throw new ArgumentException("can't deal negative damage");
 
 			HealthChangeInfo info = ChangeHealth(-damage, inflictor);
@@ -76,7 +78,6 @@ namespace RPGCuzWhyNot.Systems.HealthSystem {
 				damage = healthChangeModifier.OnHealModify(damage);
 			}
 
-			if (damage == 0) return new HealthChangeInfo(this, CurrentHealth, CurrentHealth, 0, inflictor);
 			if (damage < 0) throw new ArgumentException("can't heal negative damage");
 
 			HealthChangeInfo info = ChangeHealth(damage, inflictor);
