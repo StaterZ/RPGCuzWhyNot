@@ -15,11 +15,11 @@ namespace RPGCuzWhyNot.Systems.HealthSystem {
 
 		public event Action<HealthChangeInfo> OnDeath; //when we run out of health
 		public event Action<HealthChangeInfo> OnChange; //if we in any way change the current health
-		public event Action<HealthChangeInfo> OnDamage; //if we explicity deal damage
-		public event Action<HealthChangeInfo> OnHeal; //if we explicity heal damage
+		public event Action<HealthChangeInfo> OnDamage; //if we explicitly deal damage
+		public event Action<HealthChangeInfo> OnHeal; //if we explicitly heal damage
 		public event Action<HealthChangeInfo> OnFullRecovery; //when we reach max health
 
-		public List<IHealthChangeModifier> armor = new List<IHealthChangeModifier>(); //damage modifiers
+		public List<IHealthChangeModifier> healthChangeModifiers = new List<IHealthChangeModifier>(); //damage modifiers
 
 		public Health(int health) : this(health, health) {
 		}
@@ -58,9 +58,9 @@ namespace RPGCuzWhyNot.Systems.HealthSystem {
 			SetHealth(maxHealth, inflictor);
 		}
 
-		public HealthChangeInfo DealDamage(int damage, IInflictor inflictor) {
-			foreach (IHealthChangeModifier a in armor) {
-				damage = a.OnDamageModify(damage);
+		public HealthChangeInfo TakeDamage(int damage, IInflictor inflictor) {
+			foreach (IHealthChangeModifier healthChangeModifier in healthChangeModifiers) {
+				damage = healthChangeModifier.OnDamageModify(damage);
 			}
 
 			if (damage == 0) return new HealthChangeInfo(this, CurrentHealth, CurrentHealth, 0, inflictor);
@@ -72,8 +72,8 @@ namespace RPGCuzWhyNot.Systems.HealthSystem {
 		}
 
 		public HealthChangeInfo Heal(int damage, IInflictor inflictor) {
-			foreach (IHealthChangeModifier a in armor) {
-				damage = a.OnHealModify(damage);
+			foreach (IHealthChangeModifier healthChangeModifier in healthChangeModifiers) {
+				damage = healthChangeModifier.OnHealModify(damage);
 			}
 
 			if (damage == 0) return new HealthChangeInfo(this, CurrentHealth, CurrentHealth, 0, inflictor);

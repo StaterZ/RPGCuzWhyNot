@@ -56,9 +56,12 @@ namespace RPGCuzWhyNot {
 
 		private static bool LoadContent() { //Load content
 			Terminal.WriteLineWithoutDelay("{fg:Yellow}(Loading Content...)");
-			var errorLevel = DataLoader.LoadGameData();
-			if (errorLevel == DataLoader.ErrorLevel.Error)
+			DataLoader.ErrorLevel errorLevel = DataLoader.LoadGameData();
+
+			if (errorLevel == DataLoader.ErrorLevel.Error) {
 				return false;
+			}
+
 			Terminal.WriteLineWithoutDelay("{fg:Green}(Done!)");
 
 			if (errorLevel == DataLoader.ErrorLevel.Success) {

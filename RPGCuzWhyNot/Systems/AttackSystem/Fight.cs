@@ -45,9 +45,11 @@ namespace RPGCuzWhyNot.Systems.AttackSystem {
 				healthStatusDisplay(default);
 			}
 
+			const int statusSpacer = 1;
+			int menuDrawPos = drawPos + healthStatusDisplayDatas.Length + statusSpacer;
 			isInCombat = true;
 			while (isInCombat) {
-				DoCombat(drawPos);
+				DoTurn(menuDrawPos);
 			}
 
 			foreach ((Character combatant, Action<HealthChangeInfo> healthStatusDisplay) in healthStatusDisplayDatas) {
@@ -65,7 +67,7 @@ namespace RPGCuzWhyNot.Systems.AttackSystem {
 			int currentPos = Terminal.CursorY;
 			Terminal.CursorY = drawPos;
 
-			ConsoleColor healthColor = ColorBasedOnHealth(combatant.health);
+			ConsoleColor healthColor = GetHealthColor(combatant.health);
 
 			Terminal.ClearLine();
 			Terminal.CursorY--;
@@ -73,19 +75,23 @@ namespace RPGCuzWhyNot.Systems.AttackSystem {
 			Terminal.CursorY = currentPos;
 		}
 
-		private static ConsoleColor ColorBasedOnHealth(Health health) {
+		private static ConsoleColor GetHealthColor(Health health) {
 			if (health.Percent < 0.25) return ConsoleColor.Red;
 			if (health.Percent < 0.5) return ConsoleColor.Yellow;
 
 			return ConsoleColor.Green;
 		}
 
-		private void DoCombat(int drawPos) {
+		private void DoTurn(int drawPos) {
 			foreach (Character combatant in combatants) {
-				while (Terminal.CursorY > drawPos) {
-					Terminal.CursorY--;
-					Terminal.ClearLine();
-					Terminal.CursorY--;
+				if (drawPos > Terminal.CursorY) {
+					Terminal.CursorY = drawPos;
+				} else {
+					while (Terminal.CursorY > drawPos) {
+						Terminal.CursorY--;
+						Terminal.ClearLine();
+						Terminal.CursorY--;
+					}
 				}
 
 				if (!combatants.Any(c => c != Program.player && c.health.IsAlive && c.WantsToHarm(Program.player))) {

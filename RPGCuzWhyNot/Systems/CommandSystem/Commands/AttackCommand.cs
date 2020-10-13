@@ -3,7 +3,7 @@ using RPGCuzWhyNot.Things.Characters;
 
 namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
 	public class AttackCommand : Command {
-		public override string[] CallNames => new [] {"attack", "challenge", "confront"};
+		public override string[] CallNames => new [] {"attack", "challenge", "confront", "fight"};
 
 		public override string HelpText => "attack someone";
 

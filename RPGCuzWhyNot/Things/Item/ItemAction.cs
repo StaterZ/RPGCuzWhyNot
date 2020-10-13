@@ -103,8 +103,8 @@ namespace RPGCuzWhyNot.Things.Item {
 
 			//damage
 			//TODO: handle damage types...
-			turnAction.target?.health.DealDamage(Effects.MeleeDamage, turnAction.performer);
-			turnAction.target?.health.DealDamage(Effects.ProjectileDamage, turnAction.performer);
+			turnAction.target?.health.TakeDamage(Effects.MeleeDamage, turnAction.performer);
+			turnAction.target?.health.TakeDamage(Effects.ProjectileDamage, turnAction.performer);
 
 			//tell the player what happend
 			string formattedExecuteDescription = FormatExecuteDescription(turnAction, ExecuteDescription);
