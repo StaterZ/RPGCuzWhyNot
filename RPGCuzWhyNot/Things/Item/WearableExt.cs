@@ -12,39 +12,39 @@ namespace RPGCuzWhyNot.Things.Item {
 			StringBuilder builder = new StringBuilder();
 			builder.Append(self.ListingName);
 
-			bool ap = self.AdditiveProtection != 0;
-			bool mp = self.MultiplicativeProtection != 0;
-			bool ah = self.AdditiveHealModifier != 0;
-			bool mh = self.MultiplicativeHealModifier != 0;
-			bool p = ap || mp;
-			bool h = ah || mh;
+			bool hasAdditiveProtection = self.AdditiveProtection != 0;
+			bool hasMultiplicativeProtection = self.MultiplicativeProtection != 0;
+			bool hasAdditiveHealModifier = self.AdditiveHealModifier != 0;
+			bool hasMultiplicativeHealModifier = self.MultiplicativeHealModifier != 0;
+			bool hasAnyProtection = hasAdditiveProtection || hasMultiplicativeProtection;
+			bool hasAnyHealModifier = hasAdditiveHealModifier || hasMultiplicativeHealModifier;
 
-			if (p || h) {
-				if (p) {
+			if (hasAnyProtection || hasAnyHealModifier) {
+				if (hasAnyProtection) {
 					builder.Append(" ");
 					builder.Append("(Def: ");
-					if (ap) {
+					if (hasAdditiveProtection) {
 						builder.Append(Utils.AddSignAndColor(self.AdditiveProtection));
-						if (mp) {
+						if (hasMultiplicativeProtection) {
 							builder.Append(", ");
 						}
 					}
-					if (mp) {
+					if (hasMultiplicativeProtection) {
 						builder.Append(Utils.AddSignAndColor(self.MultiplicativeProtection * 100, false));
 						builder.Append("%");
 					}
 					builder.Append(")");
 				}
-				if (h) {
+				if (hasAnyHealModifier) {
 					builder.Append(" ");
 					builder.Append("(Heal: ");
-					if (ah) {
+					if (hasAdditiveHealModifier) {
 						builder.Append(Utils.AddSignAndColor(self.AdditiveHealModifier));
-						if (mh) {
+						if (hasMultiplicativeHealModifier) {
 							builder.Append(", ");
 						}
 					}
-					if (mh) {
+					if (hasMultiplicativeHealModifier) {
 						builder.Append(Utils.AddSignAndColor(self.MultiplicativeHealModifier * 100, false));
 						builder.Append("%");
 					}

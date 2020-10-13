@@ -23,88 +23,93 @@ namespace RPGCuzWhyNot.Systems.AttackSystem {
 		}
 
 		public void BeginCombat() {
-			Terminal.WriteLine($"{{fg:Cyan}}(Combat with {Utils.StringifyArray("[", ", ", "]", combatants.Select(combatant => combatant.Name).ToArray())} has begun!)");
-			Terminal.WriteLine();
+			Terminal.WriteLine($"{{fg:Cyan}}(Combat with {Utils.StringifyArray("[", ", ", "]", combatants.Select(combatant => combatant.Name).ToArray())} has begun!)\n");
 
 			Terminal.WriteLineWithoutDelay("{fg:Cyan}(Status)");
 			int drawPos = Terminal.CursorY;
 
 			(Character combatant, Action<HealthChangeInfo> healthStatusDisplay)[] healthStatusDisplayDatas =
-				new (Character combatant, Action<HealthChangeInfo> healthStatusDisplay)[combatants.Count];
+				new (Character, Action<HealthChangeInfo>)[combatants.Count];
 
 			for (int i = 0; i < combatants.Count; i++) {
 				Character combatant = combatants[i];
+				int statusDrawPos = drawPos + i;
 
-				int myi = i;
+				void HealthStatusDisplay(HealthChangeInfo ctx) => UpdateCombatantStatus(combatant, statusDrawPos);
 
-				void UpdateCombatantStatus(HealthChangeInfo ctx) {
-					int currentPos = Terminal.CursorY;
-					Terminal.CursorY = drawPos + myi;
-
-					ConsoleColor healthColor;
-					if (combatant.health.Percent < 0.25) {
-						healthColor = ConsoleColor.Red;
-					} else if (combatant.health.Percent < 0.5) {
-						healthColor = ConsoleColor.Yellow;
-					} else {
-						healthColor = ConsoleColor.Green;
-					}
-
-					Terminal.ClearLine();
-					Terminal.CursorY--;
-					Terminal.WriteLineWithoutDelay($"{combatant.Name}: {{fg:{healthColor}}}({combatant.health.CurrentHealth}/{combatant.health.maxHealth})");
-
-					Terminal.WriteLineWithoutDelay();
-
-					Terminal.CursorY = currentPos;
-				}
-
-				healthStatusDisplayDatas[i] = (combatant, UpdateCombatantStatus);
-				combatant.health.OnChange += UpdateCombatantStatus;
+				healthStatusDisplayDatas[i] = (combatant, HealthStatusDisplay);
+				combatant.health.OnChange += HealthStatusDisplay;
 			}
 
-			foreach ((Character combatant, Action<HealthChangeInfo> healthStatusDisplay) healthStatusDisplayData in healthStatusDisplayDatas) {
-				healthStatusDisplayData.healthStatusDisplay(default);
+			foreach ((Character _, Action<HealthChangeInfo> healthStatusDisplay) in healthStatusDisplayDatas) {
+				healthStatusDisplay(default);
 			}
 
+			const int statusSpacer = 1;
+			int menuDrawPos = drawPos + healthStatusDisplayDatas.Length + statusSpacer;
 			isInCombat = true;
 			while (isInCombat) {
-				foreach (Character combatant in combatants) {
+				DoTurn(menuDrawPos);
+			}
+
+			foreach ((Character combatant, Action<HealthChangeInfo> healthStatusDisplay) in healthStatusDisplayDatas) {
+				combatant.health.OnChange -= healthStatusDisplay;
+			}
+
+			Terminal.WriteLine("{fg:Cyan}(Combat has ended!)\n");
+		}
+
+		public void EndCombat() {
+			isInCombat = false;
+		}
+
+		private static void UpdateCombatantStatus(Character combatant, int drawPos) {
+			int currentPos = Terminal.CursorY;
+			Terminal.CursorY = drawPos;
+
+			ConsoleColor healthColor = GetHealthColor(combatant.health);
+
+			Terminal.ClearLine();
+			Terminal.CursorY--;
+			Terminal.WriteLineWithoutDelay($"{combatant.Name}: {{fg:{healthColor}}}({combatant.health.CurrentHealth}/{combatant.health.maxHealth})\n");
+			Terminal.CursorY = currentPos;
+		}
+
+		private static ConsoleColor GetHealthColor(Health health) {
+			if (health.Percent < 0.25) return ConsoleColor.Red;
+			if (health.Percent < 0.5) return ConsoleColor.Yellow;
+
+			return ConsoleColor.Green;
+		}
+
+		private void DoTurn(int drawPos) {
+			foreach (Character combatant in combatants) {
+				if (drawPos > Terminal.CursorY) {
+					Terminal.CursorY = drawPos;
+				} else {
 					while (Terminal.CursorY > drawPos) {
 						Terminal.CursorY--;
 						Terminal.ClearLine();
 						Terminal.CursorY--;
 					}
-
-					if (!combatants.Any(c => c != Program.player && c.health.IsAlive && c.WantsToHarm(Program.player))) { //slightly questionable check but it'll work for now...
-						EndCombat();
-					}
-
-					if (!isInCombat) {
-						break;
-					}
-
-					if (!combatant.health.IsAlive) continue;
-
-					Terminal.WriteLine($"{{fg:Cyan}}({combatant.Name}s Turn)");
-					combatant.DoTurn(this);
-					if (combatant != Program.player) {
-						Utils.WaitForPlayer();
-					}
-					Terminal.WriteLine();
 				}
+
+				if (!combatants.Any(c => c != Program.player && c.health.IsAlive && c.WantsToHarm(Program.player))) {
+					//slightly questionable check but it'll work for now...
+					EndCombat();
+				}
+
+				if (!isInCombat) break;
+				if (!combatant.health.IsAlive) continue;
+
+				Terminal.WriteLine($"{{fg:Cyan}}({combatant.Name}'s Turn)");
+				combatant.DoTurn(this);
+				if (combatant != Program.player) {
+					Utils.WaitForPlayer();
+				}
+
+				Terminal.WriteLine();
 			}
-
-			foreach ((Character combatant, Action<HealthChangeInfo> healthStatusDisplay) healthStatusDisplayData in healthStatusDisplayDatas) {
-				healthStatusDisplayData.combatant.health.OnChange -= healthStatusDisplayData.healthStatusDisplay;
-			}
-
-			Terminal.WriteLine("{fg:Cyan}(Combat has ended!)");
-			Terminal.WriteLine();
-		}
-
-		public void EndCombat() {
-			isInCombat = false;
 		}
 	}
 }
