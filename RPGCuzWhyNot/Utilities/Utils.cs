@@ -59,6 +59,9 @@ namespace RPGCuzWhyNot.Utilities {
 			}
 
 			if (value < 0) {
+				if (showPositiveSign) {
+					value = -value;
+				}
 				return $"{{fg:Red}}({value})";
 			}
 
@@ -72,6 +75,9 @@ namespace RPGCuzWhyNot.Utilities {
 			}
 
 			if (value < 0) {
+				if (showPositiveSign) {
+					value = -value;
+				}
 				return $"{{fg:Red}}({value})";
 			}
 
@@ -79,7 +85,7 @@ namespace RPGCuzWhyNot.Utilities {
 		}
 
 		public static void WaitForPlayer() {
-			Terminal.WriteWithoutDelay("{fg:Blue}(Press Enter)");
+			Terminal.WriteWithoutDelay("{fg:Blue}(Press any key)");
 			Terminal.ReadKey(true);
 		}
 
