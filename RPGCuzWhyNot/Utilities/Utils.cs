@@ -52,36 +52,26 @@ namespace RPGCuzWhyNot.Utilities {
 			Thread.Sleep(millis);
 		}
 
-		public static string AddSignAndColor(int value, bool showPositiveSign = true) {
-			if (value > 0) {
-				string sign = showPositiveSign ? "+" : string.Empty;
-				return $"{{fg:Green}}({sign}{value})";
-			}
+		public static string AddSignAndColor(int value, bool positiveIsGood = true, bool showPositiveSign = true) {
+			if (value == 0)
+				return "{yellow}(0)";
 
-			if (value < 0) {
-				if (showPositiveSign) {
-					value = -value;
-				}
-				return $"{{fg:Red}}({value})";
-			}
+			bool valueIsPositive = value > 0;
+			string color = (valueIsPositive == positiveIsGood) ? "green" : "red";
 
-			return $"{{fg:Yellow}}({value})";
+			string sign = value > 0 && showPositiveSign ? "+" : "";
+			return $"{{{color}}}({sign}{value})";
 		}
 
-		public static string AddSignAndColor(float value, bool showPositiveSign = true) {
-			if (value > 0) {
-				string sign = showPositiveSign ? "+" : string.Empty;
-				return $"{{fg:Green}}({sign}{value})";
-			}
+		public static string AddSignAndColor(float value, bool positiveIsGood = true, bool showPositiveSign = true) {
+			if (value == 0)
+				return "{yellow}(0)";
 
-			if (value < 0) {
-				if (showPositiveSign) {
-					value = -value;
-				}
-				return $"{{fg:Red}}({value})";
-			}
+			bool valueIsPositive = value > 0;
+			string color = (valueIsPositive == positiveIsGood) ? "green" : "red";
 
-			return $"{{fg:Yellow}}({value})";
+			string sign = value > 0 && showPositiveSign ? "+" : "";
+			return $"{{{color}}}({sign}{value})";
 		}
 
 		public static void WaitForPlayer() {

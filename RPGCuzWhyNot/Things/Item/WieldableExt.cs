@@ -7,7 +7,7 @@ namespace RPGCuzWhyNot.Things.Item {
 				return $"{w.ListingName}";
 			}
 
-			return $"{w.ListingName}  {Utils.AddSignAndColor(-w.HandsRequired)} hands required.";
+			return $"{w.ListingName}  {Utils.AddSignAndColor(w.HandsRequired, false, false)} hands required.";
 		}
 	}
 }

@@ -30,7 +30,7 @@ namespace RPGCuzWhyNot.Things.Item {
 						}
 					}
 					if (hasMultiplicativeProtection) {
-						builder.Append(Utils.AddSignAndColor(self.MultiplicativeProtection * 100, false));
+						builder.Append(Utils.AddSignAndColor(self.MultiplicativeProtection * 100, true));
 						builder.Append("%");
 					}
 					builder.Append(")");
@@ -45,7 +45,7 @@ namespace RPGCuzWhyNot.Things.Item {
 						}
 					}
 					if (hasMultiplicativeHealModifier) {
-						builder.Append(Utils.AddSignAndColor(self.MultiplicativeHealModifier * 100, false));
+						builder.Append(Utils.AddSignAndColor(self.MultiplicativeHealModifier * 100, true));
 						builder.Append("%");
 					}
 					builder.Append(")");
