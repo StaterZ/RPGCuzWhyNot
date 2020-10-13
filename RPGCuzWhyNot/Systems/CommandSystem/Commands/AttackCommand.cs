@@ -1,5 +1,7 @@
 using RPGCuzWhyNot.Systems.AttackSystem;
+using RPGCuzWhyNot.Things;
 using RPGCuzWhyNot.Things.Characters;
+using RPGCuzWhyNot.Things.Item;
 
 namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
 	public class AttackCommand : Command {
@@ -13,7 +15,9 @@ namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
 				return;
 			}
 
-			if (Program.player.location.GetCharacterByCallName(args.FirstArgument, out Character opponent)) {
+			string callName = args.FirstArgument;
+			Character opponent;
+			if (NumericCallNames.Get(callName, out opponent) && opponent.location == Program.player.location || Program.player.location.GetCharacterByCallName(callName, out opponent)) {
 				Fight fight = new Fight(Program.player, opponent);
 				fight.BeginCombat();
 			} else {
