@@ -21,6 +21,9 @@ namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 		[JsonProperty("inventory")]
 		public InventoryProps Inventory { get; set; }
 
+		[JsonProperty("actions")]
+		public ItemAction[] ItemActions { get; set; }
+
 
 		/// <summary>
 		/// Create an instance of the prototype.
@@ -42,7 +45,10 @@ namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 
 			if (Wearable != null) {
 				IWearable wearable = (IWearable)item;
-				wearable.Defense = Wearable.Defense;
+				wearable.AdditiveProtection = Wearable.AdditiveProtection;
+				wearable.MultiplicativeProtection = Wearable.MultiplicativeProtection;
+				wearable.AdditiveHealModifier = Wearable.AdditiveHealModifier;
+				wearable.MultiplicativeHealModifier = Wearable.MultiplicativeHealModifier;
 				wearable.CoveredParts = Wearable.CoveredParts;
 				wearable.CoveredLayers = Wearable.CoveredLayers;
 			}
@@ -50,7 +56,6 @@ namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 			if (Wieldable != null) {
 				IWieldable wieldable = (IWieldable)item;
 				wieldable.HandsRequired = Wieldable.HandsRequired;
-				wieldable.MeleeDamage = Wieldable.MeleeDamage;
 			}
 
 			if (Inventory != null) {
@@ -58,7 +63,13 @@ namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 				inventory.WeightFraction = Inventory.WeightFraction;
 			}
 
+			item.ItemActions = ItemActions ?? Array.Empty<ItemAction>();
+			foreach (ItemAction action in item.ItemActions) {
+				action.Item = item;
+			}
+
 			item.Prototype = this;
+
 			return item;
 		}
 
@@ -67,20 +78,26 @@ namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 		public class WieldableProps {
 			[JsonProperty("handsRequired")]
 			public int HandsRequired { get; set; }
-
-			[JsonProperty("meleeDamage")]
-			public int MeleeDamage { get; set; }
 		}
 
-		[JsonObject(ItemRequired = Required.Always)]
+		[JsonObject]
 		public class WearableProps {
-			[JsonProperty("defense")]
-			public int Defense { get; set; }
+			[JsonProperty("multiplicativeProtection")]
+			public float MultiplicativeProtection { get; set; }
 
-			[JsonProperty("coveredParts")]
+			[JsonProperty("additiveProtection")]
+			public int AdditiveProtection { get; set; }
+
+			[JsonProperty("multiplicativeHealModifier")]
+			public float MultiplicativeHealModifier { get; set; }
+
+			[JsonProperty("additiveHealModifier")]
+			public int AdditiveHealModifier { get; set; }
+
+			[JsonProperty("coveredParts", Required = Required.Always)]
 			public WearableSlots CoveredParts { get; set; }
 
-			[JsonProperty("coveredLayers")]
+			[JsonProperty("coveredLayers", Required = Required.Always)]
 			public WearableLayers CoveredLayers { get; set; }
 		}
 

@@ -7,4 +7,3 @@ namespace RPGCuzWhyNot.Systems.Inventory {
 		protected override bool CheckMove(IItem item, bool silent) => true;
 	}
 }
-

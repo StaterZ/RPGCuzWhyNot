@@ -1,5 +1,7 @@
+using RPGCuzWhyNot.Systems.HealthSystem.Alignments;
+
 namespace RPGCuzWhyNot.Systems.HealthSystem {
 	public interface IInflictor {
-		Alignment Alignment { get; }
+		IAlignment Alignment { get; }
 	}
 }

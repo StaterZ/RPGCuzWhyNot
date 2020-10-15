@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using RPGCuzWhyNot.Primitives;
 using RPGCuzWhyNot.Systems.Data;
@@ -13,6 +14,11 @@ namespace RPGCuzWhyNot.Systems {
 
 		public static ConsoleColor ForegroundColor { get => Console.ForegroundColor; set => Console.ForegroundColor = value; }
 		public static ConsoleColor BackgroundColor { get => Console.BackgroundColor; set => Console.BackgroundColor = value; }
+
+		public static bool IsCursorVisible {
+			get => Console.CursorVisible;
+			set => Console.CursorVisible = value;
+		}
 
 		public static int CursorX {
 			get => Console.CursorLeft;
@@ -50,18 +56,22 @@ namespace RPGCuzWhyNot.Systems {
 
 		private static int charBeepCounter;
 
-		public static void PushState() => stateStack.Push(GetState());
+		public static StateScope PushState() {
+			stateStack.Push(GetState());
+			return new StateScope();
+		}
+
 		public static void PopState() => SetState(stateStack.Pop());
 
 		public static void WriteLine(string text, int frequency, int charsPerSecond = -1) => Write(text + '\n', frequency, charsPerSecond);
 		public static void Write(string text, int frequency, int charsPerSecond = -1) {
-			PushState();
-			if (charsPerSecond < 0) {
-				MillisPerChar = 1000 / charsPerSecond;
+			using (PushState()) {
+				if (charsPerSecond < 0) {
+					MillisPerChar = 1000 / charsPerSecond;
+				}
+				BeepFrequency = frequency;
+				Write(text);
 			}
-			BeepFrequency = frequency;
-			Write(text);
-			PopState();
 		}
 
 		public static void WriteLine() => Write("\n");
@@ -70,12 +80,11 @@ namespace RPGCuzWhyNot.Systems {
 			Write('\n');
 		}
 
-		/// <summary>
-		/// Write a line without delay or beeping.
-		/// </summary>
-		public static void WriteLineWithoutDelay(string text) {
-			WriteWithoutDelay(text);
-			Write('\n');
+		public static void ClearLine() {
+			int startLine = CursorPosition.y;
+			CursorPosition = new Vec2(0, startLine);
+			WriteLineWithoutDelay(new string(' ', WindowSize.x));
+			CursorPosition = new Vec2(0, startLine + 1);
 		}
 
 		public static void Write(char c) => WriteChar(c);
@@ -99,22 +108,27 @@ namespace RPGCuzWhyNot.Systems {
 		/// Write without delay or beeping.
 		/// </summary>
 		public static void WriteWithoutDelay(string text) {
-			PushState();
-			MillisPerChar = 0;
-			BeepDuration = 0;
-			Write(text);
-			PopState();
+			using (PushState()) {
+				MillisPerChar = 0;
+				BeepDuration = 0;
+				Write(text);
+			}
+		}
+		public static void WriteWithoutDelay(char c) {
+			using (PushState()) {
+				MillisPerChar = 0;
+				BeepDuration = 0;
+				Write(c);
+			}
 		}
 
+
 		/// <summary>
-		/// Write without delay or beeping.
+		/// Write a line without delay or beeping.
 		/// </summary>
-		public static void WriteWithoutDelay(char c) {
-			PushState();
-			MillisPerChar = 0;
-			BeepDuration = 0;
-			Write(c);
-			PopState();
+		public static void WriteLineWithoutDelay(string text) {
+			WriteWithoutDelay(text);
+			WriteWithoutDelay('\n');
 		}
 
 		/// <summary>
@@ -242,6 +256,20 @@ namespace RPGCuzWhyNot.Systems {
 			return braceEnd + 1;
 		}
 
+		private static bool GetNameFromID(string id, out string name) {
+			if (DataLoader.Prototypes.TryGetValue(id, out Prototype proto)) {
+				name = proto.Name;
+				return true;
+			} else {
+			#if DEBUG
+				name = $"[no prototype with id '{id}']";
+			#else
+				name = id;
+			#endif
+				return false;
+			}
+		}
+
 		private static void HandleCommandWithArg(string cmd, string arg) {
 			switch (cmd) {
 				case "fg": ForegroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), arg, true); break;
@@ -251,16 +279,13 @@ namespace RPGCuzWhyNot.Systems {
 				case "bHz": BeepFrequency = int.Parse(arg); break;
 				case "bMs": BeepDuration = int.Parse(arg); break;
 				case "name":
-					if (DataLoader.Prototypes.TryGetValue(arg, out Prototype proto)) {
-						Write(proto.Name);
+					if (GetNameFromID(arg, out string name)) {
+						Write(name);
 					} else {
 					#if DEBUG
-						PushState();
-						ForegroundColor = ConsoleColor.DarkRed;
-						Console.Write($"[no prototype with id '{arg}']");
-						PopState();
+						Write($"{{darkred}}({Escape(name)})");
 					#else
-						Console.Write(arg);
+						Write(Escape(name));
 					#endif
 					}
 					break;
@@ -288,6 +313,7 @@ namespace RPGCuzWhyNot.Systems {
 				beepFrequency = BeepFrequency,
 				charsPerBeep = CharsPerBeep,
 				beepDuration = BeepDuration,
+				cursorVisible = IsCursorVisible,
 			};
 		}
 
@@ -298,10 +324,166 @@ namespace RPGCuzWhyNot.Systems {
 			BeepFrequency = state.beepFrequency;
 			CharsPerBeep = state.charsPerBeep;
 			BeepDuration = state.beepDuration;
+			IsCursorVisible = state.cursorVisible;
 		}
 
 		public static string Escape(string text) {
 			return text.Replace("{", "{{");
+		}
+
+		public static string ReadLine() => Console.ReadLine();
+
+		public static ConsoleKeyInfo ReadKey(bool intercept = false) => Console.ReadKey(intercept);
+
+		public static int GetFormattedLength(string formattedText) {
+			int formatBegin = formattedText.IndexOf('{');
+			if (formatBegin == -1) {
+				return formattedText.Length;
+			}
+
+			int formatEnd = formattedText.IndexOf('}', formatBegin + 1);
+			if (formatEnd == -1) {
+				throw new TerminalFormatException("Missing closing brace in terminal format string.");
+			}
+
+			int additionalLengthFromCommands = 0;
+			int cmdBegin = formatBegin + 1;
+			while (cmdBegin < formatEnd) {
+				int cmdEnd = formattedText.IndexOf(';', cmdBegin, formatEnd - cmdBegin);
+				if (cmdEnd == -1) {
+					cmdEnd = formatEnd;
+				}
+				if (cmdBegin == cmdEnd) {
+					break;
+				}
+				int cmdArg = formattedText.IndexOf(':', cmdBegin, cmdEnd - cmdBegin);
+				if (cmdArg == -1) {
+					// formatting command doesn't have an argument.
+					// none of these currently affect the length of the printed string,
+					// so I will ignore them.
+				} else {
+					string cmdName = formattedText[cmdBegin..cmdArg];
+					switch (cmdName) {
+						case "name":
+							string id = formattedText[(cmdArg + 1)..cmdEnd];
+							GetNameFromID(id, out string name);
+							additionalLengthFromCommands += GetFormattedLength(name);
+							break;
+					}
+				}
+				cmdBegin = cmdEnd + 1;
+			}
+
+			if (formatEnd + 1 < formattedText.Length && formattedText[formatEnd + 1] == '(') {
+				int depth = 1;
+				int parenBegin = formatEnd + 2;
+				int remainder = parenBegin;
+
+				for (; depth > 0; ++remainder) {
+					if (remainder >= formattedText.Length) {
+						throw new TerminalFormatException("Unbalanced parentheses in terminal format string.");
+					}
+
+					switch (formattedText[remainder]) {
+						case '(': ++depth; break;
+						case ')': --depth; break;
+					}
+				}
+
+				int parenEnd = remainder - 1;
+
+				return formatBegin + additionalLengthFromCommands
+					+ GetFormattedLength(formattedText[parenBegin..parenEnd])
+					+ (remainder < formattedText.Length ? GetFormattedLength(formattedText[remainder..]) : 0);
+
+			} else {
+				return formatBegin + additionalLengthFromCommands
+					+ (formatEnd + 1 < formattedText.Length ? GetFormattedLength(formattedText[(formatEnd + 1)..]) : 0);
+			}
+		}
+
+		/// <summary>
+		/// Remove all formatting from the string by expanding any formats that produce text and removing any that don't.
+		/// </summary>
+		/// <param name="formattedText">The string containing formats to remove.</param>
+		/// <returns>Returns the expanded string.</returns>
+		public static string ExpandFormatString(string formattedText) {
+			StringBuilder sb = new StringBuilder();
+			ExpandFormatString(formattedText, sb);
+			return sb.ToString();
+		}
+
+		/// <summary>
+		/// Remove all formatting from the string by expanding any formats that produce text and removing any that don't.
+		/// </summary>
+		/// <param name="formattedText">The string containing formats to remove.</param>
+		/// <param name="builder">The string builder to place the resulting expanded string into.</param>
+		public static void ExpandFormatString(string formattedText, StringBuilder builder) {
+			int formatBegin = formattedText.IndexOf('{');
+			if (formatBegin == -1) {
+				builder.Append(formattedText);
+				return;
+			}
+
+			int formatEnd = formattedText.IndexOf('}', formatBegin + 1);
+			if (formatEnd == -1) {
+				throw new TerminalFormatException("Missing closing brace in terminal format string.");
+			}
+
+			int cmdBegin = formatBegin + 1;
+			while (cmdBegin < formatEnd) {
+				int cmdEnd = formattedText.IndexOf(';', cmdBegin, formatEnd - cmdBegin);
+				if (cmdEnd == -1) {
+					cmdEnd = formatEnd;
+				}
+				if (cmdBegin == cmdEnd) {
+					break;
+				}
+				int cmdArg = formattedText.IndexOf(':', cmdBegin, cmdEnd - cmdBegin);
+				if (cmdArg == -1) {
+					// Formatting command doesn't have an argument.
+					// None of these currently add any text to the printed string,
+					// so I will ignore them.
+				} else {
+					string cmdName = formattedText[cmdBegin..cmdArg];
+					switch (cmdName) {
+						case "name":
+							string id = formattedText[(cmdArg + 1)..cmdEnd];
+							GetNameFromID(id, out string name);
+							ExpandFormatString(name, builder);
+							break;
+					}
+				}
+				cmdBegin = cmdEnd + 1;
+			}
+
+			if (formatEnd + 1 < formattedText.Length && formattedText[formatEnd + 1] == '(') {
+				int depth = 1;
+				int parenBegin = formatEnd + 2;
+				int remainder = parenBegin;
+
+				for (; depth > 0; ++remainder) {
+					if (remainder >= formattedText.Length) {
+						throw new TerminalFormatException("Unbalanced parentheses in terminal format string.");
+					}
+
+					switch (formattedText[remainder]) {
+						case '(': ++depth; break;
+						case ')': --depth; break;
+					}
+				}
+
+				int parenEnd = remainder - 1;
+
+				ExpandFormatString(formattedText[parenBegin..parenEnd], builder);
+				if (remainder < formattedText.Length) {
+					ExpandFormatString(formattedText[remainder..], builder);
+				}
+			} else {
+				if (formatEnd + 1 < formattedText.Length) {
+					ExpandFormatString(formattedText[(formatEnd + 1)..], builder);
+				}
+			}
 		}
 
 		public struct State {
@@ -311,6 +493,7 @@ namespace RPGCuzWhyNot.Systems {
 			public int millisPerChar;
 			public int beepFrequency;
 			public int beepDuration;
+			public bool cursorVisible;
 		}
 
 		public static void Beep(int frequency, int duration) {
@@ -322,8 +505,14 @@ namespace RPGCuzWhyNot.Systems {
 			cursorRowDisplacement = 0;
 		}
 
-		public static string ReadLine() {
-			return Console.ReadLine();
+		public struct StateScope : IDisposable {
+			public void Dispose() {
+				PopState();
+			}
 		}
+	}
+
+	public class TerminalFormatException : Exception {
+		public TerminalFormatException(string message) : base(message) { }
 	}
 }

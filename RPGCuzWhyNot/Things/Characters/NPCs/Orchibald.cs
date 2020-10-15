@@ -1,5 +1,8 @@
 using RPGCuzWhyNot.Systems;
+using RPGCuzWhyNot.Systems.AttackSystem;
 using RPGCuzWhyNot.Systems.Data;
+using RPGCuzWhyNot.Systems.HealthSystem;
+using RPGCuzWhyNot.Things.Characters.Races.Humanoids;
 using RPGCuzWhyNot.Utilities;
 
 namespace RPGCuzWhyNot.Things.Characters.NPCs
@@ -8,22 +11,29 @@ namespace RPGCuzWhyNot.Things.Characters.NPCs
 	public class Orchibald : NPC {
 		private const int voiceFrequency = 400;
 
+		public Orchibald() : base(new Dwarf(Humanoid.Gender.Male)) {
+			health = new Health(100);
+		}
+
 		public override void Converse(Character character, string response) {
 			Terminal.Write("Hello", voiceFrequency, 50);
 			Terminal.WriteLine(".....", voiceFrequency, 10);
-			ConsoleUtils.Sleep(1000);
+			Utils.Sleep(1000);
 			Terminal.WriteLine("Anyways, i wasn't being suspicious at all just now...", voiceFrequency);
-			ConsoleUtils.Sleep(200);
+			Utils.Sleep(200);
 			Terminal.WriteLine("Just so you know *cough*", voiceFrequency);
 		}
-	}
 
-	[UniqueNpc("village_smithy_customer")]
-	public class SmithyCustomer : NPC {
-		private const int voiceFrequency = 1000;
+		public override void DoTurn(Fight fight) {
+			foreach (Character combatant in fight.Combatants) {
+				if (combatant == this) continue;
 
-		public override void Converse(Character character, string response) {
-			Terminal.Write("Get away from me you vulgar beast!", voiceFrequency);
+				combatant.health.TakeDamage(20, this); //temp
+			}
+		}
+
+		public override bool WantsToHarm(Character character) {
+			return true;
 		}
 	}
 }

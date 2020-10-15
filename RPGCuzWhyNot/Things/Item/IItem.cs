@@ -7,6 +7,11 @@ namespace RPGCuzWhyNot.Things.Item {
 		string DescriptionOnGround { get; }
 		IInventory ContainedInventory { get; set; }
 		ItemPrototype Prototype { get; set; }
+		ItemAction[] ItemActions { get; set; }
+
+		void Destroy() {
+			ContainedInventory.Remove(this);
+		}
 	}
 }
 

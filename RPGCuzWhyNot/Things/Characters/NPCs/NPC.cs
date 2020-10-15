@@ -1,8 +1,8 @@
 using RPGCuzWhyNot.Systems;
+using RPGCuzWhyNot.Things.Characters.Races;
 using RPGCuzWhyNot.Things.Characters.Races.Humanoids;
 
-namespace RPGCuzWhyNot.Things.Characters.NPCs
-{
+namespace RPGCuzWhyNot.Things.Characters.NPCs {
 	public abstract class NPC : Character, IConversable {
 		public virtual void Converse(Character character, string response) {
 			if (race is Humanoid humanoid) {
@@ -10,6 +10,9 @@ namespace RPGCuzWhyNot.Things.Characters.NPCs
 			} else {
 				Terminal.WriteLine($"No answer, it appears they're mute...");
 			}
+		}
+
+		protected NPC(Race race) : base(race) {
 		}
 	}
 }

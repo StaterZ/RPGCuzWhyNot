@@ -29,12 +29,12 @@ namespace RPGCuzWhyNot.Systems.CommandSystem {
 				for (int i = 1; i < parts.Length; ++i) {
 					string part = parts[i];
 					if (command.Keywords.Contains(part)) {
-						args[paramName] = Stringification.StringifyArray("", " ", "", parts, argStart..i);
+						args[paramName] = Utils.StringifyArray("", " ", "", parts, argStart..i);
 						argStart = i + 1;
 						paramName = part;
 					}
 				}
-				args[paramName] = Stringification.StringifyArray("", " ", "", parts, argStart..);
+				args[paramName] = Utils.StringifyArray("", " ", "", parts, argStart..);
 				command.Execute(new CommandArguments(args));
 				return true;
 			}

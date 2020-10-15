@@ -56,6 +56,30 @@ namespace RPGCuzWhyNot.Systems.Inventory {
 			return items.Remove(item);
 		}
 
+		public bool TryGetItemById(string id, out TItem result) {
+			foreach (TItem item in items) {
+				if (item.Prototype.Id == id) {
+					result = item;
+					return true;
+				}
+			}
+
+			result = default;
+			return false;
+		}
+
+		public int GetItemCountById(string id) {
+			int count = 0;
+
+			foreach (TItem item in items) {
+				if (item.Prototype.Id == id) {
+					count++;
+				}
+			}
+
+			return count;
+		}
+
 		public int Count => items.Count;
 		public TItem this[int index] => items[index];
 
