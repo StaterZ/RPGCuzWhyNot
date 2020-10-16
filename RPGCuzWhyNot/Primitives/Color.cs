@@ -39,6 +39,26 @@ namespace RPGCuzWhyNot.Primitives {
 			b = color.b;
 		}
 
+		public bool Equals(Color other) {
+			return r == other.r && g == other.g && b == other.b;
+		}
+
+		public override bool Equals(object obj) {
+			return obj is Color other && Equals(other);
+		}
+
+		public override int GetHashCode() {
+			return HashCode.Combine(r, g, b);
+		}
+
+		public static bool operator ==(Color left, Color right) {
+			return left.Equals(right);
+		}
+
+		public static bool operator !=(Color left, Color right) {
+			return !left.Equals(right);
+		}
+
 
 		#region Predefined colors
 
