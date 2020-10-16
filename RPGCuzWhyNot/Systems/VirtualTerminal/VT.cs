@@ -32,6 +32,10 @@ namespace RPGCuzWhyNot.Systems.VirtualTerminal {
 			Write('m');
 		}
 
+		public static void TrueColor(ColorLayer layer, Color color) {
+			TrueColor(layer, color.r, color.g, color.b);
+		}
+
 		public static void TrueColor(ColorLayer layer, byte r, byte g, byte b) {
 			sb.Clear();
 			sb.Append(layer == ColorLayer.Foreground ? CSI + "38;2;" : CSI + "48;2;");
