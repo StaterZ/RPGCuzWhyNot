@@ -1,7 +1,7 @@
 {
   "id": "rusty_bucket",
   "callName": "bucket",
-  "name": "{DarkYellow}(Rusty Bucket)",
+  "name": "{Orange}(Rusty Bucket)",
   "inventoryDescription": "A rusty old bucket",
   "groundDescription": "There is an old rusty bucket on the ground.",
   "wieldable": {

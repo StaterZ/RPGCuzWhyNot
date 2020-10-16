@@ -1,6 +1,7 @@
 using System;
 using RPGCuzWhyNot.Systems;
 using RPGCuzWhyNot.Systems.Data;
+using RPGCuzWhyNot.Systems.VirtualTerminal;
 using RPGCuzWhyNot.Things.Characters;
 using RPGCuzWhyNot.Things.Characters.Races.Humanoids;
 using RPGCuzWhyNot.Things.Item;
@@ -11,12 +12,17 @@ namespace RPGCuzWhyNot {
 		public static Player player;
 
 		private static int Main() {
+			// Make sure virtual terminal control sequences works on windows.
+			VT.EnableVirtualTerminalProcessing();
+
 			try {
 				return Run();
 			} catch (Exception e) {
 				Console.WriteLine(e);
 				Utils.WaitForPlayer();
 				return -1;
+			} finally {
+				Terminal.ResetColor();
 			}
 		}
 

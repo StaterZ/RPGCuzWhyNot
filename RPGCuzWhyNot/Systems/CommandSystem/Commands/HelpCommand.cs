@@ -1,4 +1,5 @@
 using System;
+using RPGCuzWhyNot.Primitives;
 using RPGCuzWhyNot.Utilities;
 
 namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
@@ -28,9 +29,9 @@ namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
 			Terminal.PushState();
 			Terminal.MillisPerChar = 1000 / 300;
 			for (int i = 0; i < commandHandler.commands.Count; i++) {
-				Terminal.ForegroundColor = ConsoleColor.Magenta;
+				Terminal.ForegroundColor = Color.Magenta;
 				Terminal.Write(formattedCommandCallNames[i].PadRight(longestFormattedCommandCallName));
-				Terminal.ForegroundColor = ConsoleColor.White;
+				Terminal.ForegroundColor = Color.White;
 				Terminal.Write(" - ");
 				Terminal.WriteLine(commandHandler.commands[i].HelpText);
 			}

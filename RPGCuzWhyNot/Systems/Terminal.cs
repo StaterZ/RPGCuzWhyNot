@@ -5,6 +5,7 @@ using System.Threading;
 using RPGCuzWhyNot.Primitives;
 using RPGCuzWhyNot.Systems.Data;
 using RPGCuzWhyNot.Systems.Data.Prototypes;
+using RPGCuzWhyNot.Systems.VirtualTerminal;
 
 namespace RPGCuzWhyNot.Systems {
 	public static class Terminal {
@@ -12,8 +13,26 @@ namespace RPGCuzWhyNot.Systems {
 
 		private static int cursorRowDisplacement = 0;
 
-		public static ConsoleColor ForegroundColor { get => Console.ForegroundColor; set => Console.ForegroundColor = value; }
-		public static ConsoleColor BackgroundColor { get => Console.BackgroundColor; set => Console.BackgroundColor = value; }
+		private static Color currentForegroundColor = new Color(Console.ForegroundColor);
+		private static Color currentBackgroundColor = new Color(Console.BackgroundColor);
+
+		public static Color ForegroundColor {
+			get => currentForegroundColor;
+			set {
+				if (currentForegroundColor == value) return;
+				currentForegroundColor = value;
+				VT.TrueColor(ColorLayer.Foreground, value);
+			}
+		}
+
+		public static Color BackgroundColor {
+			get => currentBackgroundColor;
+			set {
+				if (currentBackgroundColor == value) return;
+				currentBackgroundColor = value;
+				VT.TrueColor(ColorLayer.Background, value);
+			}
+		}
 
 		public static bool IsCursorVisible {
 			get => Console.CursorVisible;
@@ -272,8 +291,8 @@ namespace RPGCuzWhyNot.Systems {
 
 		private static void HandleCommandWithArg(string cmd, string arg) {
 			switch (cmd) {
-				case "fg": ForegroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), arg, true); break;
-				case "bg": BackgroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), arg, true); break;
+				case "fg": ForegroundColor = Color.GetPredefinedColor(arg); break;
+				case "bg": BackgroundColor = Color.GetPredefinedColor(arg); break;
 				case "ch/b": CharsPerBeep = int.Parse(arg); break;
 				case "ms/ch": MillisPerChar = int.Parse(arg); break;
 				case "bHz": BeepFrequency = int.Parse(arg); break;
@@ -294,7 +313,7 @@ namespace RPGCuzWhyNot.Systems {
 		}
 
 		private static void HandleCommandWithoutArg(string cmd) {
-			if (Enum.TryParse(cmd, true, out ConsoleColor color)) {
+			if (Color.TryGetPredefinedColor(cmd, out Color color)) {
 				ForegroundColor = color;
 				return;
 			}
@@ -486,9 +505,15 @@ namespace RPGCuzWhyNot.Systems {
 			}
 		}
 
+		public static void ResetColor() {
+			VT.ResetColor();
+			currentForegroundColor = new Color(Console.ForegroundColor);
+			currentBackgroundColor = new Color(Console.BackgroundColor);
+		}
+
 		public struct State {
-			public ConsoleColor foregroundColor;
-			public ConsoleColor backgroundColor;
+			public Color foregroundColor;
+			public Color backgroundColor;
 			public int charsPerBeep;
 			public int millisPerChar;
 			public int beepFrequency;
