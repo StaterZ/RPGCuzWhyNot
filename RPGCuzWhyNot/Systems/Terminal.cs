@@ -19,6 +19,7 @@ namespace RPGCuzWhyNot.Systems {
 		public static Color ForegroundColor {
 			get => currentForegroundColor;
 			set {
+				if (currentForegroundColor == value) return;
 				currentForegroundColor = value;
 				VT.TrueColor(ColorLayer.Foreground, value);
 			}
@@ -27,6 +28,7 @@ namespace RPGCuzWhyNot.Systems {
 		public static Color BackgroundColor {
 			get => currentBackgroundColor;
 			set {
+				if (currentBackgroundColor == value) return;
 				currentBackgroundColor = value;
 				VT.TrueColor(ColorLayer.Background, value);
 			}
