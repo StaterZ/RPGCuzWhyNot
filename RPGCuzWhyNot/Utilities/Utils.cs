@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using RPGCuzWhyNot.Systems;
@@ -143,6 +144,55 @@ namespace RPGCuzWhyNot.Utilities {
 					sb.Append(res[^1]);
 					return sb.ToString();
 			}
+		}
+
+		private static IEnumerable<Type> GetAllTypesFromDomain(AppDomain domain) {
+			foreach (Assembly assembly in domain.GetAssemblies()) {
+				IEnumerable<Type> types;
+				try {
+					types = assembly.GetTypes();
+				} catch (ReflectionTypeLoadException e) {
+					types = e.Types.Where(x => x != null);
+				}
+				foreach (Type type in types) {
+					yield return type;
+				}
+			}
+		}
+
+		private static IEnumerable<MethodInfo> GetAllMethodInfosFromDomain(AppDomain domain) {
+			return GetAllTypesFromDomain(domain).SelectMany(type => type.GetMethods(
+				BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static
+			));
+		}
+
+		public static (Type type, T attribute)[] GetAllClassesWithAttribute<T>() where T : Attribute {
+			List<(Type type, T attribute)> results = new List<(Type type, T attribute)>();
+			foreach (Type type in GetAllTypesFromDomain(AppDomain.CurrentDomain)) {
+				if (TryGetAttribute(type, out T attribute)) {
+					results.Add((type, attribute));
+				}
+			}
+
+			return results.ToArray();
+		}
+
+		public static IEnumerable<(MethodInfo type, T attribute)> GetAllMethodsWithAttribute<T>() where T : Attribute =>
+			from info in GetAllMethodInfosFromDomain(AppDomain.CurrentDomain)
+			from attribute in TryGetAttribute<T>(info)
+			select (info, attribute);
+
+		public static bool TryGetAttribute<T>(object obj, out T attribute) where T : Attribute {
+			return TryGetAttribute(obj.GetType(), out attribute);
+		}
+
+		public static bool TryGetAttribute<T>(Type type, out T attribute) where T : Attribute {
+			attribute = (T)Attribute.GetCustomAttribute(type, typeof(T), false);
+			return attribute != null;
+		}
+
+		public static IEnumerable<T> TryGetAttribute<T>(MethodInfo info) where T : Attribute {
+			return info.GetCustomAttributes(typeof(T), false).Cast<T>();
 		}
 	}
 }
