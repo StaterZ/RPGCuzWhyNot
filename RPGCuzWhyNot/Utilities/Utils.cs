@@ -27,7 +27,7 @@ namespace RPGCuzWhyNot.Utilities {
 		/// <param name="options">The options the player can respond with.</param>
 		/// <returns></returns>
 		public static string Ask(string question, params string[] options) {
-			Terminal.Write(question + "   " + Utils.StringifyArray("[", ", ", "]", options));
+			Terminal.Write(question + "   " + options.Stringify("[", ", ", "]"));
 
 			while (true) {
 				string answer;
@@ -53,24 +53,26 @@ namespace RPGCuzWhyNot.Utilities {
 		}
 
 		public static string AddSignAndColor(int value, bool positiveIsGood = true, bool showPositiveSign = true) {
-			if (value == 0)
+			if (value == 0) {
 				return "{yellow}(0)";
+			}
 
 			bool valueIsPositive = value > 0;
 			string color = (valueIsPositive == positiveIsGood) ? "green" : "red";
 
-			string sign = value > 0 && showPositiveSign ? "+" : "";
+			string sign = valueIsPositive && showPositiveSign ? "+" : "";
 			return $"{{{color}}}({sign}{value})";
 		}
 
 		public static string AddSignAndColor(float value, bool positiveIsGood = true, bool showPositiveSign = true) {
-			if (value == 0)
+			if (value == 0) {
 				return "{yellow}(0)";
+			}
 
 			bool valueIsPositive = value > 0;
 			string color = (valueIsPositive == positiveIsGood) ? "green" : "red";
 
-			string sign = value > 0 && showPositiveSign ? "+" : "";
+			string sign = valueIsPositive && showPositiveSign ? "+" : "";
 			return $"{{{color}}}({sign}{value})";
 		}
 
@@ -92,57 +94,65 @@ namespace RPGCuzWhyNot.Utilities {
 				return 0;
 			}
 
-			return a - b * (int)Math.Floor((float)a / b);
-		}
-		public static string StringifyArray(string start, string separator, string end, string[] array) {
-			return StringifyArray(start, separator, end, array, 0, array.Length);
+			return a - b * (int) Math.Floor((float) a / b);
 		}
 
-		public static string StringifyArray(string start, string separator, string end, string[] array, Range range) {
-			var (begin, count) = range.GetOffsetAndLength(array.Length);
-			return StringifyArray(start, separator, end, array, begin, count);
-		}
-
-		public static string StringifyArray(string start, string separator, string end, string[] array, int begin, int count) {
+		public static string Stringify<T>(this T[] array, string start, Func<int, int, string> separatorFunc, string end, Range range) {
 			StringBuilder builder = new StringBuilder();
 
 			builder.Append(start);
-			for (int i = begin; i < begin + count; i++) {
-				if (i != begin) {
-					builder.Append(separator);
+			(int begin, int count) = range.GetOffsetAndLength(array.Length);
+			for (int i = 0; i < count; i++) {
+				if (i > 0) {
+					builder.Append(separatorFunc(i - 1, count - 1)); //separator index and count, not item index and count
 				}
 
-				builder.Append(array[i]);
+				builder.Append(array[begin + i]);
 			}
+
 			builder.Append(end);
 
 			return builder.ToString();
 		}
 
+		public static string Stringify<T>(this T[] array, string start, Func<int, int, string> separatorFunc, string end) {
+			return array.Stringify(start, separatorFunc, end, Range.All);
+		}
+
+		public static string Stringify<T>(this T[] array, string start, string separator, string end, Range range) {
+			return array.Stringify(start, (i, l) => separator, end, range);
+		}
+
+		public static string Stringify<T>(this T[] array, string start, string separator, string end) {
+			return array.Stringify(start, separator, end, Range.All);
+		}
+
+		public static string Stringify<T>(this T[] array, string start, string leadingSeparartor, string middleSeparator, string trailingSeparator, string end, Range range) {
+			return array.Stringify(start, (i, l) => {
+				if (i == 0) {
+					return leadingSeparartor;
+				} else if (i == l - 1) {
+					return trailingSeparator;
+				} else {
+					return middleSeparator;
+				}
+			}, end, range);
+		}
+
+		public static string Stringify<T>(this T[] array, string start, string leadingSeparartor, string middleSeparator, string trailingSeparator, string end) {
+			return array.Stringify(start, leadingSeparartor, middleSeparator, trailingSeparator, end, Range.All);
+		}
+
+		public static IEnumerable<E> GetBitFlags<E>(this E e) where E : Enum {
+			return Enum.GetValues(typeof(E)).Cast<E>().Where(value => e.HasFlag(value));
+		}
+
 		public static string FancyBitFlagEnum<E>(this E e) where E : Enum => FancyBitFlagEnum(e, out _);
 
 		public static string FancyBitFlagEnum<E>(this E e, out int count) where E : Enum {
-			List<string> res = new List<string>();
-			foreach (Enum r in Enum.GetValues(typeof(E))) {
-				if (e.HasFlag(r)) {
-					res.Add(r.ToString());
-				}
-			}
-			count = res.Count;
-			switch (res.Count) {
-				case 0: return "";
-				case 1: return res[0];
-				case 2: return $"{res[0]} and {res[1]}";
-				default:
-					StringBuilder sb = new StringBuilder();
-					for (int i = 0; i < res.Count - 1; ++i) {
-						sb.Append(res[i]);
-						sb.Append(", ");
-					}
-					sb.Append("and ");
-					sb.Append(res[^1]);
-					return sb.ToString();
-			}
+			E[] bitflags = e.GetBitFlags().ToArray();
+			count = bitflags.Length;
+			return bitflags.Stringify("", ", ", ", ", " and ", "");
 		}
 	}
 }

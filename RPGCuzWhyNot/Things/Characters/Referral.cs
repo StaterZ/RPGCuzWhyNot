@@ -26,31 +26,11 @@ namespace RPGCuzWhyNot.Things.Characters {
 		public readonly string possessivePronoun;
 
 		/// <summary>
-		/// as in "control [subject]"
+		/// as in "i'll try to control [subject]"
 		/// in 1st person it would be "Myself"
 		/// </summary>
 		public readonly string reflexivePronoun;
 
-		/// <param name="subjectPronoun">
-		/// as in "did you know [subject] stole a knife?"
-		/// in 1st person it would be "I"
-		/// </param>
-		/// <param name="objectPronoun">
-		/// as in "do you like [subject]?"
-		/// in 1st person it would be "Me"
-		/// </param>
-		/// <param name="possessiveAdjective">
-		/// as in "that's [subject] knife! you can't take that!"
-		/// in 1st person it would be "My"
-		/// </param>
-		/// <param name="possessivePronoun">
-		/// as in "that knife is [subject]! you can't take that!"
-		/// in 1st person it would be "Mine"
-		/// </param>
-		/// <param name="reflexivePronoun">
-		/// as in "control [subject]"
-		/// in 1st person it would be "Myself"
-		/// </param>
 		public Referral(string subjectPronoun, string objectPronoun, string possessiveAdjective, string possessivePronoun, string reflexivePronoun) {
 			this.subjectPronoun = subjectPronoun;
 			this.objectPronoun = objectPronoun;

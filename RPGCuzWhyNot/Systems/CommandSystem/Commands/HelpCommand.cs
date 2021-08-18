@@ -15,14 +15,14 @@ namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
 
 		public override void Execute(CommandArguments args) {
 			Terminal.WriteLine("Commands:");
-			string[] formattedCommandCallNames = new string[commandHandler.commands.Count];
-			int longestFormattedCommandCallName = 0;
+			string[] formattedCommandCallNamesArray = new string[commandHandler.commands.Count];
+			int longestFormattedCommandCallNames = 0;
 			for (int i = 0; i < commandHandler.commands.Count; i++) {
-				string formattedCommandCallName = Utils.StringifyArray("[", ", ", "]", commandHandler.commands[i].CallNames);
-				formattedCommandCallNames[i] = formattedCommandCallName;
+				string formattedCommandCallNames = commandHandler.commands[i].CallNames.Stringify("[", ", ", "]");
+				formattedCommandCallNamesArray[i] = formattedCommandCallNames;
 
-				if (formattedCommandCallName.Length > longestFormattedCommandCallName) {
-					longestFormattedCommandCallName = formattedCommandCallName.Length;
+				if (formattedCommandCallNames.Length > longestFormattedCommandCallNames) {
+					longestFormattedCommandCallNames = formattedCommandCallNames.Length;
 				}
 			}
 
@@ -30,7 +30,7 @@ namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
 			Terminal.MillisPerChar = 1000 / 300;
 			for (int i = 0; i < commandHandler.commands.Count; i++) {
 				Terminal.ForegroundColor = Color.Magenta;
-				Terminal.Write(formattedCommandCallNames[i].PadRight(longestFormattedCommandCallName));
+				Terminal.Write(formattedCommandCallNamesArray[i].PadRight(longestFormattedCommandCallNames));
 				Terminal.ForegroundColor = Color.White;
 				Terminal.Write(" - ");
 				Terminal.WriteLine(commandHandler.commands[i].HelpText);

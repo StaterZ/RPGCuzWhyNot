@@ -18,8 +18,8 @@ namespace RPGCuzWhyNot.Systems.HealthSystem {
 		public HealthChangeInfoSuccess Success {
 			get {
 				if (attemptedDelta != Delta) return HealthChangeInfoSuccess.PartialDelivery;
-				if (inflictor?.Alignment != null && health.alignment != null && !inflictor.Alignment.CanHarm(health.alignment)) return HealthChangeInfoSuccess.AlignmentConflict; //can you hurt me?
-				if (!health.IsAlive) return HealthChangeInfoSuccess.AlreadyDead; //is the health component dead?
+				if (inflictor?.Alignment != null && health.alignment != null && !inflictor.Alignment.CanHarm(health.alignment)) return HealthChangeInfoSuccess.AlignmentConflict;
+				if (!health.IsAlive) return HealthChangeInfoSuccess.AlreadyDead;
 				return HealthChangeInfoSuccess.FullDelivery;
 			}
 		}

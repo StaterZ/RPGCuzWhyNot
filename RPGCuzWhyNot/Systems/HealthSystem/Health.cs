@@ -19,7 +19,7 @@ namespace RPGCuzWhyNot.Systems.HealthSystem {
 		public event Action<HealthChangeInfo> OnHeal; //if we explicitly heal damage
 		public event Action<HealthChangeInfo> OnFullRecovery; //when we reach max health
 
-		public List<IHealthChangeModifier> healthChangeModifiers = new List<IHealthChangeModifier>(); //damage modifiers
+		public List<IHealthChangeModifier> healthChangeModifiers = new List<IHealthChangeModifier>();
 
 		public Health(int health) : this(health, health) {
 		}

@@ -23,7 +23,7 @@ namespace RPGCuzWhyNot.Systems.AttackSystem {
 		}
 
 		public void BeginCombat() {
-			Terminal.WriteLine($"{{fg:Cyan}}(Combat with {Utils.StringifyArray("[", ", ", "]", combatants.Select(combatant => combatant.Name).ToArray())} has begun!)\n");
+			Terminal.WriteLine($"{{fg:Cyan}}(Combat with {combatants.Select(combatant => combatant.Name).ToArray().Stringify("[", ", ", "]")} has begun!)\n");
 
 			Terminal.WriteLineWithoutDelay("{fg:Cyan}(Status)");
 			int drawPos = Terminal.CursorY;
