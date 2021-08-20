@@ -11,7 +11,7 @@ namespace RPGCuzWhyNot.Systems {
 	public static class Terminal {
 		private static readonly Stack<State> stateStack = new Stack<State>();
 
-		private static int cursorRowDisplacement = 0;
+		private static int cursorRowDisplacement;
 
 		private static Color currentForegroundColor = new Color(Console.ForegroundColor);
 		private static Color currentBackgroundColor = new Color(Console.BackgroundColor);
@@ -227,7 +227,7 @@ namespace RPGCuzWhyNot.Systems {
 
 		private static int Decode(string text, int offset) {
 			int braceEnd = text.IndexOf('}', offset);
-			if (braceEnd == -1) throw new ArgumentException();
+			if (braceEnd == -1) throw new ArgumentException("Missing closing brace.");
 
 			bool doPop = false;
 			int parenStart = braceEnd + 1;
@@ -266,7 +266,7 @@ namespace RPGCuzWhyNot.Systems {
 						break;
 					}
 				}
-				if (parenEnd >= text.Length) throw new ArgumentException();
+				if (parenEnd >= text.Length) throw new ArgumentException("Missing closing parenthesis.");
 				string message = text[(parenStart + 1)..parenEnd];
 				Write(message);
 				PopState();
@@ -320,7 +320,7 @@ namespace RPGCuzWhyNot.Systems {
 			switch (cmd) {
 				case "push": PushState(); break;
 				case "pop": PopState(); break;
-				default: throw new ArgumentException();
+				default: throw new ArgumentException("Unknown command.");
 			}
 		}
 

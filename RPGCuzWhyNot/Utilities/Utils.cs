@@ -120,7 +120,7 @@ namespace RPGCuzWhyNot.Utilities {
 		}
 
 		public static string Stringify<T>(this T[] array, string start, string separator, string end, Range range) {
-			return array.Stringify(start, (i, l) => separator, end, range);
+			return array.Stringify(start, (_, _) => separator, end, range);
 		}
 
 		public static string Stringify<T>(this T[] array, string start, string separator, string end) {

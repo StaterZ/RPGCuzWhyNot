@@ -1,11 +1,10 @@
-using System;
 using RPGCuzWhyNot.Primitives;
 using RPGCuzWhyNot.Utilities;
 
 namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
 	public class HelpCommand : Command {
 		public override string[] CallNames { get; } = {"help", "commands"};
-		public override string HelpText { get; } = "Show this list";
+		public override string HelpText => "Show this list";
 
 		private readonly CommandHandler commandHandler;
 

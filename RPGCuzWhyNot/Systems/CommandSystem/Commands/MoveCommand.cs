@@ -52,7 +52,7 @@ namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
 				}
 			}
 
-			string destination = "";
+			string destination;
 			bool success;
 
 			if (args.Get("to", out string toCallName)) {
