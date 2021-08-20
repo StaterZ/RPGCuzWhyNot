@@ -1,7 +1,6 @@
 using RPGCuzWhyNot.Systems.AttackSystem;
 using RPGCuzWhyNot.Things;
 using RPGCuzWhyNot.Things.Characters;
-using RPGCuzWhyNot.Things.Item;
 
 namespace RPGCuzWhyNot.Systems.CommandSystem.Commands {
 	public class AttackCommand : Command {

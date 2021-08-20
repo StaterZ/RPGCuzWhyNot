@@ -1,6 +1,5 @@
 using RPGCuzWhyNot.Systems;
 using RPGCuzWhyNot.Things.Characters.Races;
-using RPGCuzWhyNot.Things.Characters.Races.Humanoids;
 
 namespace RPGCuzWhyNot.Things.Characters.NPCs {
 	public abstract class NPC : Character, IConversable {
