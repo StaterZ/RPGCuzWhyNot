@@ -21,34 +21,34 @@ namespace RPGCuzWhyNot.Systems.Data {
 		private static readonly string npcsPath = dataPath + "npc";
 		private static readonly string lootTablesPath = dataPath + "loot";
 
-		private static readonly JsonSerializerSettings serializerSettings = new JsonSerializerSettings {
+		private static readonly JsonSerializerSettings serializerSettings = new() {
 			MissingMemberHandling = MissingMemberHandling.Error
 		};
 
 		private static readonly JsonSerializer serializer = JsonSerializer.CreateDefault(serializerSettings);
-		private static readonly Random random = new Random();
+		private static readonly Random random = new();
 
-		private static readonly Dictionary<string, Prototype> prototypes = new Dictionary<string, Prototype>();
-		private static readonly Dictionary<string, Location> locations = new Dictionary<string, Location>();
-		private static readonly Dictionary<string, NPC> npcs = new Dictionary<string, NPC>();
-		private static readonly Dictionary<string, Type> npcTypeMap = new Dictionary<string, Type>();
+		private static readonly Dictionary<string, Prototype> prototypes = new();
+		private static readonly Dictionary<string, Location> locations = new();
+		private static readonly Dictionary<string, NPC> npcs = new();
+		private static readonly Dictionary<string, Type> npcTypeMap = new();
 
 		private static ErrorLevel loadErrorLevel;
 
 		/// <summary>
 		/// All of the loaded prototypes.
 		/// </summary>
-		public static ReadOnlyDictionary<string, Prototype> Prototypes { get; } = new ReadOnlyDictionary<string, Prototype>(prototypes);
+		public static ReadOnlyDictionary<string, Prototype> Prototypes { get; } = new(prototypes);
 
 		/// <summary>
 		/// All of the loaded locations.
 		/// </summary>
-		public static ReadOnlyDictionary<string, Location> Locations { get; } = new ReadOnlyDictionary<string, Location>(locations);
+		public static ReadOnlyDictionary<string, Location> Locations { get; } = new(locations);
 
 		/// <summary>
 		/// All of the loaded NPCs.
 		/// </summary>
-		public static ReadOnlyDictionary<string, NPC> NPCs { get; } = new ReadOnlyDictionary<string, NPC>(npcs);
+		public static ReadOnlyDictionary<string, NPC> NPCs { get; } = new(npcs);
 
 		static DataLoader() {
 			FindRegisteredNPCs();
