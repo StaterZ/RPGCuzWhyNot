@@ -1,0 +1,13 @@
+{
+  "id": "player",
+  "name": "Bengt",
+  "spawnLocation": "village",
+  "inventory": [
+    "blue_potion",
+    "backpack"
+  ],
+  "wielding": [
+    "deluxe_debug_doodad",
+    "greatsword"
+  ]
+}

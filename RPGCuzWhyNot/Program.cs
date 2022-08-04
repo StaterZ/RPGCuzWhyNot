@@ -3,8 +3,6 @@ using RPGCuzWhyNot.Systems;
 using RPGCuzWhyNot.Systems.Data;
 using RPGCuzWhyNot.Systems.VirtualTerminal;
 using RPGCuzWhyNot.Things.Characters;
-using RPGCuzWhyNot.Things.Characters.Races.Humanoids;
-using RPGCuzWhyNot.Things.Item;
 using RPGCuzWhyNot.Utilities;
 
 namespace RPGCuzWhyNot {
@@ -43,19 +41,7 @@ namespace RPGCuzWhyNot {
 			}
 
 			//construct player
-			player = new Player(new Human(Humanoid.Gender.Male)) {
-				Name = "Bengt",
-				location = DataLoader.GetLocation("village"),
-				stats = new Stats(10, 10, 10, 10)
-			};
-
-
-			//add start items to player
-			player.Inventory.MoveItem(DataLoader.CreateItem("blue_potion"));
-			player.Inventory.MoveItem(DataLoader.CreateItem("backpack"));
-			player.Wielding.MoveItem((IWieldable)DataLoader.CreateItem("deluxe_debug_doodad"));
-			player.Wielding.MoveItem((IWieldable)DataLoader.CreateItem("greatsword"));
-
+			player = DataLoader.CreatePlayer("player");
 
 			//some basic event loop
 			player.location.PrintEnterInformation();

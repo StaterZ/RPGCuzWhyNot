@@ -8,6 +8,7 @@ using System.Reflection;
 using Newtonsoft.Json;
 using RPGCuzWhyNot.Systems.Data.Prototypes;
 using RPGCuzWhyNot.Things;
+using RPGCuzWhyNot.Things.Characters;
 using RPGCuzWhyNot.Things.Characters.NPCs;
 using RPGCuzWhyNot.Things.Item;
 
@@ -20,6 +21,7 @@ namespace RPGCuzWhyNot.Systems.Data {
 		private static readonly string itemsPath = dataPath + "item";
 		private static readonly string npcsPath = dataPath + "npc";
 		private static readonly string lootTablesPath = dataPath + "loot";
+		private static readonly string playerPath = dataPath + "player";
 
 		private static readonly JsonSerializerSettings serializerSettings = new() {
 			MissingMemberHandling = MissingMemberHandling.Error
@@ -68,6 +70,7 @@ namespace RPGCuzWhyNot.Systems.Data {
 			LoadPrototypesFromPath<LocationPrototype>(locationsPath);
 			LoadPrototypesFromPath<NpcPrototype>(npcsPath);
 			LoadPrototypesFromPath<LootTablePrototype>(lootTablesPath);
+			LoadPrototypesFromPath<PlayerPrototype>(playerPath);
 			ValidatePrototypes();
 
 			ConstructLocations();
@@ -86,6 +89,13 @@ namespace RPGCuzWhyNot.Systems.Data {
 				return itemPrototype.Create();
 
 			throw new DataLoaderException($"An item prototype with the id '{id}' was not found.");
+		}
+
+		public static Player CreatePlayer(string id) {
+			if (prototypes.TryGetValue(id, out Prototype prototype) && prototype is PlayerPrototype playerPrototype)
+				return playerPrototype.Create();
+
+			throw new DataLoaderException($"An player prototype with the id '{id}' was not found.");
 		}
 
 		/// <summary>
