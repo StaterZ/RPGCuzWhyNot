@@ -16,7 +16,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 		private const string performActionFailMessage = "{fg:Red}(You can't afford this action right now.)";
 		private readonly PlayerCommands commands;
 
-		public Player(Race race) : base(race) {
+		public Player(Species species) : base(species) {
 			//init health
 			health = new Health(100);
 			health.OnDamage += ctx => {

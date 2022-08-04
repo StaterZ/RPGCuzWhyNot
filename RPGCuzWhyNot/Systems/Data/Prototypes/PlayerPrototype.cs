@@ -24,8 +24,8 @@ namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 		public string[] Wearing { get; set; }
 
 		public Player Create() {
-			Race race = new Human(Gender.Male); //TODO: fix hard-coded race
-			Player player = new Player(race) {
+			Species species = new Human(Gender.Male); //TODO: fix hard-coded species
+			Player player = new Player(species) {
 				Name = Name,
 				location = DataLoader.GetLocation(SpawnLocation),
 				stats = Stats

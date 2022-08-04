@@ -18,15 +18,15 @@ namespace RPGCuzWhyNot.Things.Characters {
 		public WearablesInventory Wearing { get; }
 		public WieldablesInventory Wielding { get; }
 
-		public Race race;
-		public Referral Referral => race.Referral;
+		public Species species;
+		public Referral Referral => species.Referral;
 		public Location location;
 		public Health health;
 		public IAlignment Alignment { get; set; }
 		public Stats stats;
 
-		protected Character(Race race) {
-			this.race = race;
+		protected Character(Species species) {
+			this.species = species;
 
 			Inventory = new ItemInventory(this);
 			Wearing = new WearablesInventory(this);

@@ -7,7 +7,7 @@ namespace RPGCuzWhyNot.Things.Characters.NPCs {
 			Terminal.WriteLine($"No answer, it appears {Referral.subjectPronoun}'s mute...");
 		}
 
-		protected NPC(Race race) : base(race) {
+		protected NPC(Species species) : base(species) {
 		}
 	}
 }
