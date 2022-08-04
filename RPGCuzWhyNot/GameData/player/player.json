@@ -2,6 +2,12 @@
   "id": "player",
   "name": "Bengt",
   "spawnLocation": "village",
+  "stats": {
+    "speed": 10,
+    "strength": 10,
+    "accuracy": 10,
+    "fortitude": 10
+  },
   "inventory": [
     "blue_potion",
     "backpack"

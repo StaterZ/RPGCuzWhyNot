@@ -11,7 +11,7 @@ namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 		[JsonProperty("spawnLocation", Required = Required.Always)]
 		public string SpawnLocation { get; set; }
 
-		[JsonProperty("stats")]
+		[JsonProperty("stats", Required = Required.Always)]
 		public Stats Stats { get; set; }
 
 		[JsonProperty("inventory")]
@@ -30,15 +30,23 @@ namespace RPGCuzWhyNot.Systems.Data.Prototypes {
 				location = DataLoader.GetLocation(SpawnLocation),
 				stats = Stats
 			};
-			
-			foreach (string item in Inventory) {
-				player.Inventory.MoveItem(DataLoader.CreateItem(item));
+
+			if (Inventory != null) {
+				foreach (string item in Inventory) {
+					player.Inventory.MoveItem(DataLoader.CreateItem(item));
+				}
 			}
-			foreach (string item in Wielding) {
-				player.Wielding.MoveItem((IWieldable)DataLoader.CreateItem(item));
+
+			if (Wielding != null) {
+				foreach (string item in Wielding) {
+					player.Wielding.MoveItem((IWieldable)DataLoader.CreateItem(item));
+				}
 			}
-			foreach (string item in Wearing) {
-				player.Wearing.MoveItem((IWearable)DataLoader.CreateItem(item));
+
+			if (Wearing != null) {
+				foreach (string item in Wearing) {
+					player.Wearing.MoveItem((IWearable)DataLoader.CreateItem(item));
+				}
 			}
 
 			return player;
