@@ -8,7 +8,7 @@ namespace RPGCuzWhyNot.Things.Characters.NPCs {
 	public class SmithyCustomer : NPC {
 		private const int voiceFrequency = 1000;
 
-		public SmithyCustomer() : base(new Human(Humanoid.Gender.Female)) {
+		public SmithyCustomer() : base(new Human(Gender.Female)) {
 		}
 
 		public override void Converse(Character character, string response) {

@@ -5,7 +5,7 @@ using RPGCuzWhyNot.Things.Characters.Races.Humanoids;
 
 namespace RPGCuzWhyNot.Things.Characters.NPCs {
 	public class TheMother : Character {
-		public TheMother() : base(new Human(Humanoid.Gender.Female)) {
+		public TheMother() : base(new Human(Gender.Female)) {
 			Name = "Din Mamma";
 			health = new Health(9001);
 			health.OnDeath += Die;

@@ -11,7 +11,7 @@ namespace RPGCuzWhyNot.Things.Characters.NPCs
 	public class Orchibald : NPC {
 		private const int voiceFrequency = 400;
 
-		public Orchibald() : base(new Dwarf(Humanoid.Gender.Male)) {
+		public Orchibald() : base(new Dwarf(Gender.Male)) {
 			health = new Health(100);
 		}
 
