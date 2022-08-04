@@ -16,7 +16,14 @@ namespace RPGCuzWhyNot {
 			VT.EnableVirtualTerminalProcessing();
 
 			try {
-				return Run();
+				int exitCode = Run();
+
+				if (exitCode != 0) {
+					Console.WriteLine($"Exited with bad code: {exitCode}");
+					Utils.WaitForPlayer();
+				}
+
+				return exitCode;
 			} catch (Exception e) {
 				Console.WriteLine(e);
 				Utils.WaitForPlayer();
