@@ -47,7 +47,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 
 		private void InsertItemActions(Menu menu, IEnumerable<ItemAction> itemActions, IEnumerable<Character> combatants, Turn turn) {
 			foreach (ItemAction itemAction in itemActions) {
-				menu.items.Add(new MenuItem(itemAction.Name, itemAction.Description, handler => {
+				menu.items.Add(new MenuItem(itemAction.Name, itemAction.Listing, handler => {
 					Character target = null;
 
 					if (itemAction.HasTarget) {
@@ -83,7 +83,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 				Menu attack = new Menu("{fg:Red}(Attack)");
 				foreach (IWieldable wieldable in Wielding) {
 					Menu menu = new Menu(wieldable.Name);
-					attack.items.Add(new SubMenu(menu, "Do something with this item. (Temp Desc)"));
+					attack.items.Add(new SubMenu(menu, wieldable.DescriptionInInventory));
 
 					InsertItemActions(menu, wieldable.ItemActions, fight.Combatants, turn);
 				}
@@ -96,18 +96,18 @@ namespace RPGCuzWhyNot.Things.Characters {
 				foreach (IItem item in Inventory) {
 					Menu menu = new Menu(item.Name);
 
-					allItems.items.Add(new SubMenu(menu, "Do something with this item. (Temp Desc)"));
+					allItems.items.Add(new SubMenu(menu, item.DescriptionInInventory));
 					if (item is IWieldable) {
-						wieldableItems.items.Add(new SubMenu(menu, "Do something with this item. (Temp Desc)"));
+						wieldableItems.items.Add(new SubMenu(menu, item.DescriptionInInventory));
 					}
 					if (item is IWearable) {
-						wearableItems.items.Add(new SubMenu(menu, "Do something with this item. (Temp Desc)"));
+						wearableItems.items.Add(new SubMenu(menu, item.DescriptionInInventory));
 					}
 					if (item is ItemWithInventory) {
-						inventoriesItems.items.Add(new SubMenu(menu, "Do something with this item. (Temp Desc)"));
+						inventoriesItems.items.Add(new SubMenu(menu, item.DescriptionInInventory));
 					}
 					if (item.ItemActions.Any(action => action.Effects.ConsumeSelf)) {
-						consumableItems.items.Add(new SubMenu(menu, "Do something with this item. (Temp Desc)"));
+						consumableItems.items.Add(new SubMenu(menu, item.DescriptionInInventory));
 					}
 
 					InsertItemActions(menu, item.ItemActions, fight.Combatants, turn);
@@ -123,7 +123,7 @@ namespace RPGCuzWhyNot.Things.Characters {
 				Menu equipment = new Menu("{fg:Yellow}(Equipment)");
 				foreach (IWearable wearable in Wearing) {
 					Menu menu = new Menu(wearable.Name);
-					equipment.items.Add(new SubMenu(menu, "Do something with this item. (Temp Desc)"));
+					equipment.items.Add(new SubMenu(menu, wearable.DescriptionInInventory));
 
 					InsertItemActions(menu, wearable.ItemActions, fight.Combatants, turn);
 				}

@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
 using Newtonsoft.Json;
 using RPGCuzWhyNot.Systems;
 using RPGCuzWhyNot.Systems.AttackSystem;
 using RPGCuzWhyNot.Systems.Inventory;
+using RPGCuzWhyNot.Utilities;
 
 namespace RPGCuzWhyNot.Things.Item {
 	[Serializable]
@@ -34,6 +37,60 @@ namespace RPGCuzWhyNot.Things.Item {
 
 		[JsonProperty("effects")]
 		public Effects Effects { get; set; }
+
+		[JsonIgnore]
+		public string Listing {
+			get {
+				StringBuilder builder = new();
+				builder.AppendLine(Description);
+				builder.AppendLine();
+
+				if (Effects.ConsumeSelf) {
+					builder.AppendLine("{red}(Will Destroy Item!)");
+				}
+				if (Effects.TransferSelf.HasValue) {
+					builder.AppendLine($"{{yellow}}(Transfers Item to {Effects.TransferSelf.Value})");
+				}
+				builder.AppendLine($"Requires: {(-Requirements.Stats).Listing}");
+				if (Requirements.Items.Count > 0) {
+					builder.AppendLine($"  Needed: {Requirements.Items}");
+					foreach (KeyValuePair<string, int> pair in Requirements.Items) {
+						builder.AppendLine($"    {Utils.AddSignAndColor(pair.Value, true, false)} {pair.Key}{(pair.Value > 1 ? "s" : "")}");
+					}
+				}
+				if (Effects.ConsumeItems.Count > 0) {
+					builder.AppendLine("  Items Consumed:");
+					foreach (KeyValuePair<string, int> pair in Effects.ConsumeItems) {
+						builder.AppendLine($"    {Utils.AddSignAndColor(-pair.Value)} {pair.Key}{(pair.Value > 1 ? "s" : "")}");
+					}
+				}
+
+				builder.AppendLine();
+				builder.AppendLine($"Effects: {Effects.Stats.Listing}");
+				if (Effects.MeleeDamage != 0) {
+					builder.AppendLine($"  Melee Damage: {Utils.AddSignAndColor(-Effects.MeleeDamage)}");
+				}
+				if (Effects.ProjectileDamage != 0) {
+					builder.AppendLine($"  Projectile Damage: {Utils.AddSignAndColor(-Effects.ProjectileDamage)}");
+				}
+				if (Effects.ArmorPiercing != 0) {
+					builder.AppendLine($"  Armor Piercing: {Utils.AddSignAndColor(Effects.ArmorPiercing * 100, true, false)}%");
+				}
+				if (Effects.HealSelf != 0) {
+					builder.AppendLine($"  You Heal {Utils.AddSignAndColor(Effects.HealSelf)} health");
+				}
+				if (Effects.HealTarget != 0) {
+					builder.AppendLine($"  Target Heals {Utils.AddSignAndColor(Effects.HealTarget)} health");
+				}
+				if (Effects.TransferItems.Count > 0) {
+					builder.AppendLine("  Items Transferred:");
+					foreach (KeyValuePair<string, Effects.ItemTransferEntry> pair in Effects.TransferItems) {
+						builder.AppendLine($"    {pair.Value.Amount} {pair.Key}{(pair.Value.Amount > 1 ? "s" : "")} to {pair.Value.Location}");
+					}
+				}
+				return builder.ToString();
+			}
+		}
 
 		public ItemAction() {
 			Requirements = new Requirements();

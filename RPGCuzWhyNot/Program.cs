@@ -1,4 +1,6 @@
 using System;
+using System.Globalization;
+using System.Threading;
 using RPGCuzWhyNot.Systems;
 using RPGCuzWhyNot.Systems.Data;
 using RPGCuzWhyNot.Systems.VirtualTerminal;
@@ -12,6 +14,11 @@ namespace RPGCuzWhyNot {
 		private static int Main() {
 			// Make sure virtual terminal control sequences works on windows.
 			VT.EnableVirtualTerminalProcessing();
+
+			// Use dot for decimals
+			CultureInfo customCulture = (CultureInfo)Thread.CurrentThread.CurrentCulture.Clone();
+			customCulture.NumberFormat.NumberDecimalSeparator = ".";
+			Thread.CurrentThread.CurrentCulture = customCulture;
 
 			try {
 				int exitCode = Run();

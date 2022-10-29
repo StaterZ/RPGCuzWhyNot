@@ -36,5 +36,13 @@ namespace RPGCuzWhyNot.Things.Item {
 		public static Stats operator -(Stats a, Stats b) {
 			return new Stats(a.Speed - b.Speed, a.Strength - b.Strength, a.Accuracy - b.Accuracy, a.Fortitude - b.Fortitude);
 		}
+
+		public static Stats operator +(Stats a) {
+			return new Stats(+a.Speed, +a.Strength, +a.Accuracy, +a.Fortitude);
+		}
+
+		public static Stats operator -(Stats a) {
+			return new Stats(-a.Speed, -a.Strength, -a.Accuracy, -a.Fortitude);
+		}
 	}
 }
