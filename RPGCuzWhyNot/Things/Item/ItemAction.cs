@@ -68,10 +68,10 @@ namespace RPGCuzWhyNot.Things.Item {
 				builder.AppendLine();
 				builder.AppendLine($"Effects: {Effects.Stats.Listing}");
 				if (Effects.MeleeDamage != 0) {
-					builder.AppendLine($"  Melee Damage: {Utils.AddSignAndColor(-Effects.MeleeDamage)}");
+					builder.AppendLine($"  Melee Damage: {Utils.AddSignAndColor(Effects.MeleeDamage, true, false)}");
 				}
 				if (Effects.ProjectileDamage != 0) {
-					builder.AppendLine($"  Projectile Damage: {Utils.AddSignAndColor(-Effects.ProjectileDamage)}");
+					builder.AppendLine($"  Projectile Damage: {Utils.AddSignAndColor(Effects.ProjectileDamage, true, false)}");
 				}
 				if (Effects.ArmorPiercing != 0) {
 					builder.AppendLine($"  Armor Piercing: {Utils.AddSignAndColor(Effects.ArmorPiercing * 100, true, false)}%");
