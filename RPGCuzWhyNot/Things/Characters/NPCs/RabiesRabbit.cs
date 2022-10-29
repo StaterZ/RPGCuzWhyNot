@@ -10,7 +10,7 @@ namespace RPGCuzWhyNot.Things.Characters.NPCs {
 		private const int voiceFrequency = 1000;
 
 		public RabiesRabbit() : base(new Rabbit(Gender.Male)) {
-			health = new Health(30);
+			health = new Health(90);
 		}
 
 		public override void Converse(Character character, string response) {
