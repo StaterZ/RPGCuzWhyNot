@@ -20,10 +20,10 @@ namespace RPGCuzWhyNot.Things.Characters {
 			//init health
 			health = new Health(100);
 			health.OnDamage += ctx => {
-				Terminal.WriteLine($"{ctx.inflictor} hit you for {ctx.Delta} damage.");
+				Terminal.WriteLine($"{ctx.inflictor.Name} hit you for {ctx.Delta} damage.");
 			};
 			health.OnDeath += ctx => {
-				Terminal.WriteLine($"{ctx.inflictor} killed you!");
+				Terminal.WriteLine($"{ctx.inflictor.Name} killed you!");
 				Utils.WaitForPlayer();
 				Environment.Exit(0);
 			};
