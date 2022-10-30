@@ -1,0 +1,122 @@
+object ItemPrototype derives ThingPrototype {
+	! inventoryDescription: string //the description shown when the item has been picked up and is in the invetory
+	! groundDescription: string //the description shown when the item is on the ground
+	? wieldable: WieldableProps
+	? wearable: WearableProps
+	? inventory: InventoryProps
+	? actions: []ItemAction
+}
+
+object WieldableProps {
+	? handsRequired: int //how many hands are required
+}
+
+object WearableProp {
+	? multiplicativeProtection: float //percentage of damage blocked
+	? additiveProtection: int //flat damage blocked, applied before multiplicativeProtection
+	? multiplicativeHealModifier: float //percentage added to all healing
+	? additiveHealModifier: int //flat health added to all healing
+	! coveredParts: WearableSlots //the bodyparts used by the item
+	! coveredLayers: WearableLayers //the clothing layer used by the item
+}
+
+object InventoryProps {
+	? weightFraction: Fraction
+}
+
+object ItemAction {
+	? hasTarget: bool //if true it will act on a spesific target/combatant
+	? callNames: []string //names used by the player to refer to it
+	? name: string //the pretty-print name
+	? description: string //a description of what the action will do if used
+	? executeDescription: string //the text displayed when the player performs the action
+	? requirements: Requirements //this needed to use the action
+	? effects: Effects //the result or "effects" if will of the action
+}
+
+object Requirements {
+	? stats: Stats //stats required to use
+	? items: string->int //a mapping of item ids to how many are required in inventory (Note: this only cheks if they're present, it does not consume anything)
+}
+
+object Stats {
+	? speed: int
+	? strength: int
+	? accuracy: int
+	? fortitude: int
+}
+
+object Effects {
+	? stats: Stats
+	? meleeDamage: int
+	? projectileDamage: int
+	? armorPiercing: float
+	? consumeSelf: bool
+	? consumeItems: string->int //a mapping of tiem ids to how many of them
+	? transferSelf: TransferLocation
+	? transferItems: string->ItemTransferEntry //a mapping of item ids to where to transfer them
+	? healSelf: int
+	? healTarget: int
+}
+
+object ItemTransferEntry {
+	location: TransferLocation
+	amount: int
+}
+
+flags WearableSlots {
+	chest, //shirts
+	back, //backpacks
+	head, //hats
+	arms, //long-sleeved clothing
+	legs, //pants
+	hands, //gloves
+	feet, //shoes
+	face, //masks
+	neck, //necklaces
+	wrists, //bracelets
+}
+
+flags WearableLayers {
+	inner, //regular clothing
+	middle, //light armor, like chainmail or leather
+	outer, //heavy armor, like full plate armor
+}
+
+enum TransferLocation {
+	ground, //item gets dropped on the ground and can be picked up again after the battle
+	target, //transfers item to the target. example: shoot an arrow on them and have it stick in them
+}
+
+object LocationPrototype derives ThingPrototype {
+	! description: string //a description shown when you enter the location
+	? items: []ThingWithChance
+	? paths: string->string //a mapping of location ids to a description of the path leading there
+}
+
+object ThingPrototype derives Prototype {
+	! callName: string
+}
+
+object Prototype {
+	! "id", string
+	! "name", string
+}
+
+LootTablePrototype {
+	? items: string->int //a mapping of item ids to weights. the chance of getting the item is the items weight divided on the sum of all weights in the loot table
+}
+
+object NpcPrototype derives ThingPrototype {
+	! location: string
+	! glanceDescription: string
+	! approachDescription: string
+}
+
+object PlayerPrototype : Prototype {
+	! spawnLocation: string //the location id of the spawn location
+	! stats: Stats
+	? inventory: []string //an array of item ids to have in inventory
+	? wielding: []string //an array of item ids to wield
+	? wearing: []string //an array of item ids to wear
+}
