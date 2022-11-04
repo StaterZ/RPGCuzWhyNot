@@ -99,11 +99,11 @@ object ThingPrototype derives Prototype {
 }
 
 object Prototype {
-	! "id", string
-	! "name", string
+	! id: string
+	! name: string
 }
 
-LootTablePrototype {
+object LootTablePrototype {
 	? items: string->int //a mapping of item ids to weights. the chance of getting the item is the items weight divided on the sum of all weights in the loot table
 }
 
